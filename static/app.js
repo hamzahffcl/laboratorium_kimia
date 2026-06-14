@@ -556,12 +556,13 @@ function updatePHIndicator() {
     const volume_L = (canvas.width * canvas.height) / 10000.0;
     const concentration = score / volume_L;
     
-    // Konstanta sensitivitas k diubah dari 1.0 menjadi 0.08 agar pH lebih cepat berubah
-    const k = 0.08;
+    // Konstanta sensitivitas diseimbangkan (0.35) agar tidak instan merah/biru dengan 1 molekul
+    const k = 0.35;
     const targetPH = 7.0 - Math.tanh(concentration / k) * 7.0;
 
     if (typeof this._currentPH === 'undefined') this._currentPH = 7.0;
-    this._currentPH += (targetPH - this._currentPH) * 0.05; // Dipercepat transisinya dari 0.03
+    // Transisi diperlambat (0.015) agar perubahan warnanya berjalan mengalun pelan
+    this._currentPH += (targetPH - this._currentPH) * 0.015; 
     const pH = this._currentPH;
 
     let targetR = 255, targetG = 255, targetB = 255;
@@ -575,17 +576,18 @@ function updatePHIndicator() {
     else if (pH <= 11) { targetR = 60; targetG = 80; targetB = 255; } 
     else { targetR = 80; targetG = 0; targetB = 200; }             
 
-    currentBg.r += (targetR - currentBg.r) * 0.08;
-    currentBg.g += (targetG - currentBg.g) * 0.08;
-    currentBg.b += (targetB - currentBg.b) * 0.08;
+    // Transisi pergantian warna RGB diperhalus
+    currentBg.r += (targetR - currentBg.r) * 0.02;
+    currentBg.g += (targetG - currentBg.g) * 0.02;
+    currentBg.b += (targetB - currentBg.b) * 0.02;
 
     const wrapper = document.querySelector('.canvas-wrapper');
     if (wrapper) {
         if (pH > 6.5 && pH < 7.5) {
              wrapper.style.backgroundColor = `rgba(255, 255, 255, 0.05)`; 
         } else {
-             // Opacity ditingkatkan ke 0.6
-             wrapper.style.backgroundColor = `rgba(${Math.round(currentBg.r)}, ${Math.round(currentBg.g)}, ${Math.round(currentBg.b)}, 0.6)`;
+             // Opacity diturunkan ke 0.25 agar kalem dan tidak mencolok
+             wrapper.style.backgroundColor = `rgba(${Math.round(currentBg.r)}, ${Math.round(currentBg.g)}, ${Math.round(currentBg.b)}, 0.25)`;
         }
     }
 }
