@@ -702,13 +702,11 @@ canvas.addEventListener('mousedown', (e) => {
         let matchedLabel = null;
         let atomSymbols = [];
         
-        if (DB.periodicTable.find(a => a.symbol === input)) {
+        matchedLabel = Object.keys(DB.moleculeAtoms).find(lbl => lbl.startsWith(input + " ") || lbl === input);
+        if (matchedLabel) {
+            atomSymbols = DB.moleculeAtoms[matchedLabel];
+        } else if (DB.periodicTable.find(a => a.symbol === input)) {
             atomSymbols = [input];
-        } else {
-            matchedLabel = Object.keys(DB.moleculeAtoms).find(lbl => lbl.startsWith(input + " ") || lbl === input);
-            if (matchedLabel) {
-                atomSymbols = DB.moleculeAtoms[matchedLabel];
-            }
         }
         
         if (atomSymbols.length > 0) {
