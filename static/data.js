@@ -10886,6 +10886,25 @@ window.CHEM_DATA = {
       "charge": null,
       "complexity": null,
       "isomeric_smiles": null
+    },
+    {
+      "label": "C (Karbon)",
+      "atoms_csv": "C",
+      "mp": 3550.0,
+      "bp": 3825.0,
+      "acid_base_type": "Netral",
+      "acid_base_strength": "Tidak Ada",
+      "ionization_factor": 0.0,
+      "bond_type": "Covalent Network",
+      "molar_mass": 12.011,
+      "density": 2.26,
+      "pubchem_cid": 5462310,
+      "iupac_name": "Carbon",
+      "molecular_weight": null,
+      "exact_mass": null,
+      "charge": null,
+      "complexity": null,
+      "isomeric_smiles": null
     }
   ],
   "reactions": [
