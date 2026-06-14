@@ -582,7 +582,8 @@ function updatePHIndicator() {
         if (pH > 6.5 && pH < 7.5) {
              wrapper.style.backgroundColor = `rgba(255, 255, 255, 0.1)`; 
         } else {
-             wrapper.style.backgroundColor = `rgba(${Math.round(currentBg.r)}, ${Math.round(currentBg.g)}, ${Math.round(currentBg.b)}, 0.3)`;
+             // Ditingkatkan dari 0.3 menjadi 0.45 agar warna asam/basa lebih terlihat jelas
+             wrapper.style.backgroundColor = `rgba(${Math.round(currentBg.r)}, ${Math.round(currentBg.g)}, ${Math.round(currentBg.b)}, 0.45)`;
         }
     }
 }
