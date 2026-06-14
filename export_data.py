@@ -10,7 +10,7 @@ def export_to_json():
     c = conn.cursor()
     
     # Ekstrak Molecules dengan JOIN ke MoleculeAtoms
-    c.execute("SELECT id, label, melting_point, boiling_point, acid_base_type, acid_base_strength, ionization_factor, bond_type, molar_mass, density FROM Molecules")
+    c.execute("SELECT id, label, melting_point, boiling_point, acid_base_type, acid_base_strength, ionization_factor, bond_type, molar_mass, density, pubchem_cid, iupac_name, molecular_weight, exact_mass, charge, complexity, isomeric_smiles FROM Molecules")
     molecules_data = c.fetchall()
     
     molecules = []
@@ -43,7 +43,14 @@ def export_to_json():
             "ionization_factor": row[6],
             "bond_type": row[7],
             "molar_mass": row[8],
-            "density": row[9]
+            "density": row[9],
+            "pubchem_cid": row[10],
+            "iupac_name": row[11],
+            "molecular_weight": row[12],
+            "exact_mass": row[13],
+            "charge": row[14],
+            "complexity": row[15],
+            "isomeric_smiles": row[16]
         })
         
     print(f"Berhasil mengekstrak {len(molecules)} Molekul secara Relasional.")
