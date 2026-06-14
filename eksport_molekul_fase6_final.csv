@@ -1,0 +1,574 @@
+﻿id,label,melting_point,boiling_point,acid_base_type,acid_base_strength,ionization_factor,bond_type,molar_mass,density,heat_capacity,enthalpy_formation
+1,AgCl (Endapan Perak Klorida),455.0,1547.0,Netral,Tidak Ada,0.0,Senyawa Ionik,143.318,,48.0,-127.0
+2,AgNO3 (Perak Nitrat),210.0,440.0,Netral,Tidak Ada,0.0,Senyawa Ionik,169.872,4.35,101.8,-124.4
+3,Al2O3 (Alumina),2054.0,2977.0,Netral,Tidak Ada,0.0,Senyawa Ionik,101.96,3.97,92.2,-1675.7
+4,Br2 (Gas Bromin),-7.2,58.8,Netral,Tidak Ada,0.0,Senyawa Kovalen,159.808,,55.2,0.0
+5,C10H18 (Alkuna),-77.53,170.75,Netral,Tidak Ada,0.0,Senyawa Kovalen,138.254,0.745,289.2,-117.56129337539431
+6,C10H20 (Alkena/Olefin),-75.77,173.4,Netral,Tidak Ada,0.0,Senyawa Kovalen,140.27,0.74,312.0,-182.58
+7,C10H21COOH (Asam Lemak/Karboksilat),105.0,243.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,186.295,0.89,376.8,-622.13
+8,C10H21Cl (Kloroalkana),-53.35,176.5,Netral,Tidak Ada,0.0,Senyawa Kovalen,176.728,0.735,346.0,-366.44583631554383
+9,C10H21F (Fluoroalkana),-35.0,189.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,160.276,0.735,344.4,-426.23
+10,C10H21NH2 (Amina),-48.03,186.5,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,157.301,0.8,372.2,-265.5388680150292
+11,C10H21OH (Alkohol Alifatik),5.0,220.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,158.285,0.844,351.6,-485.72
+12,C10H22 (Alkana/Parafin),-29.92,174.12,Netral,Tidak Ada,0.0,Senyawa Kovalen,142.286,0.735,334.8,-300.9
+13,C10H8 (Naftalena / Kapur Barus),80.2,218.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,128.174,1.16,175.2,78.5
+14,C11H20 (Alkuna),-41.86,203.52,Netral,Tidak Ada,0.0,Senyawa Kovalen,152.281,0.756,320.4,-153.9032176656151
+15,C11H22 (Alkena/Olefin),-58.0,204.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,154.297,0.751,343.2,-288.07
+16,C11H23COOH (Asam Lemak/Karboksilat),-15.0,249.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,200.322,0.886,408.0,-682.7
+17,C11H23Cl (Kloroalkana),-17.0,245.34,Netral,Tidak Ada,0.0,Senyawa Kovalen,190.755,0.745,377.2,-305.98
+18,C11H23F (Fluoroalkana),-58.83,206.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,174.303,0.745,375.6,-446.16
+19,C11H23NH2 (Amina),17.0,229.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,171.328,0.804,403.4,-307.86
+20,C11H23OH (Alkohol Alifatik),15.0,246.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,172.312,0.845,382.8,-504.8
+21,C11H24 (Alkana/Parafin),-26.0,195.78,Netral,Tidak Ada,0.0,Senyawa Kovalen,156.313,0.745,366.0,-327.2
+22,C12H22 (Alkuna),-30.59,239.9,Netral,Tidak Ada,0.0,Senyawa Kovalen,166.308,0.766,351.6,-256.63
+23,C12H22O11 (Sukrosa / Gula Pasir),201.5,1035.59,Netral,Tidak Ada,0.0,Senyawa Kovalen,342.297,,536.4,
+24,C12H24 (Alkena/Olefin),-62.35,198.59,Netral,Tidak Ada,0.0,Senyawa Kovalen,168.324,0.76,374.4,-258.03
+25,C12H25COOH (Asam Lemak/Karboksilat),-38.0,123.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,214.349,0.883,439.2,-698.81
+26,C12H25Cl (Kloroalkana),43.5,238.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,204.782,0.754,408.4,-412.89178517711736
+27,C12H25F (Fluoroalkana),-47.56,225.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,188.33,0.754,406.8,-553.19
+28,C12H25NH2 (Amina),29.0,255.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,185.355,0.807,434.6,-311.4776816691982
+29,C12H25OH (Alkohol Alifatik),-2.33,248.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,186.339,0.83,414.0,-520.35
+30,C12H26 (Alkana/Parafin),-9.6,216.29,Netral,Tidak Ada,0.0,Senyawa Kovalen,170.34,0.754,397.2,-350.9
+31,C13H24 (Alkuna),-33.1,277.87,Netral,Tidak Ada,0.0,Senyawa Kovalen,180.335,0.774,382.8,-289.65
+32,C13H26 (Alkena/Olefin),-23.0,232.8,Netral,Tidak Ada,0.0,Senyawa Kovalen,182.351,0.768,405.6,-249.57
+33,C13H27COOH (Asam Lemak/Karboksilat),55.0,326.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,228.376,0.881,470.4,-833.5
+34,C13H27Cl (Kloroalkana),6.0,280.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,218.809,0.762,439.6,-346.88
+35,C13H27F (Fluoroalkana),-36.29,242.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,202.357,0.762,438.0,-485.48
+36,C13H27NH2 (Amina),15.78,259.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,199.382,0.809,465.8,-333.41
+37,C13H27OH (Alkohol Alifatik),8.94,315.63,Netral,Tidak Ada,0.0,Senyawa Kovalen,200.366,0.845,445.2,-657.55
+38,C13H28 (Alkana/Parafin),-58.15,223.45,Netral,Tidak Ada,0.0,Senyawa Kovalen,184.367,0.762,428.4,-436.11475960790415
+39,C14H26 (Alkuna),-41.39,304.31,Netral,Tidak Ada,0.0,Senyawa Kovalen,194.362,0.781,414.0,-314.2
+40,C14H28 (Alkena/Olefin),-12.5,251.1,Netral,Tidak Ada,0.0,Senyawa Kovalen,196.378,0.774,436.8,-275.55
+41,C14H29COOH (Asam Lemak/Karboksilat),18.5,295.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,242.403,0.879,501.6,-743.9
+42,C14H29Cl (Kloroalkana),-10.69,283.76,Netral,Tidak Ada,0.0,Senyawa Kovalen,232.836,0.768,470.8,-428.75
+43,C14H29F (Fluoroalkana),-25.02,246.04,Netral,Tidak Ada,0.0,Senyawa Kovalen,216.384,0.768,469.2,-606.51
+44,C14H29NH2 (Amina),83.1,289.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,213.409,0.811,497.0,-357.4164953233672
+45,C14H29OH (Alkohol Alifatik),20.21,338.51,Netral,Tidak Ada,0.0,Senyawa Kovalen,214.393,0.846,476.4,-598.01
+46,C14H30 (Alkana/Parafin),-40.61,246.33,Netral,Tidak Ada,0.0,Senyawa Kovalen,198.394,0.768,459.6,-401.49
+47,C15H28 (Alkuna),-23.68,292.46,Netral,Tidak Ada,0.0,Senyawa Kovalen,208.389,0.787,445.2,-333.88
+48,C15H30 (Alkena/Olefin),-19.42,273.81,Netral,Tidak Ada,0.0,Senyawa Kovalen,210.405,0.78,468.0,-316.6
+49,C15H31COOH (Asam Lemak/Karboksilat),12.15,308.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,256.43,0.877,532.8,-779.18
+50,C15H31Cl (Kloroalkana),15.58,307.08,Netral,Tidak Ada,0.0,Senyawa Kovalen,246.863,0.773,502.0,-387.4
+51,C15H31F (Fluoroalkana),-13.75,274.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,230.411,0.773,500.4,-524.49
+52,C15H31NH2 (Amina),18.13,242.5,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,227.436,0.813,528.2,-361.73
+53,C15H31OH (Alkohol Alifatik),46.0,318.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,228.42,0.846,507.6,-658.2
+54,C15H32 (Alkana/Parafin),9.95,270.6,Netral,Tidak Ada,0.0,Senyawa Kovalen,212.421,0.773,490.8,-428.8
+55,C16H30 (Alkuna),14.49,318.42,Netral,Tidak Ada,0.0,Senyawa Kovalen,222.416,0.792,476.4,-360.7
+56,C16H32 (Alkena/Olefin),-1.85,298.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,224.432,0.785,499.2,-418.4
+57,C16H33COOH (Asam Lemak/Karboksilat),61.0,362.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,270.457,0.875,564.0,-924.4
+58,C16H33Cl (Kloroalkana),11.85,329.52,Netral,Tidak Ada,0.0,Senyawa Kovalen,260.89,0.778,533.2,-481.37
+59,C16H33F (Fluoroalkana),-2.48,287.5,Netral,Tidak Ada,0.0,Senyawa Kovalen,244.438,0.778,531.6,-543.64
+60,C16H33NH2 (Amina),-60.0,281.1,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,241.463,0.815,559.4,-419.22
+61,C16H33OH (Alkohol Alifatik),-7.6,289.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,242.447,0.846,538.8,-588.75
+62,C16H34 (Alkana/Parafin),18.0,286.75,Netral,Tidak Ada,0.0,Senyawa Kovalen,226.448,0.778,522.0,-456.1
+63,C17H32 (Alkuna),70.76,354.99,Netral,Tidak Ada,0.0,Senyawa Kovalen,236.443,0.796,507.6,-371.95476340694006
+64,C17H34 (Alkena/Olefin),11.25,301.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,238.459,0.789,530.4,-351.71
+65,C17H35COOH (Asam Lemak/Karboksilat),24.0,334.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,284.484,0.874,595.2,-828.38
+66,C17H35Cl (Kloroalkana),24.0,352.84,Netral,Tidak Ada,0.0,Senyawa Kovalen,274.917,0.782,564.4,-426.51
+67,C17H35F (Fluoroalkana),8.79,303.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,258.465,0.782,562.8,-562.78
+68,C17H35NH2 (Amina),40.67,291.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,255.49,0.816,590.6,-426.3247158046207
+69,C17H35OH (Alkohol Alifatik),55.5,324.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,256.474,0.846,570.0,-702.1851428571429
+70,C17H36 (Alkana/Parafin),22.0,303.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,240.475,0.782,553.2,-479.5
+71,C18H34 (Alkuna),-9.05,347.29,Netral,Tidak Ada,0.0,Senyawa Kovalen,250.47,0.801,538.8,-232.21
+72,C18H36 (Alkena/Olefin),17.5,315.5,Netral,Tidak Ada,0.0,Senyawa Kovalen,252.486,0.793,561.6,-380.99
+73,C18H37COOH (Asam Lemak/Karboksilat),69.2,300.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,298.511,0.872,626.4,-847.013063766286
+74,C18H37Cl (Kloroalkana),34.39,375.28,Netral,Tidak Ada,0.0,Senyawa Kovalen,288.944,0.786,595.6,-552.2296317618382
+75,C18H37F (Fluoroalkana),20.06,316.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,272.492,0.786,594.0,-581.16
+76,C18H37NH2 (Amina),51.94,304.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,269.517,0.818,621.8,-449.2941226317052
+77,C18H37OH (Alkohol Alifatik),41.7,318.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,270.501,0.847,601.2,-735.1590357142857
+78,C18H38 (Alkana/Parafin),28.0,316.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,254.502,0.786,584.4,-567.4
+79,C19H36 (Alkuna),121.84,369.73,Netral,Tidak Ada,0.0,Senyawa Kovalen,264.497,0.804,570.0,-444.63861198738164
+80,C19H38 (Alkena/Olefin),23.0,331.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,266.513,0.797,592.8,-403.65
+81,C19H39COOH (Asam Lemak/Karboksilat),75.0,400.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,312.538,0.871,657.6,-1011.9
+82,C19H39Cl (Kloroalkana),27.5,165.5,Netral,Tidak Ada,0.0,Senyawa Kovalen,302.971,0.789,626.8,-575.4526061926249
+83,C19H39F (Fluoroalkana),31.33,329.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,286.519,0.789,625.2,-575.4526061926249
+84,C19H39NH2 (Amina),63.21,317.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,283.544,0.819,653.0,-472.26352945878966
+85,C19H39OH (Alkohol Alifatik),63.3,345.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,284.528,0.847,632.4,-768.1329285714287
+86,C19H40 (Alkana/Parafin),-13.15,360.73,Netral,Tidak Ada,0.0,Senyawa Kovalen,268.529,0.789,615.6,-575.4526061926249
+87,C1H3Cl (Kloroalkana),-97.35,-23.98,Netral,Tidak Ada,0.0,Senyawa Kovalen,50.485,-0.3,65.2,-82.62
+88,C1H3F (Fluoroalkana),-141.85,-78.31,Netral,Tidak Ada,0.0,Senyawa Kovalen,34.033,-0.3,63.6,-236.58
+89,C1H3NH2 (Amina),-93.2,-6.4,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,31.058,0.44,91.4,-20.91
+90,C20H38 (Alkuna),148.11,330.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,278.524,0.807,601.2,-480.9805362776025
+91,C20H40 (Alkena/Olefin),36.93,388.21,Netral,Tidak Ada,0.0,Senyawa Kovalen,280.54,0.8,624.0,-456.68501857585136
+92,C20H41COOH (Asam Lemak/Karboksilat),51.25,371.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,326.565,0.87,688.8,-902.7619095448545
+93,C20H41Cl (Kloroalkana),56.93,421.04,Netral,Tidak Ada,0.0,Senyawa Kovalen,316.998,0.792,658.0,-598.6755806234116
+94,C20H41F (Fluoroalkana),42.6,341.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,300.546,0.792,656.4,-598.6755806234116
+95,C20H41NH2 (Amina),59.48,396.05,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,297.571,0.82,684.2,-495.2329362858742
+96,C20H41OH (Alkohol Alifatik),50.15,475.79,Netral,Tidak Ada,0.0,Senyawa Kovalen,298.555,0.847,663.6,-801.1068214285715
+97,C20H42 (Alkana/Parafin),36.75,344.1,Netral,Tidak Ada,0.0,Senyawa Kovalen,282.556,0.792,646.8,-598.6755806234116
+98,C21H40 (Alkuna),100.25,354.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,292.551,0.81,632.4,-517.3224605678233
+99,C21H42 (Alkena/Olefin),63.85,495.2,Netral,Tidak Ada,0.0,Senyawa Kovalen,294.567,0.803,655.2,-483.5135417956657
+100,C21H43COOH (Asam Lemak/Karboksilat),27.0,343.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,340.592,0.869,720.0,-930.6363324341387
+101,C21H43Cl (Kloroalkana),135.0,490.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,331.025,0.795,689.2,-621.8985550541984
+102,C21H43F (Fluoroalkana),53.87,353.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,314.573,0.795,687.6,-621.8985550541984
+103,C21H43NH2 (Amina),85.75,341.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,311.598,0.821,715.4,-518.2023431129587
+104,C21H43OH (Alkohol Alifatik),75.51,429.35,Netral,Tidak Ada,0.0,Senyawa Kovalen,312.582,0.847,694.8,-834.0807142857143
+105,C21H44 (Alkana/Parafin),40.5,359.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,296.583,0.795,678.0,-621.8985550541984
+106,C22H42 (Alkuna),111.52,366.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,306.578,0.813,663.6,-553.6643848580441
+107,C22H44 (Alkena/Olefin),38.0,367.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,308.594,0.805,686.4,-510.3420650154799
+108,C22H45COOH (Asam Lemak/Karboksilat),117.1,521.03,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,354.619,0.868,751.2,-958.5107553234229
+109,C22H45Cl (Kloroalkana),79.47,466.8,Netral,Tidak Ada,0.0,Senyawa Kovalen,345.052,0.798,720.4,-645.1215294849852
+110,C22H45F (Fluoroalkana),65.14,364.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,328.6,0.798,718.8,-645.1215294849852
+111,C22H45NH2 (Amina),97.02,352.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,325.625,0.822,746.6,-541.1717499400431
+112,C22H45OH (Alkohol Alifatik),71.25,407.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,326.609,0.847,726.0,-867.0546071428571
+113,C22H46 (Alkana/Parafin),44.4,368.15,Netral,Tidak Ada,0.0,Senyawa Kovalen,310.61,0.798,709.2,-645.1215294849852
+114,C23H44 (Alkuna),122.79,378.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,320.605,0.816,694.8,-590.0063091482649
+115,C23H46 (Alkena/Olefin),74.06,379.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,322.621,0.808,717.6,-537.1705882352941
+116,C23H47COOH (Asam Lemak/Karboksilat),129.42,533.79,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,368.646,0.867,782.4,-986.3851782127074
+117,C23H47Cl (Kloroalkana),165.0,550.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,359.079,0.8,751.6,-668.3445039157721
+118,C23H47F (Fluoroalkana),76.41,375.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,342.627,0.8,750.0,-668.3445039157721
+119,C23H47NH2 (Amina),108.29,363.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,339.652,0.823,777.8,-564.1411567671277
+120,C23H47OH (Alkohol Alifatik),74.0,390.85,Netral,Tidak Ada,0.0,Senyawa Kovalen,340.636,0.847,757.2,-900.0285000000001
+121,C23H48 (Alkana/Parafin),49.0,381.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,324.637,0.8,740.4,-668.3445039157721
+122,C24H46 (Alkuna),134.06,389.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,334.632,0.818,726.0,-626.3482334384857
+123,C24H48 (Alkena/Olefin),46.25,390.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,336.648,0.81,748.8,-563.9991114551084
+124,C24H49COOH (Asam Lemak/Karboksilat),57.4,556.67,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,382.673,0.867,813.6,-1014.2596011019916
+125,C24H49Cl (Kloroalkana),180.0,580.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,373.106,0.802,782.8,-691.5674783465588
+126,C24H49F (Fluoroalkana),87.68,385.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,356.654,0.802,781.2,-691.5674783465588
+127,C24H49NH2 (Amina),-39.0,379.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,353.679,0.823,809.0,-585.0
+128,C24H49OH (Alkohol Alifatik),132.91,250.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,354.663,0.848,788.4,-933.0023928571429
+129,C24H50 (Alkana/Parafin),52.5,391.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,338.664,0.802,771.6,-691.5674783465588
+130,C25H48 (Alkuna),145.33,399.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,348.659,0.82,757.2,-662.6901577287066
+131,C25H50 (Alkena/Olefin),96.6,401.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,350.675,0.812,780.0,-590.8276346749226
+132,C25H51COOH (Asam Lemak/Karboksilat),136.96,579.11,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,396.7,0.866,844.8,-1042.1340239912759
+133,C25H51Cl (Kloroalkana),195.0,610.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,387.133,0.804,814.0,-714.7904527773455
+134,C25H51F (Fluoroalkana),98.95,395.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,370.681,0.804,812.4,-714.7904527773455
+135,C25H51NH2 (Amina),115.83,510.45,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,367.706,0.824,840.2,-610.0799704212967
+136,C25H51OH (Alkohol Alifatik),245.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,368.69,0.848,819.6,-965.9762857142857
+137,C25H52 (Alkana/Parafin),53.5,401.9,Netral,Tidak Ada,0.0,Senyawa Kovalen,352.691,0.804,802.8,-714.7904527773455
+138,C26H50 (Alkuna),156.6,409.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,362.686,0.822,788.4,-699.0320820189274
+139,C26H52 (Alkena/Olefin),107.87,411.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,364.702,0.814,811.2,-617.6561578947368
+140,C26H53COOH (Asam Lemak/Karboksilat),86.8,689.72,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,410.727,0.865,876.0,-1070.00844688056
+141,C26H53Cl (Kloroalkana),139.55,558.76,Netral,Tidak Ada,0.0,Senyawa Kovalen,401.16,0.806,845.2,-738.0134272081323
+142,C26H53F (Fluoroalkana),110.22,404.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,384.708,0.806,843.6,-738.0134272081323
+143,C26H53NH2 (Amina),162.29,571.5,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,381.733,0.825,871.4,-633.0493772483812
+144,C26H53OH (Alkohol Alifatik),155.45,613.07,Netral,Tidak Ada,0.0,Senyawa Kovalen,382.717,0.848,850.8,-998.9501785714288
+145,C26H54 (Alkana/Parafin),56.7,415.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,366.718,0.806,834.0,-738.0134272081323
+146,C27H52 (Alkuna),167.87,419.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,376.713,0.824,819.6,-735.3740063091482
+147,C27H54 (Alkena/Olefin),47.85,658.1,Netral,Tidak Ada,0.0,Senyawa Kovalen,378.729,0.816,842.4,-644.484681114551
+148,C27H55COOH (Asam Lemak/Karboksilat),159.5,624.87,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,424.754,0.865,907.2,-1097.8828697698443
+149,C27H55Cl (Kloroalkana),150.82,581.64,Netral,Tidak Ada,0.0,Senyawa Kovalen,415.187,0.807,876.4,-761.2364016389192
+150,C27H55F (Fluoroalkana),121.49,413.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,398.735,0.807,874.8,-761.2364016389192
+151,C27H55NH2 (Amina),153.37,398.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,395.76,0.825,902.6,-656.0187840754656
+152,C27H55OH (Alkohol Alifatik),275.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,396.744,0.848,882.0,-1031.9240714285716
+153,C27H56 (Alkana/Parafin),59.25,442.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,380.745,0.807,865.2,-761.2364016389192
+154,C28H54 (Alkuna),179.14,428.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,390.74,0.825,850.8,-771.715930599369
+155,C28H56 (Alkena/Olefin),31.0,430.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,392.756,0.817,873.6,-671.3132043343653
+156,C28H57COOH (Asam Lemak/Karboksilat),66.0,648.19,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,438.781,0.864,938.4,-1125.7572926591286
+157,C28H57Cl (Kloroalkana),240.0,700.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,429.214,0.809,907.6,-784.459376069706
+158,C28H57F (Fluoroalkana),132.76,422.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,412.762,0.809,906.0,-784.459376069706
+159,C28H57NH2 (Amina),215.43,468.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,409.787,0.826,933.8,-678.9881909025502
+160,C28H57OH (Alkohol Alifatik),83.3,659.27,Netral,Tidak Ada,0.0,Senyawa Kovalen,410.771,0.848,913.2,-1064.8979642857144
+161,C28H58 (Alkana/Parafin),63.25,432.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,394.772,0.809,896.4,-784.459376069706
+162,C29H56 (Alkuna),190.41,437.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,404.767,0.827,882.0,-808.0578548895899
+163,C29H58 (Alkena/Olefin),141.68,586.65,Netral,Tidak Ada,0.0,Senyawa Kovalen,406.783,0.819,904.8,-698.1417275541795
+164,C29H59COOH (Asam Lemak/Karboksilat),137.04,669.31,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,452.808,0.864,969.6,-1153.631715548413
+165,C29H59Cl (Kloroalkana),255.0,730.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,443.241,0.81,938.8,-807.6823505004927
+166,C29H59F (Fluoroalkana),144.03,430.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,426.789,0.81,937.2,-807.6823505004927
+167,C29H59NH2 (Amina),24.5,602.41,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,423.814,0.826,965.0,-683.51
+168,C29H59OH (Alkohol Alifatik),84.0,682.15,Netral,Tidak Ada,0.0,Senyawa Kovalen,424.798,0.848,944.4,-1097.8718571428572
+169,C29H60 (Alkana/Parafin),64.85,443.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,408.799,0.81,927.6,-807.6823505004927
+170,C2H2 (Gas Etuna),-80.75,-84.15,Netral,Tidak Ada,0.0,Senyawa Kovalen,26.038,,39.6,228.32
+171,C2H4 (Gas Etena),-169.1,-103.77,Netral,Tidak Ada,0.0,Senyawa Kovalen,28.054,,62.4,52.56
+172,C2H5COOH (Asam Lemak/Karboksilat),-45.0,160.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,74.079,0.315,127.2,-298.0
+173,C2H5Cl (Kloroalkana),-138.85,12.3,Netral,Tidak Ada,0.0,Senyawa Kovalen,64.512,0.275,96.4,-111.24
+174,C2H5F (Fluoroalkana),-143.2,-37.54,Netral,Tidak Ada,0.0,Senyawa Kovalen,48.06,0.275,94.8,-272.54
+175,C2H5NH2 (Amina),-81.1,16.6,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,45.085,0.64,122.6,-47.5
+176,C2H5OH (Etanol Alkohol),-114.1,78.2,Netral,Tidak Ada,0.0,Senyawa Kovalen,46.069,0.82,102.0,-184.02
+177,C2H6 (Gas Etana),-182.85,-88.58,Netral,Tidak Ada,0.0,Senyawa Kovalen,30.07,1.3562,85.2,-83.78
+178,C30H58 (Alkuna),201.68,446.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,418.794,0.828,913.2,-844.3997791798106
+179,C30H60 (Alkena/Olefin),110.5,448.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,420.81,0.82,936.0,-724.9702507739937
+180,C30H61COOH (Asam Lemak/Karboksilat),109.45,781.24,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,466.835,0.863,1000.8,-1181.5061384376972
+181,C30H61Cl (Kloroalkana),184.63,650.28,Netral,Tidak Ada,0.0,Senyawa Kovalen,457.268,0.812,970.0,-830.9053249312794
+182,C30H61F (Fluoroalkana),155.3,438.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,440.816,0.812,968.4,-830.9053249312794
+183,C30H61NH2 (Amina),237.97,486.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,437.841,0.827,996.2,-724.9270045567191
+184,C30H61OH (Alkohol Alifatik),88.0,705.03,Netral,Tidak Ada,0.0,Senyawa Kovalen,438.825,0.848,975.6,-1130.8457500000002
+185,C30H62 (Alkana/Parafin),66.0,451.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,422.826,0.812,958.8,-830.9053249312794
+186,C31H60 (Alkuna),212.95,455.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,432.821,0.83,944.4,-880.7417034700316
+187,C31H62 (Alkena/Olefin),164.22,457.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,434.837,0.821,967.2,-751.798773993808
+188,C31H63COOH (Asam Lemak/Karboksilat),219.58,716.83,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,480.862,0.863,1032.0,-1209.3805613269815
+189,C31H63Cl (Kloroalkana),285.0,790.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,471.295,0.813,1001.2,-854.1282993620664
+190,C31H63F (Fluoroalkana),166.57,446.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,454.843,0.813,999.6,-854.1282993620664
+191,C31H63NH2 (Amina),285.0,770.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,451.868,0.827,1027.4,-747.8964113838036
+192,C31H63OH (Alkohol Alifatik),87.6,727.47,Netral,Tidak Ada,0.0,Senyawa Kovalen,452.852,0.848,1006.8,-1163.819642857143
+193,C31H64 (Alkana/Parafin),67.9,458.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,436.853,0.813,990.0,-854.1282993620664
+194,C32H62 (Alkuna),224.22,463.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,446.848,0.831,975.6,-917.0836277602523
+195,C32H64 (Alkena/Olefin),58.85,793.85,Netral,Tidak Ada,0.0,Senyawa Kovalen,448.864,0.823,998.4,-778.6272972136222
+196,C32H65COOH (Asam Lemak/Karboksilat),435.0,1010.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,494.889,0.862,1063.2,-1237.2549842162657
+197,C32H65Cl (Kloroalkana),300.0,820.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,485.322,0.814,1032.4,-877.3512737928531
+198,C32H65F (Fluoroalkana),177.84,454.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,468.87,0.814,1030.8,-877.3512737928531
+199,C32H65NH2 (Amina),260.51,503.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,465.895,0.828,1058.6,-770.8658182108882
+200,C32H65OH (Alkohol Alifatik),89.0,750.79,Netral,Tidak Ada,0.0,Senyawa Kovalen,466.879,0.848,1038.0,-1196.7935357142858
+201,C32H66 (Alkana/Parafin),69.85,470.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,450.88,0.814,1021.2,-968.3
+202,C33H64 (Alkuna),235.49,471.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,460.875,0.832,1006.8,-953.425552050473
+203,C33H66 (Alkena/Olefin),186.76,473.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,462.891,0.824,1029.6,-805.4558204334364
+204,C33H67COOH (Asam Lemak/Karboksilat),212.12,761.71,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,508.916,0.862,1094.4,-1265.12940710555
+205,C33H67Cl (Kloroalkana),315.0,850.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,499.349,0.815,1063.6,-900.5742482236399
+206,C33H67F (Fluoroalkana),189.11,461.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,482.897,0.815,1062.0,-900.5742482236399
+207,C33H67NH2 (Amina),220.99,428.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,479.922,0.828,1089.8,-793.8352250379727
+208,C33H67OH (Alkohol Alifatik),365.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,480.906,0.848,1069.2,-1229.7674285714286
+209,C33H68 (Alkana/Parafin),72.0,475.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,464.907,0.815,1052.4,-900.5742482236399
+210,C34H66 (Alkuna),246.76,478.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,474.902,0.833,1038.0,-989.767476340694
+211,C34H68 (Alkena/Olefin),198.03,701.05,Netral,Tidak Ada,0.0,Senyawa Kovalen,476.918,0.825,1060.8,-832.2843436532507
+212,C34H69COOH (Asam Lemak/Karboksilat),465.0,1070.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,522.943,0.862,1125.6,-1293.0038299948344
+213,C34H69Cl (Kloroalkana),330.0,880.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,513.376,0.816,1094.8,-923.7972226544266
+214,C34H69F (Fluoroalkana),200.38,468.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,496.924,0.816,1093.2,-923.7972226544266
+215,C34H69NH2 (Amina),330.0,860.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,493.949,0.828,1121.0,-816.8046318650572
+216,C34H69OH (Alkohol Alifatik),245.61,796.11,Netral,Tidak Ada,0.0,Senyawa Kovalen,494.933,0.848,1100.4,-1262.7413214285716
+217,C34H70 (Alkana/Parafin),72.6,483.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,478.934,0.816,1083.6,-923.7972226544266
+218,C35H68 (Alkuna),258.03,486.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,488.929,0.834,1069.2,-1026.1094006309147
+219,C35H70 (Alkena/Olefin),209.3,489.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,490.945,0.826,1092.0,-859.112866873065
+220,C35H71COOH (Asam Lemak/Karboksilat),60.0,808.35,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,536.97,0.861,1156.8,-1320.8782528841186
+221,C35H71Cl (Kloroalkana),240.98,344.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,527.403,0.817,1126.0,-947.0201970852133
+222,C35H71F (Fluoroalkana),211.65,475.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,510.951,0.817,1124.4,-947.0201970852133
+223,C35H71NH2 (Amina),345.0,890.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,507.976,0.829,1152.2,-839.7740386921416
+224,C35H71OH (Alkohol Alifatik),395.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,508.96,0.848,1131.6,-1295.7152142857144
+225,C35H72 (Alkana/Parafin),75.0,489.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,492.961,0.817,1114.8,-947.0201970852133
+226,C36H70 (Alkuna),269.3,493.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,502.956,0.835,1100.4,-1062.4513249211357
+227,C36H72 (Alkena/Olefin),220.57,496.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,504.972,0.827,1123.2,-885.9413900928791
+228,C36H73COOH (Asam Lemak/Karboksilat),495.0,1130.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,550.997,0.861,1188.0,-1348.7526757734029
+229,C36H73Cl (Kloroalkana),360.0,940.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,541.43,0.818,1157.2,-970.2431715160003
+230,C36H73F (Fluoroalkana),222.92,482.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,524.978,0.818,1155.6,-970.2431715160003
+231,C36H73NH2 (Amina),305.59,533.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,522.003,0.829,1183.4,-862.7434455192262
+232,C36H73OH (Alkohol Alifatik),268.15,841.87,Netral,Tidak Ada,0.0,Senyawa Kovalen,522.987,0.848,1162.8,-1328.6891071428572
+233,C36H74 (Alkana/Parafin),76.25,504.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,506.988,0.818,1146.0,-970.2431715160003
+234,C37H72 (Alkuna),280.57,500.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,516.983,0.836,1131.6,-1098.7932492113564
+235,C37H74 (Alkena/Olefin),231.84,503.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,518.999,0.828,1154.4,-912.7699133126935
+236,C37H75COOH (Asam Lemak/Karboksilat),18.35,854.11,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,565.024,0.861,1219.2,-1216.5
+237,C37H75Cl (Kloroalkana),375.0,970.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,555.457,0.819,1188.4,-993.466145946787
+238,C37H75F (Fluoroalkana),234.19,489.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,539.005,0.819,1186.8,-993.466145946787
+239,C37H75NH2 (Amina),40.0,785.45,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,536.03,0.829,1214.6,-885.7128523463107
+240,C37H75OH (Alkohol Alifatik),425.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,537.014,0.848,1194.0,-1361.663
+241,C37H76 (Alkana/Parafin),46.71,505.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,521.015,0.819,1177.2,-993.466145946787
+242,C38H74 (Alkuna),291.84,507.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,531.01,0.837,1162.8,-1135.1351735015771
+243,C38H76 (Alkena/Olefin),243.11,510.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,533.026,0.828,1185.6,-939.5984365325077
+244,C38H77COOH (Asam Lemak/Karboksilat),525.0,1190.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,579.051,0.861,1250.4,-1404.5015215519713
+245,C38H77Cl (Kloroalkana),0.0,100.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,569.484,0.82,1219.6,-1016.6891203775738
+246,C38H77F (Fluoroalkana),245.46,495.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,553.032,0.82,1218.0,-1016.6891203775738
+247,C38H77NH2 (Amina),390.0,980.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,550.057,0.829,1245.8,-908.6822591733951
+248,C38H77OH (Alkohol Alifatik),440.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,551.041,0.848,1225.2,-1394.636892857143
+249,C38H78 (Alkana/Parafin),80.5,512.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,535.042,0.82,1208.4,-1016.6891203775738
+250,C39H76 (Alkuna),303.11,513.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,545.037,0.838,1194.0,-1171.477097791798
+251,C39H78 (Alkena/Olefin),254.38,517.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,547.053,0.829,1216.8,-966.426959752322
+252,C39H79COOH (Asam Lemak/Karboksilat),309.74,899.87,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,593.078,0.86,1281.6,-1432.3759444412556
+253,C39H79Cl (Kloroalkana),405.0,1030.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,583.511,0.821,1250.8,-1039.9120948083605
+254,C39H79F (Fluoroalkana),256.73,502.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,567.059,0.821,1249.2,-1039.9120948083605
+255,C39H79NH2 (Amina),288.61,467.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,564.084,0.83,1277.0,-931.6516660004796
+256,C39H79OH (Alkohol Alifatik),455.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,565.068,0.848,1256.4,-1427.6107857142858
+257,C39H80 (Alkana/Parafin),79.88,518.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,549.069,0.821,1239.6,-1039.9120948083605
+258,C3H4 (Alkuna),-136.2,-32.28,Netral,Tidak Ada,0.0,Senyawa Kovalen,40.065,0.453,70.8,190.16
+259,C3H6 (Alkena/Olefin),-185.07,-47.62,Netral,Tidak Ada,0.0,Senyawa Kovalen,42.081,0.46,93.6,20.37
+260,C3H6O3 (Gliseraldehida),53.0,125.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,90.078,,144.0,-694.08
+261,C3H7COOH (Asam Lemak/Karboksilat),11.0,235.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,88.106,0.983,158.4,-395.09
+262,C3H7Cl (Kloroalkana),-122.8,46.2,Netral,Tidak Ada,0.0,Senyawa Kovalen,78.539,0.467,127.6,-160.5
+263,C3H7F (Fluoroalkana),-159.0,-3.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,62.087,0.467,126.0,-285.9
+264,C3H7NH2 (Amina),-95.13,31.8,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,59.112,0.707,153.8,-112.3
+265,C3H7OH (Alkohol Alifatik),-113.0,6.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,60.096,0.83,133.2,-216.4
+266,C3H8 (Propana),-187.65,-42.11,Netral,Tidak Ada,0.0,Senyawa Kovalen,44.097,,116.4,-104.39
+267,C40H78 (Alkuna),314.38,520.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,559.064,0.839,1225.2,-1207.8190220820188
+268,C40H80 (Alkena/Olefin),265.65,523.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,561.08,0.83,1248.0,-993.2554829721361
+269,C40H81COOH (Asam Lemak/Karboksilat),555.0,1250.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,607.105,0.86,1312.8,-1460.25036733054
+270,C40H81Cl (Kloroalkana),420.0,1060.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,597.538,0.821,1282.0,-1063.1350692391475
+271,C40H81F (Fluoroalkana),268.0,508.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,581.086,0.821,1280.4,-1063.1350692391475
+272,C40H81NH2 (Amina),420.0,1040.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,578.111,0.83,1308.2,-954.6210728275641
+273,C40H81OH (Alkohol Alifatik),470.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,579.095,0.849,1287.6,-1460.5846785714286
+274,C40H82 (Alkana/Parafin),81.5,522.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,563.096,0.821,1270.8,-1063.1350692391475
+275,C41H80 (Alkuna),435.0,1070.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,573.091,0.84,1256.4,-1244.1609463722396
+276,C41H82 (Alkena/Olefin),435.0,1070.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,575.107,0.831,1279.2,-1020.0840061919504
+277,C41H83COOH (Asam Lemak/Karboksilat),272.28,943.87,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,621.132,0.86,1344.0,-1488.1247902198243
+278,C41H83Cl (Kloroalkana),435.0,1090.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,611.565,0.822,1313.2,-1086.3580436699342
+279,C41H83F (Fluoroalkana),435.0,1090.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,595.113,0.822,1311.6,-1086.3580436699342
+280,C41H83NH2 (Amina),435.0,1070.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,592.138,0.83,1339.4,-977.5904796546487
+281,C41H83OH (Alkohol Alifatik),485.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,593.122,0.849,1318.8,-1493.5585714285717
+282,C41H84 (Alkana/Parafin),68.94,531.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,577.123,0.822,1302.0,-1086.3580436699342
+283,C42H82 (Alkuna),450.0,1100.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,587.118,0.84,1287.6,-1280.5028706624605
+284,C42H84 (Alkena/Olefin),75.85,1065.35,Netral,Tidak Ada,0.0,Senyawa Kovalen,589.134,0.831,1310.4,-1046.9125294117646
+285,C42H85COOH (Asam Lemak/Karboksilat),343.55,968.51,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,635.159,0.86,1375.2,-1515.9992131091085
+286,C42H85Cl (Kloroalkana),450.0,1120.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,625.592,0.823,1344.4,-1109.581018100721
+287,C42H85F (Fluoroalkana),450.0,1120.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,609.14,0.823,1342.8,-1109.581018100721
+288,C42H85NH2 (Amina),33.5,484.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,606.165,0.83,1370.6,-1000.5598864817332
+289,C42H85OH (Alkohol Alifatik),0.0,100.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,607.149,0.849,1350.0,-1526.5324642857145
+290,C42H86 (Alkana/Parafin),82.95,537.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,591.15,0.823,1333.2,-1109.581018100721
+291,C43H84 (Alkuna),465.0,1130.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,601.145,0.841,1318.8,-1316.8447949526812
+292,C43H86 (Alkena/Olefin),465.0,1130.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,603.161,0.832,1341.6,-1073.7410526315787
+293,C43H87COOH (Asam Lemak/Karboksilat),75.0,991.39,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,649.186,0.859,1406.4,-1543.8736359983927
+294,C43H87Cl (Kloroalkana),465.0,1150.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,639.619,0.823,1375.6,-1132.8039925315077
+295,C43H87F (Fluoroalkana),465.0,1150.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,623.167,0.823,1374.0,-1132.8039925315077
+296,C43H87NH2 (Amina),465.0,1130.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,620.192,0.831,1401.8,-1023.5292933088176
+297,C43H87OH (Alkohol Alifatik),515.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,621.176,0.849,1381.2,-1559.5063571428573
+298,C43H88 (Alkana/Parafin),84.85,542.5,Netral,Tidak Ada,0.0,Senyawa Kovalen,605.177,0.823,1364.4,-1132.8039925315077
+299,C44H86 (Alkuna),480.0,1160.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,615.172,0.842,1350.0,-1353.186719242902
+300,C44H88 (Alkena/Olefin),480.0,1160.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,617.188,0.833,1372.8,-1100.569575851393
+301,C44H89COOH (Asam Lemak/Karboksilat),615.0,1370.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,663.213,0.859,1437.6,-1571.748058887677
+302,C44H89Cl (Kloroalkana),480.0,1180.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,653.646,0.824,1406.8,-1156.0269669622944
+303,C44H89F (Fluoroalkana),480.0,1180.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,637.194,0.824,1405.2,-1156.0269669622944
+304,C44H89NH2 (Amina),480.0,1160.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,634.219,0.831,1433.0,-1046.4987001359023
+305,C44H89OH (Alkohol Alifatik),530.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,635.203,0.849,1412.4,-1592.48025
+306,C44H90 (Alkana/Parafin),87.75,548.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,619.204,0.824,1395.6,-1156.0269669622944
+307,C45H88 (Alkuna),495.0,1190.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,629.199,0.842,1381.2,-1389.528643533123
+308,C45H90 (Alkena/Olefin),79.98,1146.8,Netral,Tidak Ada,0.0,Senyawa Kovalen,631.215,0.833,1404.0,-1127.3980990712073
+309,C45H91COOH (Asam Lemak/Karboksilat),630.0,1400.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,677.24,0.859,1468.8,-1599.6224817769612
+310,C45H91Cl (Kloroalkana),495.0,1210.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,667.673,0.824,1438.0,-1179.2499413930814
+311,C45H91F (Fluoroalkana),495.0,1210.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,651.221,0.824,1436.4,-1179.2499413930814
+312,C45H91NH2 (Amina),495.0,1190.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,648.246,0.831,1464.2,-1069.4681069629867
+313,C45H91OH (Alkohol Alifatik),545.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,649.23,0.849,1443.6,-1625.454142857143
+314,C45H92 (Alkana/Parafin),323.76,554.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,633.231,0.824,1426.8,-1179.2499413930814
+315,C46H90 (Alkuna),510.0,1220.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,643.226,0.843,1412.4,-1425.8705678233437
+316,C46H92 (Alkena/Olefin),510.0,1220.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,645.242,0.834,1435.2,-1154.2266222910214
+317,C46H93COOH (Asam Lemak/Karboksilat),645.0,1430.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,691.267,0.859,1500.0,-1627.4969046662457
+318,C46H93Cl (Kloroalkana),510.0,1240.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,681.7,0.825,1469.2,-1202.472915823868
+319,C46H93F (Fluoroalkana),510.0,1240.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,665.248,0.825,1467.6,-1202.472915823868
+320,C46H93NH2 (Amina),510.0,1220.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,662.273,0.831,1495.4,-1092.437513790071
+321,C46H93OH (Alkohol Alifatik),560.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,663.257,0.849,1474.8,-1658.428035714286
+322,C46H94 (Alkana/Parafin),87.85,559.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,647.258,0.825,1458.0,-1202.472915823868
+323,C47H92 (Alkuna),525.0,1250.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,657.253,0.843,1443.6,-1462.2124921135646
+324,C47H94 (Alkena/Olefin),525.0,1250.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,659.269,0.834,1466.4,-1181.0551455108357
+325,C47H95COOH (Asam Lemak/Karboksilat),660.0,1460.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,705.294,0.859,1531.2,-1655.37132755553
+326,C47H95Cl (Kloroalkana),525.0,1270.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,695.727,0.826,1500.4,-1225.6958902546548
+327,C47H95F (Fluoroalkana),525.0,1270.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,679.275,0.826,1498.8,-1225.6958902546548
+328,C47H95NH2 (Amina),525.0,1250.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,676.3,0.831,1526.6,-1115.4069206171557
+329,C47H95OH (Alkohol Alifatik),575.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,677.284,0.849,1506.0,-1691.4019285714287
+330,C47H96 (Alkana/Parafin),346.3,564.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,661.285,0.826,1489.2,-1225.6958902546548
+331,C48H94 (Alkuna),540.0,1280.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,671.28,0.844,1474.8,-1498.5544164037854
+332,C48H96 (Alkena/Olefin),85.85,1228.25,Netral,Tidak Ada,0.0,Senyawa Kovalen,673.296,0.835,1497.6,-1207.88366873065
+333,C48H97COOH (Asam Lemak/Karboksilat),675.0,1490.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,719.321,0.858,1562.4,-1683.2457504448141
+334,C48H97Cl (Kloroalkana),540.0,1300.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,709.754,0.826,1531.6,-1248.9188646854416
+335,C48H97F (Fluoroalkana),540.0,1300.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,693.302,0.826,1530.0,-1248.9188646854416
+336,C48H97NH2 (Amina),42.38,516.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,690.327,0.832,1557.8,-1138.3763274442401
+337,C48H97OH (Alkohol Alifatik),590.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,691.311,0.849,1537.2,-1724.3758214285717
+338,C48H98 (Alkana/Parafin),88.25,570.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,675.312,0.826,1520.4,-1248.9188646854416
+339,C49H100 (Alkana/Parafin),368.84,574.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,689.339,0.827,1551.6,-1272.1418391162285
+340,C49H96 (Alkuna),555.0,1310.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,685.307,0.844,1506.0,-1534.896340694006
+341,C49H98 (Alkena/Olefin),555.0,1310.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,687.323,0.836,1528.8,-1234.712191950464
+342,C49H99COOH (Asam Lemak/Karboksilat),690.0,1520.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,733.348,0.858,1593.6,-1711.1201733340984
+343,C49H99Cl (Kloroalkana),555.0,1330.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,723.781,0.827,1562.8,-1272.1418391162285
+344,C49H99F (Fluoroalkana),555.0,1330.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,707.329,0.827,1561.2,-1272.1418391162285
+345,C49H99NH2 (Amina),555.0,1310.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,704.354,0.832,1589.0,-1161.3457342713245
+346,C49H99OH (Alkohol Alifatik),605.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,705.338,0.849,1568.4,-1757.3497142857145
+347,C4H10 (Butana),-138.1,-0.49,Netral,Tidak Ada,0.0,Senyawa Kovalen,58.124,,147.6,-125.85
+348,C4H4 (Vinilasetilena),203.0,6.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,52.076,,79.2,
+349,C4H6 (Alkuna),-136.2,11.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,54.092,0.557,102.0,162.3
+350,C4H8 (Alkena/Olefin),-138.89,3.72,Netral,Tidak Ada,0.0,Senyawa Kovalen,56.108,0.56,124.8,-7.33
+351,C4H9COOH (Asam Lemak/Karboksilat),15.0,93.6,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,102.133,0.95,189.6,-481.79
+352,C4H9Cl (Kloroalkana),-131.0,69.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,92.566,0.562,158.8,-191.1
+353,C4H9F (Fluoroalkana),-121.4,23.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,76.114,0.562,157.2,-352.29
+354,C4H9NH2 (Amina),-85.0,68.8,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,73.139,0.74,185.0,-132.6
+355,C4H9OH (Alkohol Alifatik),-131.08,30.8,Netral,Tidak Ada,0.0,Senyawa Kovalen,74.123,0.835,164.4,-278.8
+356,C50H100 (Alkena/Olefin),570.0,1340.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,701.35,0.836,1560.0,-1261.5407151702784
+357,C50H101COOH (Asam Lemak/Karboksilat),705.0,1550.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,747.375,0.858,1624.8,-1738.9945962233826
+358,C50H101Cl (Kloroalkana),570.0,1360.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,737.808,0.827,1594.0,-1295.3648135470153
+359,C50H101F (Fluoroalkana),570.0,1360.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,721.356,0.827,1592.4,-1295.3648135470153
+360,C50H101NH2 (Amina),570.0,1340.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,718.381,0.832,1620.2,-1184.3151410984092
+361,C50H101OH (Alkohol Alifatik),620.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,719.365,0.849,1599.6,-1790.3236071428573
+362,C50H102 (Alkana/Parafin),91.7,575.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,703.366,0.827,1582.8,-1295.3648135470153
+363,C50H98 (Alkuna),570.0,1340.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,699.334,0.845,1537.2,-1571.238264984227
+364,C51H100 (Alkuna),585.0,1370.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,713.361,0.845,1568.4,-1607.5801892744478
+365,C51H102 (Alkena/Olefin),585.0,1370.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,715.377,0.836,1591.2,-1288.3692383900925
+366,C51H103COOH (Asam Lemak/Karboksilat),720.0,1580.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,761.402,0.858,1656.0,-1766.869019112667
+367,C51H103Cl (Kloroalkana),585.0,1390.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,751.835,0.827,1625.2,-1318.587787977802
+368,C51H103F (Fluoroalkana),585.0,1390.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,735.383,0.827,1623.6,-1318.587787977802
+369,C51H103NH2 (Amina),585.0,1370.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,732.408,0.832,1651.4,-1207.2845479254936
+370,C51H103OH (Alkohol Alifatik),635.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,733.392,0.849,1630.8,-1823.2975000000001
+371,C51H104 (Alkana/Parafin),391.38,584.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,717.393,0.827,1614.0,-1318.587787977802
+372,C52H102 (Alkuna),600.0,1400.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,727.388,0.846,1599.6,-1643.9221135646687
+373,C52H104 (Alkena/Olefin),600.0,1400.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,729.404,0.837,1622.4,-1315.1977616099068
+374,C52H105COOH (Asam Lemak/Karboksilat),735.0,1610.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,775.429,0.858,1687.2,-1794.7434420019513
+375,C52H105Cl (Kloroalkana),600.0,1420.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,765.862,0.828,1656.4,-1341.8107624085887
+376,C52H105F (Fluoroalkana),600.0,1420.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,749.41,0.828,1654.8,-1341.8107624085887
+377,C52H105NH2 (Amina),600.0,1400.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,746.435,0.832,1682.6,-1230.2539547525782
+378,C52H105OH (Alkohol Alifatik),650.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,747.419,0.849,1662.0,-1856.2713928571432
+379,C52H106 (Alkana/Parafin),93.85,588.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,731.42,0.828,1645.2,-1341.8107624085887
+380,C53H104 (Alkuna),615.0,1430.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,741.415,0.846,1630.8,-1680.2640378548895
+381,C53H106 (Alkena/Olefin),615.0,1430.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,743.431,0.837,1653.6,-1342.0262848297211
+382,C53H107COOH (Asam Lemak/Karboksilat),750.0,1640.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,789.456,0.858,1718.4,-1822.6178648912355
+383,C53H107Cl (Kloroalkana),615.0,1450.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,779.889,0.828,1687.6,-1365.0337368393757
+384,C53H107F (Fluoroalkana),615.0,1450.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,763.437,0.828,1686.0,-1365.0337368393757
+385,C53H107NH2 (Amina),615.0,1430.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,760.462,0.832,1713.8,-1253.2233615796627
+386,C53H107OH (Alkohol Alifatik),665.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,761.446,0.849,1693.2,-1889.245285714286
+387,C53H108 (Alkana/Parafin),413.92,593.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,745.447,0.828,1676.4,-1365.0337368393757
+388,C54H106 (Alkuna),630.0,1460.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,755.442,0.847,1662.0,-1716.6059621451102
+389,C54H108 (Alkena/Olefin),90.85,1391.15,Netral,Tidak Ada,0.0,Senyawa Kovalen,757.458,0.838,1684.8,-1368.8548080495352
+390,C54H109COOH (Asam Lemak/Karboksilat),765.0,1670.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,803.483,0.857,1749.6,-1850.4922877805197
+391,C54H109Cl (Kloroalkana),630.0,1480.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,793.916,0.829,1718.8,-1388.2567112701624
+392,C54H109F (Fluoroalkana),630.0,1480.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,777.464,0.829,1717.2,-1388.2567112701624
+393,C54H109NH2 (Amina),412.66,1173.09,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,774.489,0.833,1745.0,-1276.192768406747
+394,C54H109OH (Alkohol Alifatik),680.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,775.473,0.849,1724.4,-1922.2191785714288
+395,C54H110 (Alkana/Parafin),94.85,597.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,759.474,0.829,1707.6,-1388.2567112701624
+396,C55H108 (Alkuna),645.0,1490.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,769.469,0.847,1693.2,-1752.9478864353312
+397,C55H110 (Alkena/Olefin),645.0,1490.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,771.485,0.838,1716.0,-1395.6833312693495
+398,C55H111COOH (Asam Lemak/Karboksilat),780.0,1700.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,817.51,0.857,1780.8,-1878.366710669804
+399,C55H111Cl (Kloroalkana),645.0,1510.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,807.943,0.829,1750.0,-1411.4796857009492
+400,C55H111F (Fluoroalkana),645.0,1510.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,791.491,0.829,1748.4,-1411.4796857009492
+401,C55H111NH2 (Amina),645.0,1490.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,788.516,0.833,1776.2,-1299.1621752338317
+402,C55H111OH (Alkohol Alifatik),695.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,789.5,0.849,1755.6,-1955.1930714285716
+403,C55H112 (Alkana/Parafin),645.0,1490.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,773.501,0.829,1738.8,-1411.4796857009492
+404,C56H110 (Alkuna),660.0,1520.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,783.496,0.848,1724.4,-1789.289810725552
+405,C56H112 (Alkena/Olefin),660.0,1520.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,785.512,0.839,1747.2,-1422.5118544891639
+406,C56H113COOH (Asam Lemak/Karboksilat),795.0,1730.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,831.537,0.857,1812.0,-1906.2411335590882
+407,C56H113Cl (Kloroalkana),660.0,1540.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,821.97,0.829,1781.2,-1434.702660131736
+408,C56H113F (Fluoroalkana),660.0,1540.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,805.518,0.829,1779.6,-1434.702660131736
+409,C56H113NH2 (Amina),660.0,1520.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,802.543,0.833,1807.4,-1322.1315820609161
+410,C56H113OH (Alkohol Alifatik),710.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,803.527,0.849,1786.8,-1988.1669642857146
+411,C56H114 (Alkana/Parafin),660.0,1520.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,787.528,0.829,1770.0,-1434.702660131736
+412,C57H112 (Alkuna),675.0,1550.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,797.523,0.848,1755.6,-1825.6317350157726
+413,C57H114 (Alkena/Olefin),675.0,1550.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,799.539,0.839,1778.4,-1449.340377708978
+414,C57H115COOH (Asam Lemak/Karboksilat),810.0,1760.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,845.564,0.857,1843.2,-1934.1155564483727
+415,C57H115Cl (Kloroalkana),675.0,1570.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,835.997,0.83,1812.4,-1457.9256345625226
+416,C57H115F (Fluoroalkana),675.0,1570.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,819.545,0.83,1810.8,-1457.9256345625226
+417,C57H115NH2 (Amina),491.47,556.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,816.57,0.833,1838.6,-1345.1009888880005
+418,C57H115OH (Alkohol Alifatik),725.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,817.554,0.849,1818.0,-2021.1408571428574
+419,C57H116 (Alkana/Parafin),96.55,609.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,801.555,0.83,1801.2,-1457.9256345625226
+420,C58H114 (Alkuna),690.0,1580.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,811.55,0.848,1786.8,-1861.9736593059936
+421,C58H116 (Alkena/Olefin),690.0,1580.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,813.566,0.839,1809.6,-1476.1689009287923
+422,C58H117COOH (Asam Lemak/Karboksilat),825.0,1790.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,859.591,0.857,1874.4,-1961.989979337657
+423,C58H117Cl (Kloroalkana),690.0,1600.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,850.024,0.83,1843.6,-1481.1486089933096
+424,C58H117F (Fluoroalkana),690.0,1600.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,833.572,0.83,1842.0,-1481.1486089933096
+425,C58H117NH2 (Amina),690.0,1580.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,830.597,0.833,1869.8,-1368.0703957150852
+426,C58H117OH (Alkohol Alifatik),740.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,831.581,0.849,1849.2,-2054.11475
+427,C58H118 (Alkana/Parafin),98.18,613.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,815.582,0.83,1832.4,-1481.1486089933096
+428,C59H116 (Alkuna),705.0,1610.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,825.577,0.849,1818.0,-1898.3155835962145
+429,C59H118 (Alkena/Olefin),705.0,1610.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,827.593,0.84,1840.8,-1502.9974241486066
+430,C59H119COOH (Asam Lemak/Karboksilat),840.0,1820.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,873.618,0.857,1905.6,-1989.8644022269411
+431,C59H119Cl (Kloroalkana),705.0,1630.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,864.051,0.831,1874.8,-1504.3715834240963
+432,C59H119F (Fluoroalkana),705.0,1630.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,847.599,0.831,1873.2,-1504.3715834240963
+433,C59H119NH2 (Amina),705.0,1610.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,844.624,0.833,1901.0,-1391.0398025421696
+434,C59H119OH (Alkohol Alifatik),755.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,845.608,0.849,1880.4,-2087.0886428571434
+435,C59H120 (Alkana/Parafin),705.0,1610.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,829.609,0.831,1863.6,-1504.3715834240963
+436,C5H10 (Alkena/Olefin),-136.0,36.3,Netral,Tidak Ada,0.0,Senyawa Kovalen,70.135,0.62,156.0,-58.2
+437,C5H11COOH (Asam Lemak/Karboksilat),-37.8,182.49,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,116.16,0.93,220.8,-392.91
+438,C5H11Cl (Kloroalkana),-99.0,107.9,Netral,Tidak Ada,0.0,Senyawa Kovalen,106.593,0.62,190.0,-213.2
+439,C5H11F (Fluoroalkana),-141.45,55.9,Netral,Tidak Ada,0.0,Senyawa Kovalen,90.141,0.62,188.4,-377.53
+440,C5H11NH2 (Amina),-105.0,77.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,87.166,0.76,216.2,-146.06
+441,C5H11OH (Alkohol Alifatik),-117.0,130.8,Netral,Tidak Ada,0.0,Senyawa Kovalen,88.15,0.838,195.6,-356.4
+442,C5H12 (Alkana/Parafin),-130.0,36.06,Netral,Tidak Ada,0.0,Senyawa Kovalen,72.151,0.62,178.8,-173.5
+443,C5H8 (Alkuna),-114.1,44.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,68.119,0.62,133.2,53.68
+444,C60H118 (Alkuna),720.0,1640.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,839.604,0.849,1849.2,-1934.657507886435
+445,C60H120 (Alkena/Olefin),720.0,1640.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,841.62,0.84,1872.0,-1529.8259473684207
+446,C60H121Cl (Kloroalkana),720.0,1660.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,878.078,0.831,1906.0,-1527.594557854883
+447,C60H121F (Fluoroalkana),720.0,1660.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,861.626,0.831,1904.4,-1527.594557854883
+448,C60H121NH2 (Amina),720.0,1640.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,858.651,0.833,1932.2,-1414.009209369254
+449,C60H121OH (Alkohol Alifatik),770.0,1327.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,859.635,0.849,1911.6,-2120.0625357142862
+450,C60H122 (Alkana/Parafin),100.0,250.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,843.636,0.831,1894.8,-1527.594557854883
+451,C6H10 (Alkuna),-96.1,83.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,82.146,0.662,164.4,15.1
+452,C6H12 (Alkena/Olefin),-134.8,56.4,Netral,Tidak Ada,0.0,Senyawa Kovalen,84.162,0.66,187.2,-87.0
+453,C6H12O6 (Glukosa / Gula Darah),102.0,577.18,Netral,Tidak Ada,0.0,Senyawa Kovalen,180.156,,288.0,
+454,C6H13COOH (Asam Lemak/Karboksilat),-77.17,132.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,130.187,0.917,252.0,-555.2
+455,C6H13Cl (Kloroalkana),-115.85,116.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,120.62,0.658,221.2,-231.16
+456,C6H13F (Fluoroalkana),-130.18,82.9,Netral,Tidak Ada,0.0,Senyawa Kovalen,104.168,0.658,219.6,-402.45
+457,C6H13NH2 (Amina),96.0,92.2,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,101.193,0.773,247.4,-173.66124070669122
+458,C6H13OH (Alkohol Alifatik),-93.54,99.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,102.177,0.84,226.8,-316.21
+459,C6H14 (Alkana/Parafin),-95.07,68.72,Netral,Tidak Ada,0.0,Senyawa Kovalen,86.178,0.658,210.0,-198.49
+460,C6H5OH (Fenol),41.0,181.8,Netral,Tidak Ada,0.0,Senyawa Kovalen,94.113,1.06,135.6,-165.1
+461,C6H6 (Benzena),5.5,80.07,Netral,Tidak Ada,0.0,Senyawa Kovalen,78.114,,118.8,49.1
+462,C6H8O6 (Vitamin C / Asam Askorbat),177.5,444.11,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,176.124,,242.4,
+463,C7H12 (Alkuna),-92.84,98.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,96.173,0.691,195.6,-36.17
+464,C7H14 (Alkena/Olefin),-136.6,96.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,98.189,0.689,218.4,-104.3
+465,C7H15COOH (Asam Lemak/Karboksilat),-41.49,165.16,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,144.214,0.907,283.2,-384.0
+466,C7H15Cl (Kloroalkana),-72.16,143.5,Netral,Tidak Ada,0.0,Senyawa Kovalen,134.647,0.686,252.4,-259.66
+467,C7H15F (Fluoroalkana),-73.0,122.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,118.195,0.686,250.8,-365.66
+468,C7H15NH2 (Amina),-18.0,153.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,115.22,0.783,278.6,-266.0
+469,C7H15OH (Alkohol Alifatik),-97.27,107.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,116.204,0.841,258.0,-364.04
+470,C7H16 (Alkana/Parafin),-91.0,98.4,Netral,Tidak Ada,0.0,Senyawa Kovalen,100.205,0.686,241.2,-223.91
+471,C7H6O3 (Asam Salisilat),145.5,150.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,138.122,,177.6,
+472,C7H8 (Toluena),-93.95,110.6,Netral,Tidak Ada,0.0,Senyawa Kovalen,92.141,,150.0,12.36
+473,C8H10N4O2 (Kafein),238.0,367.25,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,194.194,,318.8,
+474,C8H14 (Alkuna),104.5,103.38,Netral,Tidak Ada,0.0,Senyawa Kovalen,110.2,0.714,226.8,-44.87744479495268
+475,C8H16 (Alkena/Olefin),-88.0,124.9,Netral,Tidak Ada,0.0,Senyawa Kovalen,112.216,0.71,249.6,-135.7
+476,C8H17COOH (Asam Lemak/Karboksilat),95.5,328.78,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,158.241,0.9,314.4,-568.2688348734432
+477,C8H17Cl (Kloroalkana),-17.9,140.46,Netral,Tidak Ada,0.0,Senyawa Kovalen,148.674,0.706,283.6,-281.07
+478,C8H17F (Fluoroalkana),-64.0,146.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,132.222,0.706,282.0,-386.0
+479,C8H17NH2 (Amina),-62.0,162.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,129.247,0.79,309.8,-206.0
+480,C8H17OH (Alkohol Alifatik),-44.99,160.2,Netral,Tidak Ada,0.0,Senyawa Kovalen,130.231,0.843,289.2,-431.53
+481,C8H18 (Alkana/Parafin),-56.85,125.64,Netral,Tidak Ada,0.0,Senyawa Kovalen,114.232,0.706,272.4,-249.73
+482,C9H16 (Alkuna),-99.44,148.5,Netral,Tidak Ada,0.0,Senyawa Kovalen,124.227,0.731,258.0,-81.21936908517353
+483,C9H18 (Alkena/Olefin),-110.26,130.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,126.243,0.727,280.8,-161.57126315789475
+484,C9H19COOH (Asam Lemak/Karboksilat),158.5,351.5,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,172.268,0.894,345.6,-596.1432577627274
+485,C9H19Cl (Kloroalkana),-49.62,166.57,Netral,Tidak Ada,0.0,Senyawa Kovalen,162.701,0.722,314.8,-310.38
+486,C9H19F (Fluoroalkana),1.0,167.5,Netral,Tidak Ada,0.0,Senyawa Kovalen,146.249,0.722,313.2,-474.3
+487,C9H19NH2 (Amina),-1.0,198.0,Basa Lemah,Lemah,0.0001,Senyawa Kovalen,143.274,0.796,341.0,-256.23
+488,C9H19OH (Alkohol Alifatik),-57.31,151.56,Netral,Tidak Ada,0.0,Senyawa Kovalen,144.258,0.843,320.4,-415.13
+489,C9H20 (Alkana/Parafin),-53.25,150.76,Netral,Tidak Ada,0.0,Senyawa Kovalen,128.259,0.722,303.6,-274.7
+490,C9H8O4 (Aspirin),116.5,374.45,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,180.159,,234.0,
+491,CCl4 (Karbon Tetraklorida),-23.0,76.7,Netral,Tidak Ada,0.0,Senyawa Kovalen,153.811,,98.8,-130.09
+492,CH (Radikal Metilidin),-273.0,-273.0,Netral,Tidak Ada,0.0,Radikal Bebas,13.019,,19.8,
+493,CH2 (Metilena),-273.0,-273.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,14.027,,31.2,
+494,CH2NH (Metanimina),111.75,26.31,Netral,Tidak Ada,0.0,Senyawa Kovalen,29.042,,68.6,
+495,CH2O (Formaldehida),-92.0,-19.1,Netral,Tidak Ada,0.0,Senyawa Kovalen,30.026,,48.0,-109.16
+496,CH3 (Radikal Metil),-273.0,-273.0,Netral,Tidak Ada,0.0,Radikal Bebas,15.035,,42.6,
+497,CH3CHO (Asetaldehida),-111.35,10.51,Netral,Tidak Ada,0.0,Senyawa Kovalen,44.053,,79.2,-52.68
+498,CH3COOH (Asam Asetat/Cuka),16.6,117.9,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,60.052,,96.0,-386.15
+499,CH3COONa (Natrium Asetat),324.0,881.4,Netral,Tidak Ada,0.0,Senyawa Ionik,82.034,1.528,84.6,-708.8
+500,CH3OH (Metanol),-98.0,64.48,Netral,Tidak Ada,0.0,Senyawa Kovalen,32.042,,70.8,-238.4
+501,CH4 (Gas Metana),-182.4,-161.48,Netral,Tidak Ada,0.0,Senyawa Kovalen,16.043,0.7168,54.0,-74.53
+502,CH4N2O (Urea),133.35,353.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,60.056,,122.8,-333.1
+503,CO (Karbon Monoksida),-205.0,-191.51,Netral,Tidak Ada,0.0,Senyawa Kovalen,28.01,8.9,25.2,-110.53
+504,CO2 (Karbon Dioksida),-56.5,-78.48,Netral,Tidak Ada,0.0,Senyawa Kovalen,44.009,1.976,42.0,-393.47
+505,CO3 (Radikal Karbonat),-273.0,-273.0,Netral,Tidak Ada,0.0,Radikal Bebas,60.008,,58.8,
+506,CaCl2 (Kalsium Klorida),775.0,1935.0,Netral,Tidak Ada,0.0,Senyawa Ionik,110.978,2.2,45.2,-795.4
+507,Cl2 (Gas Klorin),-101.0,-33.95,Netral,Tidak Ada,0.0,Senyawa Kovalen,70.9,2.898,45.2,0.0
+508,F2 (Gas Fluorin),-219.67,-188.11,Netral,Tidak Ada,0.0,Senyawa Kovalen,37.997,1.667,42.0,0.0
+509,Fe,1538.0,2861.0,Netral,Tidak Ada,0.0,Logam Murni,55.845,,,0.0
+510,Fe2O3 (Karat Besi),1565.0,3414.0,Netral,Tidak Ada,0.0,Senyawa Ionik,159.687,,50.4,-824.2
+511,FeCl2 (Besi(II) Klorida),677.0,1023.0,Netral,Tidak Ada,0.0,Senyawa Ionik,126.745,,45.2,-341.8
+512,FeO (Besi(II) Oksida),1377.0,3414.0,Netral,Tidak Ada,0.0,Senyawa Ionik,71.844,,16.8,-272.0
+513,H2 (Gas Hidrogen),-259.16,-252.78,Netral,Tidak Ada,0.0,Senyawa Kovalen,2.016,0.082,22.8,0.0
+514,H2CO3 (Asam Karbonat),-20.0,100.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,62.024,,81.6,
+515,H2O (Air),0.0,99.97,Netral,Tidak Ada,0.0,Senyawa Kovalen,18.015,1.0,39.6,-285.82
+516,H2O2 (Hidrogen Peroksida),-20.21,150.2,Netral,Tidak Ada,0.0,Senyawa Kovalen,34.014,,56.4,-187.8
+517,H2S (Hidrogen Sulfida),-85.5,-60.3,ACID,WEAK,0.001,Senyawa Kovalen,34.076,1.5392,45.4,-20.6
+518,H2SO3 (Asam Sulfit),-273.0,-273.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,82.073,,95.8,
+519,H2SO4 (Asam Sulfat),4.16,337.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,98.072,,112.6,-814.0
+520,H3PO4 (Asam Fosfat),31.18,407.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,97.994,1.9,101.4,-1284.4
+521,HBr (Asam Bromida),-86.5,-66.38,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,80.912,,39.0,-35.85
+522,HCN (Asam Sianida),-13.4,25.63,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,27.026,,45.8,108.9
+523,HCOOH (Asam Format),8.3,101.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,46.025,,64.8,-425.0
+524,HCl (Asam Klorida),-114.2,-85.1,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,36.458,1.639,34.0,-92.17
+525,HF (Asam Fluorida),-83.55,20.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,20.006,,32.4,-272.71
+526,HI (Asam Iodida),-50.76,-35.55,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,127.912,5.66,11.4,26.47
+527,HNO3 (Asam Nitrat),-42.0,83.0,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,63.012,,87.8,-174.1
+528,I2 (Gas Iodida),113.55,184.4,Netral,Tidak Ada,0.0,Senyawa Kovalen,253.809,11.27,,0.0
+529,K2SO4 (Kalium Sulfat),1069.0,1689.0,Netral,Tidak Ada,0.0,Senyawa Ionik,174.253,2.66,89.8,-1437.8
+530,KCl (Kalium Klorida),771.0,1415.85,Netral,Tidak Ada,0.0,Senyawa Ionik,74.548,1.98,22.6,-436.5
+531,KI (Kalium Iodida),681.0,1323.0,Netral,Tidak Ada,0.0,Senyawa Ionik,166.003,,,-327.9
+532,KNO3 (Kalium Nitrat),334.0,400.0,Netral,Tidak Ada,0.0,Senyawa Ionik,101.102,2.1,76.4,-494.6
+533,KOH (Kalium Hidroksida),406.0,1327.0,BASE,STRONG,1.0,Senyawa Ionik,56.105,2.04,28.2,-424.6
+534,Mg,650.0,1090.0,Netral,Tidak Ada,0.0,Logam Murni,24.305,1.7,,0.0
+535,MgCl2 (Magnesium Klorida),714.0,1412.0,Netral,Tidak Ada,0.0,Senyawa Ionik,95.205,2.3,45.2,-641.3
+536,N2 (Gas Nitrogen),-210.0,-195.8,Netral,Tidak Ada,0.0,Senyawa Kovalen,28.014,1.251,52.0,0.0
+537,N2H2 (Diazena),-150.0,-100.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,30.03,,74.8,
+538,N2H4 (Hidrazina),2.0,113.55,Netral,Tidak Ada,0.0,Senyawa Kovalen,32.046,,97.6,50.6
+539,N2O (Gas Tertawa / Nitrous Oksida),-90.8,-88.47,Netral,Tidak Ada,0.0,Senyawa Kovalen,44.013,1.799,68.8,82.57
+540,N2O4 (Dinitrogen Tetroksida),-9.3,21.15,Netral,Tidak Ada,0.0,Senyawa Kovalen,92.01,,119.2,10.77
+541,NH (Radikal Imidogen),-273.0,-273.0,Netral,Tidak Ada,0.0,Radikal Bebas,15.015,,37.4,
+542,NH2 (Radikal Amino),-273.0,-273.0,Netral,Tidak Ada,0.0,Radikal Bebas,16.023,,48.8,
+543,NH2COOH (Asam Karbamat),-29.0,101.19,Asam Lemah,Lemah,1e-05,Senyawa Kovalen,61.04,,102.2,-112.6
+544,NH3 (Gas Amonia),-77.7,-33.32,BASE,WEAK,0.004,Senyawa Kovalen,17.031,0.696,60.2,-45.56
+545,NH4Cl (Amonium Klorida / Salmiak),338.0,520.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,53.489,1.5,94.2,-314.4
+546,NO (Nitrogen Monoksida),-163.6,-151.74,Netral,Tidak Ada,0.0,Senyawa Kovalen,30.006,,42.8,91.09
+547,NO2 (Nitrogen Dioksida),-9.3,21.15,Netral,Tidak Ada,0.0,Senyawa Kovalen,46.005,,59.6,34.02
+548,Na2SO4 (Natrium Sulfat),884.0,1429.0,Netral,Tidak Ada,0.0,Senyawa Ionik,142.036,,89.8,-1387.1
+549,NaCl (Garam Dapur),800.7,1465.0,Netral,Tidak Ada,0.0,Senyawa Ionik,58.44,,22.6,-411.2
+550,NaF (Natrium Fluorida),996.0,1704.0,Netral,Tidak Ada,0.0,Senyawa Ionik,41.988,2.8,21.0,-576.6
+551,NaNO3 (Natrium Nitrat),306.5,380.0,Netral,Tidak Ada,0.0,Senyawa Ionik,84.994,2.3,76.4,-467.9
+552,NaOH (Natrium Hidroksida),323.0,1388.0,BASE,STRONG,1.0,Senyawa Ionik,39.997,2.1,28.2,-425.8
+553,O (Oksigen Atomik),-273.0,-273.0,Netral,Tidak Ada,0.0,Radikal Bebas,15.999,1.429,16.8,
+554,O2 (Gas Oksigen),-218.79,-182.96,Netral,Tidak Ada,0.0,Senyawa Kovalen,31.998,1.429,33.6,0.0
+555,O3 (Gas Ozon),-193.0,-111.35,Netral,Tidak Ada,0.0,Senyawa Kovalen,47.997,2.144,50.4,141.75
+556,O4 (Tetraoksigen),-200.0,-150.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,63.996,,67.2,
+557,OH (Radikal Hidroksil),-273.0,-273.0,Netral,Tidak Ada,0.0,Radikal Bebas,17.007,,28.2,
+558,PH3 (Fosfin),-133.8,-87.75,Netral,Tidak Ada,0.0,Senyawa Kovalen,33.998,1.39,34.2,5.4
+559,Pb(NO3)2 (Timbal(II) Nitrat),470.0,470.0,Netral,Tidak Ada,0.0,Senyawa Ionik,331.208,,76.4,-451.9
+560,PbI2 (Endapan Kuning Timbal Iodida),410.0,872.0,Netral,Tidak Ada,0.0,Senyawa Ionik,461.009,,,-175.5
+561,S (Belerang),13.25,444.61,Netral,Tidak Ada,0.0,Non-Logam (Radikal),32.06,2.1,22.6,1.85
+562,SF6 (Sulfur Heksafluorida),-63.8,-63.8,Netral,Tidak Ada,0.0,Senyawa Kovalen,146.05,6.5,148.6,-1220.5
+563,SO (Sulfur Monoksida),-50.0,-20.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,48.059,,39.4,
+564,SO2 (Sulfur Dioksida),-72.5,-10.01,Netral,Tidak Ada,0.0,Senyawa Kovalen,64.058,2.619,56.2,-296.8
+565,SO3 (Sulfur Trioksida),28.18,44.5,Netral,Tidak Ada,0.0,Senyawa Kovalen,80.057,,73.0,-454.5
+566,SO4 (Peroksosulfat),50.0,200.0,Netral,Tidak Ada,0.0,Senyawa Kovalen,96.056,,89.8,
+567,TiO2 (Titanium Dioksida),1843.0,2750.0,Netral,Tidak Ada,0.0,Senyawa Ionik,111.733,4.3,33.6,
+568,Zn,419.53,907.0,Netral,Tidak Ada,0.0,Logam Murni,65.38,7.1,,0.0
+569,ZnCl2 (Seng Klorida),325.0,732.0,Netral,Tidak Ada,0.0,Senyawa Ionik,136.28,2.9,45.2,-415.1
+570,[CH4-O2]* (Radikal Aktif),-273.0,-273.0,Netral,Tidak Ada,0.0,Radikal Bebas,48.041,,87.6,
+571,[Fe-HCl]* (Radikal Aktif),-273.0,-273.0,Netral,Tidak Ada,0.0,Radikal Bebas,92.303,,34.0,
+572,[Mg-HCl]* (Radikal Aktif),-273.0,-273.0,Netral,Tidak Ada,0.0,Radikal Bebas,60.763,,34.0,
+573,[Zn-HCl]* (Radikal Aktif),-273.0,-273.0,Netral,Tidak Ada,0.0,Radikal Bebas,101.838,,34.0,

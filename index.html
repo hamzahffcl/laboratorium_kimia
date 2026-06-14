@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorium Fisika Kimia 2D</title>
+    <link rel="stylesheet" href="./static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Canvas Wadah Reaksi -->
+        <div class="canvas-wrapper">
+            <div class="glass-panel canvas-glass">
+                <canvas id="labCanvas"></canvas>
+            </div>
+            <!-- Notifikasi Reaksi -->
+            <div id="reaction-toast" class="toast hidden"></div>
+        </div>
+
+        <!-- Panel Kontrol -->
+        <div class="glass-panel control-panel">
+            <h1 class="title">🧪 Lab Simulator</h1>
+            
+            <div class="control-group">
+                <label>Pilih / Ketik Atom:</label>
+                <div class="input-row">
+                    <input type="text" id="atomInput" placeholder="Contoh: H, HCl, CH4" list="atomList">
+                    <datalist id="atomList"></datalist>
+                    <button id="addAtomBtn" class="btn primary">Tambah</button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Suhu Wadah (<span id="tempValue" style="color: #ff4757; font-weight: bold;">25.0</span> °C)</label>
+                <input type="range" id="tempSlider" min="-273" max="3000" value="25">
+            </div>
+
+            <div class="control-group">
+                <label>Tekanan (<span id="pressValue">1.0</span> atm)</label>
+                <input type="range" id="pressSlider" min="0.1" max="100.0" step="0.1" value="1">
+            </div>
+
+            <div class="control-group">
+                <button id="clearBtn" class="btn danger">Bersihkan Wadah</button>
+            </div>
+
+            <div class="info-panel">
+                <h3>🔍 Info Partikel</h3>
+                <p>Klik atom/molekul di layar untuk melihat detail.</p>
+                <div id="particleInfo" class="particle-details hidden">
+                    <p><strong>Nama:</strong> <span id="infoName">-</span></p>
+                    <p><strong>Massa Molar:</strong> <span id="infoMolarMass">-</span></p>
+                    <p><strong>Densitas:</strong> <span id="infoDensity">-</span></p>
+                    <p><strong>Titik Leleh:</strong> <span id="infoMP">-</span></p>
+                    <p><strong>Titik Didih:</strong> <span id="infoBP">-</span></p>
+                    <p><strong>Fase:</strong> <span id="infoPhase">-</span></p>
+                    <p><strong>Sifat:</strong> <span id="infoAcidBase">-</span></p>
+                    <p><strong>Jenis Ikatan:</strong> <span id="infoBondType">-</span></p>
+                </div>
+            </div>
+
+            <div class="info-panel" style="flex: 1; display: flex; flex-direction: column; margin-top: 0;">
+                <h3>📜 Log Reaksi</h3>
+                <div id="reactionLog" class="reaction-log"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Utama -->
+    <script src="./static/data.js?v=25"></script>
+    <script src="./static/app.js?v=25"></script>
+</body>
+</html>
