@@ -556,34 +556,36 @@ function updatePHIndicator() {
     const volume_L = (canvas.width * canvas.height) / 10000.0;
     const concentration = score / volume_L;
     
-    const k = 1.0;
+    // Konstanta sensitivitas k diubah dari 1.0 menjadi 0.08 agar pH lebih cepat berubah
+    const k = 0.08;
     const targetPH = 7.0 - Math.tanh(concentration / k) * 7.0;
 
     if (typeof this._currentPH === 'undefined') this._currentPH = 7.0;
-    this._currentPH += (targetPH - this._currentPH) * 0.03;
+    this._currentPH += (targetPH - this._currentPH) * 0.05; // Dipercepat transisinya dari 0.03
     const pH = this._currentPH;
 
     let targetR = 255, targetG = 255, targetB = 255;
     
-    if (pH < 3) { targetR = 229; targetG = 57; targetB = 53; }      
-    else if (pH < 5) { targetR = 239; targetG = 154; targetB = 154; } 
-    else if (pH < 6.5) { targetR = 255; targetG = 204; targetB = 128; } 
+    // Warna yang lebih cerah/kuat
+    if (pH < 3) { targetR = 255; targetG = 20; targetB = 20; }      
+    else if (pH < 5) { targetR = 255; targetG = 100; targetB = 100; } 
+    else if (pH < 6.5) { targetR = 255; targetG = 180; targetB = 80; } 
     else if (pH <= 7.5) { targetR = 255; targetG = 255; targetB = 255; } 
-    else if (pH <= 9) { targetR = 227; targetG = 242; targetB = 253; } 
-    else if (pH <= 11) { targetR = 92; targetG = 107; targetB = 192; } 
-    else { targetR = 49; targetG = 27; targetB = 146; }             
+    else if (pH <= 9) { targetR = 100; targetG = 180; targetB = 255; } 
+    else if (pH <= 11) { targetR = 60; targetG = 80; targetB = 255; } 
+    else { targetR = 80; targetG = 0; targetB = 200; }             
 
-    currentBg.r += (targetR - currentBg.r) * 0.05;
-    currentBg.g += (targetG - currentBg.g) * 0.05;
-    currentBg.b += (targetB - currentBg.b) * 0.05;
+    currentBg.r += (targetR - currentBg.r) * 0.08;
+    currentBg.g += (targetG - currentBg.g) * 0.08;
+    currentBg.b += (targetB - currentBg.b) * 0.08;
 
     const wrapper = document.querySelector('.canvas-wrapper');
     if (wrapper) {
         if (pH > 6.5 && pH < 7.5) {
-             wrapper.style.backgroundColor = `rgba(255, 255, 255, 0.1)`; 
+             wrapper.style.backgroundColor = `rgba(255, 255, 255, 0.05)`; 
         } else {
-             // Ditingkatkan dari 0.3 menjadi 0.45 agar warna asam/basa lebih terlihat jelas
-             wrapper.style.backgroundColor = `rgba(${Math.round(currentBg.r)}, ${Math.round(currentBg.g)}, ${Math.round(currentBg.b)}, 0.45)`;
+             // Opacity ditingkatkan ke 0.6
+             wrapper.style.backgroundColor = `rgba(${Math.round(currentBg.r)}, ${Math.round(currentBg.g)}, ${Math.round(currentBg.b)}, 0.6)`;
         }
     }
 }
