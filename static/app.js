@@ -176,9 +176,11 @@ class Particle {
                 mp = atm.mp;
                 bp = atm.bp;
             } else {
-                if (['Fe', 'Zn', 'Mg', 'Al', 'Ag', 'Pb', 'Pt'].includes(atm.symbol)) {
+                if (atm.symbol === 'C') {
+                    mp = 3550; bp = 3825;
+                } else if (['Fe', 'Zn', 'Mg', 'Al', 'Ag', 'Pb', 'Pt', 'Na', 'K', 'Ca', 'P', 'S', 'I'].includes(atm.symbol)) {
                     mp = 600; bp = 2000;
-                } else if (['H', 'O', 'N', 'Cl', 'F', 'He', 'Ne', 'Ar'].includes(atm.symbol)) {
+                } else if (['H', 'O', 'N', 'Cl', 'F', 'He', 'Ne', 'Ar', 'Kr', 'Xe'].includes(atm.symbol)) {
                     mp = -250; bp = -200;
                 }
             }
