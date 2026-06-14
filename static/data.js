@@ -22714,7 +22714,7 @@ window.CHEM_DATA = {
       "symbol": "Br",
       "name": "Bromine",
       "mass": 79.904,
-      "color": "dark red",
+      "color": "darkred",
       "charge": -1,
       "mp": -7.199999999999989,
       "bp": 58.80000000000001
@@ -22732,7 +22732,7 @@ window.CHEM_DATA = {
       "symbol": "Ca",
       "name": "Calcium",
       "mass": 40.078,
-      "color": "dark gray",
+      "color": "darkgray",
       "charge": 2,
       "mp": 842.0000000000001,
       "bp": 1484.0
@@ -22822,7 +22822,7 @@ window.CHEM_DATA = {
       "symbol": "Mg",
       "name": "Magnesium",
       "mass": 24.305,
-      "color": "dark gray",
+      "color": "darkgray",
       "charge": 2,
       "mp": 650.0,
       "bp": 1090.0

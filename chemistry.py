@@ -65,10 +65,10 @@ class AtomData:
         # Pewarnaan CPK (Corey-Pauling-Koltun) sederhana
         colors = {
             'H': 'white', 'C': 'gray', 'N': 'blue', 'O': 'red',
-            'F': 'green', 'Cl': 'green', 'Br': 'dark red', 'I': 'purple',
+            'F': 'green', 'Cl': 'green', 'Br': 'darkred', 'I': 'purple',
             'He': 'cyan', 'Ne': 'cyan', 'Ar': 'cyan', 'Kr': 'cyan', 'Xe': 'cyan',
             'S': 'yellow', 'P': 'orange', 'Na': 'purple', 'K': 'purple',
-            'Ca': 'dark gray', 'Mg': 'dark gray', 'Fe': 'orange'
+            'Ca': 'darkgray', 'Mg': 'darkgray', 'Fe': 'orange'
         }
         return colors.get(self.symbol, '#a8a8a8') # Default abu-abu terang
 
