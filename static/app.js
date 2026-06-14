@@ -627,8 +627,6 @@ function animate() {
             document.getElementById('infoBondType').textContent = bondText;
             document.getElementById('infoIUPAC').textContent = (molData && molData.iupac_name) ? molData.iupac_name : "N/A";
             document.getElementById('infoExactMass').textContent = (molData && molData.exact_mass) ? molData.exact_mass.toFixed(4) + ' Da' : "N/A";
-            document.getElementById('infoPubChem').textContent = (molData && molData.pubchem_cid) ? molData.pubchem_cid : "N/A";
-            document.getElementById('infoSmiles').textContent = (molData && molData.isomeric_smiles) ? molData.isomeric_smiles : "N/A";
         }
     }
     
