@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.pyc
+chemistry.db
+chemistry.db.bak
+.env

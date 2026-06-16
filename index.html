@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Laboratorium Fisika Kimia 2D</title>
+    <link rel="stylesheet" href="./static/style.css?v=46">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Canvas Wadah Reaksi -->
+        <div class="canvas-wrapper">
+            <div class="glass-panel canvas-glass">
+                <canvas id="labCanvas"></canvas>
+            </div>
+            <!-- Notifikasi Reaksi -->
+            <div id="reaction-toast" class="toast hidden"></div>
+        </div>
+
+        <!-- Panel Kontrol -->
+        <div class="glass-panel control-panel">
+            <h1 class="title">🧪 Lab Simulator</h1>
+            
+            <div class="control-group">
+                <label>Mau mereaksikan apa hari ini?</label>
+                <div class="input-row">
+                    <input type="text" id="atomInput" placeholder="Contoh: H, HCl, CH4" list="atomList">
+                    <datalist id="atomList"></datalist>
+                    <button id="addAtomBtn" class="btn primary">Tambah</button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Suhu Wadah (<span id="tempValue" style="color: #ff4757; font-weight: bold;">25.0</span> °C)</label>
+                <input type="range" id="tempSlider" min="-273" max="5000" value="25">
+            </div>
+
+            <div class="control-group">
+                <label>Tekanan (<span id="pressValue">1.0</span> atm)</label>
+                <input type="range" id="pressSlider" min="0.1" max="100.0" step="0.1" value="1">
+            </div>
+
+            <div class="control-group action-buttons" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
+                <button id="clearBtn" class="btn danger" style="grid-column: span 2; margin-top: 0;">Kosongkan Meja Lab</button>
+                <button id="exportProgressBtn" class="btn" style="background: #475569; color: white; padding: 10px; font-size: 0.85rem;" onclick="QuestEngine.exportProgress()">⬇️ Simpan Data</button>
+                <button id="importProgressBtn" class="btn" style="background: #475569; color: white; padding: 10px; font-size: 0.85rem;" onclick="document.getElementById('importProgressInput').click()">⬆️ Muat Data</button>
+                <button id="resetProgressBtn" class="btn danger" style="grid-column: span 2; margin-top: 0; background: #7f1d1d; padding: 10px; font-size: 0.85rem;" onclick="QuestEngine.resetProgress()">Mulai dari Nol</button>
+                <input type="file" id="importProgressInput" accept=".json" hidden onchange="QuestEngine.importProgress(event)">
+            </div>
+
+            <div class="info-panel quest-panel" style="background: rgba(255, 215, 0, 0.1); border-left: 4px solid gold; text-align: center;">
+                <h3>📜 Misi & Progres</h3>
+                <p style="font-size: 0.85rem; margin-bottom: 10px; color: #cbd5e1;">Selesaikan misi atau buka ensiklopedia untuk melihat seluruh molekul.</p>
+                <button id="openQuestJournalBtn" class="btn primary" style="width: 100%; font-size: 1rem; padding: 12px; font-weight: bold; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);" onclick="document.getElementById('questJournalModal').classList.remove('hidden')">Buka Jurnal Misi</button>
+                <button id="openCollectionBtn" class="btn" style="width: 100%; font-size: 1rem; padding: 12px; font-weight: bold; margin-top: 10px; background: #8b5cf6; color: white; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);" onclick="document.getElementById('collectionModal').classList.remove('hidden'); if(window.QuestEngine) window.QuestEngine.renderCollection();">📖 Buka Koleksi Molekul</button>
+            </div>
+
+            <div class="info-panel">
+                <h3>🔍 Kenali Partikelmu</h3>
+                <p>Sentuh atom atau molekul yang ada di layar untuk melihat rahasianya.</p>
+                <div id="particleInfo" class="particle-details hidden">
+                    <p><strong>Nama:</strong> <span id="infoName">-</span></p>
+                    <p><strong>IUPAC Name:</strong> <span id="infoIUPAC">-</span></p>
+                    <p><strong>Massa Molar:</strong> <span id="infoMolarMass">-</span></p>
+                    <p><strong>Massa Eksak:</strong> <span id="infoExactMass">-</span></p>
+                    <p><strong>Densitas:</strong> <span id="infoDensity">-</span></p>
+                    <p><strong>Titik Leleh:</strong> <span id="infoMP">-</span></p>
+                    <p><strong>Titik Didih:</strong> <span id="infoBP">-</span></p>
+                    <p><strong>Fase:</strong> <span id="infoPhase">-</span></p>
+                    <p><strong>Sifat:</strong> <span id="infoAcidBase">-</span></p>
+                    <p><strong>Jenis Ikatan:</strong> <span id="infoBondType">-</span></p>
+                </div>
+            </div>
+
+            <div class="info-panel quest-panel" style="background: rgba(0, 255, 128, 0.1); border-left: 4px solid #00ff80; text-align: center; margin-top: 15px;">
+                <h3>📜 Log Reaksi</h3>
+                <p style="font-size: 0.85rem; margin-bottom: 10px; color: #cbd5e1;">Buka jendela ini untuk melihat sejarah seluruh eksperimenmu.</p>
+                <button id="openReactionLogBtn" class="btn primary" style="width: 100%; font-size: 1rem; padding: 12px; font-weight: bold; background: #00b894; box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4);" onclick="document.getElementById('reactionLogModal').classList.remove('hidden')">Buka Log Reaksi</button>
+            </div>
+            
+            <!-- Watermark -->
+            <div style="text-align: center; margin-top: 10px; font-size: 0.8rem; color: rgba(255, 255, 255, 0.15); font-style: italic; letter-spacing: 1px; user-select: none;">
+                umjhamzel
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edukasi (Awalnya Tersembunyi) -->
+    <div id="eduModalOverlay" class="edu-modal-overlay hidden">
+        <div class="edu-modal">
+            <h2 id="eduModalTitle" class="edu-modal-title">Catatan Observasi</h2>
+            <div id="eduModalContent" class="edu-modal-content">
+                Isi edukasi...
+            </div>
+            <button id="eduModalBtn" class="btn primary edu-modal-btn" onclick="document.getElementById('eduModalOverlay').classList.add('hidden')">Tutup Catatan</button>
+        </div>
+    </div>
+
+    <!-- Jurnal Misi Modal (Awalnya Tersembunyi) -->
+    <div id="questJournalModal" class="edu-modal-overlay hidden" style="z-index: 10000;">
+        <div class="edu-modal" style="max-width: 800px; width: 90%; max-height: 90vh; display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 15px;">
+                <h2 style="margin: 0; color: #fbbf24; font-size: 1.5rem;">📜 Jurnal Eksperimen</h2>
+                <button onclick="document.getElementById('questJournalModal').classList.add('hidden')" style="background: none; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer;">&times;</button>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; overflow-y: auto; flex: 1; padding-right: 10px;">
+                <!-- Kolom Misi Aktif -->
+                <div>
+                    <h3 style="color: #60a5fa; border-bottom: 2px solid #60a5fa; padding-bottom: 5px;">Belum Diselesaikan</h3>
+                    <div id="questActiveContainer" class="quest-list" style="margin-top: 10px; max-height: none;">
+                        <!-- Misi aktif di-render di sini -->
+                    </div>
+                </div>
+                
+                <!-- Kolom Misi Selesai -->
+                <div>
+                    <h3 style="color: #4ade80; border-bottom: 2px solid #4ade80; padding-bottom: 5px;">Telah Diselesaikan</h3>
+                    <div id="questCompletedContainer" class="quest-list" style="margin-top: 10px; max-height: none; opacity: 0.8;">
+                        <!-- Misi selesai di-render di sini -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Koleksi Molekul Modal -->
+    <div id="collectionModal" class="edu-modal-overlay hidden" style="z-index: 10000;">
+        <div class="edu-modal" style="max-width: 800px; width: 90%; max-height: 90vh; display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 15px;">
+                <h2 style="margin: 0; color: #a78bfa; font-size: 1.5rem;">📖 Ensiklopedia Molekul</h2>
+                <div style="color: #cbd5e1; font-weight: bold; font-size: 1.1rem;">Progres: <span id="collectionProgress" style="color: #4ade80;">0 / 0</span></div>
+                <button onclick="document.getElementById('collectionModal').classList.add('hidden')" style="background: none; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer;">&times;</button>
+            </div>
+            
+            <div id="collectionContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; overflow-y: auto; flex: 1; padding: 10px; align-content: start;">
+                <!-- Kotak koleksi di-render di sini -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Log Reaksi Modal (Awalnya Tersembunyi) -->
+    <div id="reactionLogModal" class="edu-modal-overlay hidden" style="z-index: 10000;">
+        <div class="edu-modal" style="max-width: 600px; width: 90%; height: 75vh; max-height: 800px; display: flex; flex-direction: column; background: rgba(15, 23, 42, 0.95); border: 2px solid #00ff80; box-shadow: 0 0 30px rgba(0, 255, 128, 0.3);">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 15px; margin-bottom: 15px;">
+                <h2 style="margin: 0; font-size: 1.5rem; color: #00ff80;">📜 Log Reaksi</h2>
+                <button onclick="document.getElementById('reactionLogModal').classList.add('hidden')" style="background: none; border: none; color: #cbd5e1; font-size: 2rem; cursor: pointer; padding: 0 10px; line-height: 1;">&times;</button>
+            </div>
+            
+            <!-- Wadah Log -->
+            <div id="reactionLog" class="reaction-log" style="flex: 1; overflow-y: auto; text-align: left; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); margin: 0;"></div>
+            
+            <div style="margin-top: 20px; text-align: center;">
+                <button class="btn" style="background: #00ff80; color: #0f172a; padding: 12px 30px; font-weight: bold; width: 100%; border-radius: 8px; font-size: 1rem;" onclick="document.getElementById('reactionLogModal').classList.add('hidden')">Tutup Log</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Utama -->
+    <script src="./static/data.js?v=55"></script>
+    <script src="./static/quest.js?v=55"></script>
+    <script src="./static/app.js?v=55"></script>
+</body>
+</html>
