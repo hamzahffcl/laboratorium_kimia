@@ -255,7 +255,9 @@ window.QuestEngine = {
         let discoveredCount = 0;
 
         allMolecules.forEach(molLabel => {
-            const isDiscovered = this.state.discoveredMolecules.includes(molLabel);
+            // Sebuah item dianggap 'ditemukan' jika ia ada di discoveredMolecules (untuk molekul) 
+            // ATAU ada di unlockedAtoms (untuk atom-atom dasar).
+            const isDiscovered = this.state.discoveredMolecules.includes(molLabel) || this.state.unlockedAtoms.includes(molLabel);
             if (isDiscovered) discoveredCount++;
 
             const badge = document.createElement('div');
