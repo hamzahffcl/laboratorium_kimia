@@ -10763,7 +10763,7 @@ window.CHEM_DATA = {
       "acid_base_strength": "Tidak Ada",
       "ionization_factor": 0.0,
       "bond_type": "Senyawa Ionik",
-      "molar_mass": 111.733,
+      "molar_mass": 79.866,
       "density": 4.3,
       "pubchem_cid": 26042,
       "iupac_name": "dioxotitanium",

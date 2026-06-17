@@ -131,6 +131,7 @@ class VisualEffect {
 }
 
 let currentTemp = 25.0;
+let targetTemp = 25.0;
 let currentPress = 1.0;
 const MAX_PARTICLES = 150;
 let particleCounter = 0; // Untuk ID partikel (digunakan di Spatial Grid)
@@ -180,13 +181,6 @@ async function initDB() {
             datalist.innerHTML = '';
             let unlocked = window.QuestEngine ? window.QuestEngine.state.unlockedAtoms : [];
             
-            DB.periodicTable.forEach(a => {
-                if(unlocked.includes(a.symbol)) {
-                    const opt = document.createElement('option');
-                    opt.value = a.symbol;
-                    datalist.appendChild(opt);
-                }
-            });
             Object.keys(DB.moleculeAtoms).forEach(label => {
                 if(unlocked.includes(label)) {
                     const opt = document.createElement('option');
@@ -453,11 +447,8 @@ function applyReactionHeat(deltaH_kJ, numReactions) {
     const tempEl = document.getElementById('tempValue');
     if (tempEl) tempEl.textContent = currentTemp.toFixed(1);
     
-    // Update posisi tuas Slider agar sinkron dengan ledakan
-    const sliderEl = document.getElementById('tempSlider');
-    if (sliderEl && !isDraggingTemp) {
-        sliderEl.value = currentTemp.toFixed(0);
-    }
+    // (Slider kini merepresentasikan Suhu Pemanas / targetTemp, bukan currentTemp)
+    // Tidak ikut melonjak saat terjadi ledakan
     
     return clampedDelta; // Kembalikan besaran asli untuk ukuran flash
 }
@@ -752,6 +743,10 @@ function updatePHIndicator() {
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
+    // Thermal Conductivity (Newton's Law of Cooling)
+    const k_thermal = 0.01;
+    currentTemp += (targetTemp - currentTemp) * k_thermal;
+    
     updatePHIndicator();
     
     particles.forEach(p => p.updatePhysics());
@@ -774,6 +769,48 @@ function animate() {
     });
     visualEffects = visualEffects.filter(v => v.life > 0);
     
+    // --- THERMAL VISUAL CUES ---
+    if (currentTemp > 80) {
+        let intensity = Math.min((currentTemp - 80) / 200, 1.0);
+        
+        // Embers / Heat wave overlay (tanpa mengganggu pH background color)
+        ctx.save();
+        ctx.fillStyle = `rgba(255, 60, 0, ${0.05 * intensity})`;
+        ctx.fillRect(0, canvas.height - 50 * intensity, canvas.width, 50 * intensity);
+        
+        // Spawn heat distortion / embers
+        if (Math.random() < 0.2 * intensity && particles.length > 0) {
+            let px = Math.random() * canvas.width;
+            let py = canvas.height - Math.random() * 20;
+            let vfx = new VisualEffect(px, py, 'smoke');
+            vfx.color = '255, 100, 0'; // api/oranye
+            vfx.life = 0.5 + Math.random() * 0.5;
+            visualEffects.push(vfx);
+        }
+        ctx.restore();
+    } else if (currentTemp < 0) {
+        let intensity = Math.min(Math.abs(currentTemp) / 100, 1.0);
+        
+        // Frost border vignette
+        ctx.save();
+        ctx.strokeStyle = `rgba(200, 240, 255, ${0.4 * intensity})`;
+        ctx.lineWidth = 15 * intensity;
+        ctx.strokeRect(0, 0, canvas.width, canvas.height);
+        
+        // Spawn frost / ice crystals
+        if (Math.random() < 0.1 * intensity && particles.length > 0) {
+            let px = Math.random() * canvas.width;
+            let py = Math.random() * canvas.height;
+            let vfx = new VisualEffect(px, py, 'smoke');
+            vfx.color = '200, 240, 255'; // es
+            vfx.vx = (Math.random() - 0.5) * 0.5;
+            vfx.vy = Math.random() * 0.5 + 0.1; // jatuh ke bawah
+            vfx.life = 0.8 + Math.random() * 0.5;
+            visualEffects.push(vfx);
+        }
+        ctx.restore();
+    }
+    
     // Live update Info Panel
     if (selectedParticle) {
         if (!particles.includes(selectedParticle)) {
@@ -782,6 +819,7 @@ function animate() {
         } else {
             let molData = DB.molecules.find(m => m.label === selectedParticle.label);
             document.getElementById('infoName').textContent = selectedParticle.label;
+            document.getElementById('infoCurrentTemp').textContent = currentTemp.toFixed(1) + ' °C';
             document.getElementById('infoMolarMass').textContent = (molData && molData.molar_mass) ? molData.molar_mass.toFixed(2) + ' g/mol' : selectedParticle.mass.toFixed(2) + ' g/mol (Kalkulasi)';
             document.getElementById('infoDensity').textContent = (molData && molData.density) ? molData.density + ' g/cm³' : 'N/A';
             document.getElementById('infoMP').textContent = (selectedParticle.current_mp !== undefined ? selectedParticle.current_mp.toFixed(1) : "N/A") + ' °C';
@@ -808,6 +846,7 @@ function animate() {
 window.getCanvasState = function() {
     return {
         temp: currentTemp,
+        targetTemp: targetTemp,
         press: currentPress,
         particles: particles.map(p => ({
             atomSymbols: p.atomData.map(a => a.symbol),
@@ -825,11 +864,12 @@ window.restoreCanvasState = function(savedData) {
     if (!savedData) return;
     
     if (savedData.temp !== undefined) {
-        currentTemp = savedData.temp;
+        currentTemp = savedData.temp || 25.0;
+        targetTemp = savedData.targetTemp !== undefined ? savedData.targetTemp : 25.0;
         const tempEl = document.getElementById('tempValue');
         const tempSl = document.getElementById('tempSlider');
-        if (tempEl) tempEl.textContent = currentTemp.toFixed(1);
-        if (tempSl) tempSl.value = currentTemp.toFixed(0);
+        if (tempEl) tempEl.textContent = targetTemp.toFixed(0);
+        if (tempSl) tempSl.value = targetTemp.toFixed(0);
     }
     
     if (savedData.press !== undefined) {
@@ -853,19 +893,13 @@ window.restoreCanvasState = function(savedData) {
 };
 
 // Event Listeners
-let isDraggingTemp = false;
 const tempSliderEl = document.getElementById('tempSlider');
 
 if (tempSliderEl) {
-    tempSliderEl.addEventListener('mousedown', () => isDraggingTemp = true);
-    tempSliderEl.addEventListener('mouseup', () => isDraggingTemp = false);
-    tempSliderEl.addEventListener('touchstart', () => isDraggingTemp = true);
-    tempSliderEl.addEventListener('touchend', () => isDraggingTemp = false);
-
     tempSliderEl.addEventListener('input', (e) => {
-        currentTemp = parseFloat(e.target.value);
+        targetTemp = parseFloat(e.target.value);
         const tempEl = document.getElementById('tempValue');
-        if (tempEl) tempEl.textContent = currentTemp.toFixed(0);
+        if (tempEl) tempEl.textContent = targetTemp.toFixed(0);
     });
 }
 
