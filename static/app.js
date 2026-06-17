@@ -164,6 +164,15 @@ async function initDB() {
             DB.knownMolecules[sortedSyms] = m.label;
         });
 
+        // Masukkan juga atom-atom dasar ke dalam ensiklopedia jika belum ada
+        DB.periodicTable.forEach(a => {
+            if (!DB.moleculeAtoms[a.symbol]) {
+                DB.moleculeAtoms[a.symbol] = [a.symbol];
+                DB.moleculeThermo[a.symbol] = { mp: a.mp, bp: a.bp };
+                DB.knownMolecules[a.symbol] = a.symbol;
+            }
+        });
+
         DB.reactions = data.reactions;
         
         const datalist = document.getElementById('atomList');

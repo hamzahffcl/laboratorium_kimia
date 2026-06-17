@@ -276,8 +276,8 @@ window.QuestEngine = {
 
     // Pengecekan Penemuan Baru
     checkDiscovery(moleculeLabel) {
-        // Jangan catat jika itu adalah atom tunggal atau radikal (bintang di akhir)
-        if (moleculeLabel.includes('*') || moleculeLabel.length < 3) return; 
+        // Jangan catat radikal bebas (bintang di akhir)
+        if (moleculeLabel.includes('*')) return; 
 
         if (!this.state.discoveredMolecules.includes(moleculeLabel)) {
             this.state.discoveredMolecules.push(moleculeLabel);
