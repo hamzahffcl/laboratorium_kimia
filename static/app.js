@@ -744,8 +744,14 @@ function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     // Thermal Conductivity (Newton's Law of Cooling)
-    const k_thermal = 0.01;
-    currentTemp += (targetTemp - currentTemp) * k_thermal;
+    let diff = targetTemp - currentTemp;
+    let step = diff * 0.01;
+    
+    // Batasi kecepatan pemanasan ekstrim (misal ke 5000C) agar tidak instan
+    if (step > 2.5) step = 2.5; 
+    if (step < -5.0) step = -5.0; // Pendinginan boleh lebih cepat sedikit
+    
+    currentTemp += step;
     
     updatePHIndicator();
     
