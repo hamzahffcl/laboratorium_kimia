@@ -4,3 +4,9 @@ __pycache__/
 chemistry.db
 chemistry.db.bak
 .env
+
+# Unrelated project files/scripts
+scratch/
+test.js
+test_parse.js
+*_report.txt
