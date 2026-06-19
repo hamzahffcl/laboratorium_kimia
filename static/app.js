@@ -142,6 +142,10 @@ let currentBg = {r: 255, g: 255, b: 255};
 function resizeCanvas() {
     canvas.width = canvas.parentElement.clientWidth;
     canvas.height = canvas.parentElement.clientHeight;
+    if (liquidCanvas) {
+        liquidCanvas.width = canvas.width;
+        liquidCanvas.height = canvas.height;
+    }
 }
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
@@ -423,22 +427,29 @@ class Particle {
     }
 
     draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        // Tentukan kanvas target: Jika zat cair dan liquidCtx tersedia, gunakan liquidCtx
+        let targetCtx = (this.state === "CAIR" && typeof liquidCtx !== 'undefined' && liquidCtx !== null) ? liquidCtx : ctx;
+
+        targetCtx.beginPath();
+        targetCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         
-        let gradient = ctx.createRadialGradient(
+        let gradient = targetCtx.createRadialGradient(
             this.x - this.radius * 0.3, this.y - this.radius * 0.3, this.radius * 0.1,
             this.x, this.y, this.radius
         );
         gradient.addColorStop(0, '#ffffff');
         gradient.addColorStop(1, this.color);
         
-        ctx.fillStyle = gradient;
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
-        ctx.lineWidth = 1;
-        ctx.stroke();
+        targetCtx.fillStyle = gradient;
+        targetCtx.fill();
         
+        // Garis tepi putih pudar untuk efek 3D
+        targetCtx.strokeStyle = 'rgba(255,255,255,0.3)';
+        targetCtx.lineWidth = 1;
+        targetCtx.stroke();
+        
+        // --- LABEL NAMA ATOM / MOLEKUL ---
+        // Selalu gambar teks di canvas utama (ctx) agar teks tidak ikut terdistorsi filter svg metaball
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 10px Inter';
         ctx.textAlign = 'center';
