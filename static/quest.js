@@ -274,6 +274,18 @@ window.QuestEngine = {
         if (progressEl) {
             progressEl.innerText = `${discoveredCount} / ${allMolecules.length}`;
         }
+        
+        // Animasi Staggering saat Modal Koleksi dirender
+        if (window.anime) {
+            anime({
+                targets: '#collectionContainer .collection-badge',
+                scale: [0.8, 1],
+                opacity: [0, 1],
+                delay: anime.stagger(50, {start: 100}), // berjatuhan satu per satu
+                easing: 'spring(1, 80, 10, 0)',
+                duration: 600
+            });
+        }
     },
 
     // Pengecekan Penemuan Baru
@@ -385,6 +397,11 @@ window.QuestEngine = {
         toast.className = `achievement-toast ${isMajor ? 'major' : ''}`;
         toast.innerHTML = message;
         document.body.appendChild(toast);
+
+        // Panggil Confetti khusus misi/pencapaian penting
+        if (isMajor && window.shootConfetti) {
+            window.shootConfetti();
+        }
 
         // Animasi MASUK dari atas dengan spring yang sangat ekspresif
         anime({

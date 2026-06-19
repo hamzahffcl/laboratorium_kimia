@@ -1055,3 +1055,42 @@ initDB().then(() => {
     }
     animate();
 });
+
+// ==========================================
+// EFEK UI PREMIUM: CONFETTI (Anime.js)
+// ==========================================
+window.shootConfetti = function() {
+    if (!window.anime) return;
+    
+    const colors = ['#fbbf24', '#4ade80', '#60a5fa', '#f472b6', '#a78bfa'];
+    const fragments = 80; // Jumlah partikel confetti
+    
+    for (let i = 0; i < fragments; i++) {
+        const el = document.createElement('div');
+        el.style.position = 'fixed';
+        // Mulai dari tengah layar
+        el.style.left = '50%';
+        el.style.top = '40%';
+        el.style.width = (Math.random() * 8 + 4) + 'px';
+        el.style.height = (Math.random() * 8 + 4) + 'px';
+        el.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        // Bentuk acak (lingkaran atau persegi panjang)
+        el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        el.style.zIndex = '999999';
+        el.style.pointerEvents = 'none';
+        document.body.appendChild(el);
+        
+        // Animasi sebaran ledakan (burst)
+        anime({
+            targets: el,
+            translateX: () => anime.random(-300, 300),
+            translateY: () => anime.random(-200, 400),
+            scale: [0, 1.5, 0],
+            rotate: () => anime.random(-360, 360),
+            opacity: [1, 0],
+            duration: () => anime.random(1000, 2500),
+            easing: 'easeOutExpo',
+            complete: () => el.remove() // Mencegah memory leak! Hapus setelah selesai
+        });
+    }
+};
