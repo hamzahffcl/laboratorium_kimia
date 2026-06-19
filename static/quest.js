@@ -358,6 +358,11 @@ window.QuestEngine = {
                 // Panggil Modal Edukasi
                 this.showEducationalModal(activeQuest);
                 
+                // Pemicu Ledakan Confetti saat Misi Selesai!
+                if (window.shootConfetti) {
+                    window.shootConfetti();
+                }
+                
                 // Pengecoh: Reset suhu dan tekanan ke default
                 if (typeof currentTemp !== 'undefined') {
                     currentTemp = 25;
