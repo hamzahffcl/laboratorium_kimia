@@ -776,6 +776,7 @@ function updatePHIndicator() {
 
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (liquidCtx) liquidCtx.clearRect(0, 0, canvas.width, canvas.height);
     
     // Thermal Conductivity (Newton's Law of Cooling)
     let diff = targetTemp - currentTemp;
