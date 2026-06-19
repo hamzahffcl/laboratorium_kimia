@@ -205,8 +205,32 @@ function showToast(msg) {
     const toast = document.getElementById('reaction-toast');
     toast.textContent = msg;
     toast.classList.remove('hidden');
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2500);
+
+    // Hentikan animasi sebelumnya jika ada
+    anime.remove(toast);
+
+    // Animasi MASUK - spring bouncy
+    anime({
+        targets: toast,
+        translateX: ['-50%', '-50%'], // jaga posisi horizontal tetap
+        translateY: [20, 0],
+        opacity: [0, 1],
+        duration: 500,
+        easing: 'spring(1, 80, 10, 0)',
+        complete: () => {
+            // Animasi KELUAR setelah 2.5 detik
+            anime({
+                targets: toast,
+                translateX: '-50%',
+                translateY: [0, -15],
+                opacity: [1, 0],
+                duration: 400,
+                delay: 2500,
+                easing: 'easeInCubic',
+                complete: () => toast.classList.add('hidden')
+            });
+        }
+    });
 
     const log = document.getElementById('reactionLog');
     if (log) {
@@ -214,8 +238,18 @@ function showToast(msg) {
         entry.className = 'log-entry';
         const time = new Date().toLocaleTimeString();
         entry.textContent = `[${time}] ${msg}`;
+        // Animasi entri log baru
+        entry.style.opacity = '0';
+        entry.style.transform = 'translateX(-10px)';
         log.appendChild(entry);
         log.scrollTop = log.scrollHeight;
+        anime({
+            targets: entry,
+            opacity: [0, 1],
+            translateX: [-10, 0],
+            duration: 300,
+            easing: 'easeOutQuart'
+        });
     }
 }
 
@@ -951,6 +985,17 @@ document.getElementById('addAtomBtn').addEventListener('click', () => {
         playPopSFX();
         particles.push(new Particle(atomSymbols, null, null, matchedLabel));
         if (window.QuestEngine) window.QuestEngine.saveProgress();
+
+        // Micro-animation pada tombol Tambah: pulse effect
+        const btn = document.getElementById('addAtomBtn');
+        if (btn && window.anime) {
+            anime({
+                targets: btn,
+                scale: [1, 1.15, 1],
+                duration: 350,
+                easing: 'spring(1, 80, 10, 0)'
+            });
+        }
     } else {
         alert("Atom/Molekul tidak ditemukan!");
     }

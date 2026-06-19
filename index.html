@@ -52,8 +52,8 @@
             <div class="info-panel quest-panel" style="background: rgba(255, 215, 0, 0.1); border-left: 4px solid gold; text-align: center;">
                 <h3>📜 Misi & Progres</h3>
                 <p style="font-size: 0.85rem; margin-bottom: 10px; color: #cbd5e1;">Selesaikan misi atau buka ensiklopedia untuk melihat seluruh molekul.</p>
-                <button id="openQuestJournalBtn" class="btn primary" style="width: 100%; font-size: 1rem; padding: 12px; font-weight: bold; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);" onclick="document.getElementById('questJournalModal').classList.remove('hidden')">Buka Jurnal Misi</button>
-                <button id="openCollectionBtn" class="btn" style="width: 100%; font-size: 1rem; padding: 12px; font-weight: bold; margin-top: 10px; background: #8b5cf6; color: white; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);" onclick="document.getElementById('collectionModal').classList.remove('hidden'); if(window.QuestEngine) window.QuestEngine.renderCollection();">📖 Buka Koleksi Molekul</button>
+                <button id="openQuestJournalBtn" class="btn primary" style="width: 100%; font-size: 1rem; padding: 12px; font-weight: bold; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);" onclick="openModal('questJournalModal')">Buka Jurnal Misi</button>
+                <button id="openCollectionBtn" class="btn" style="width: 100%; font-size: 1rem; padding: 12px; font-weight: bold; margin-top: 10px; background: #8b5cf6; color: white; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);" onclick="openModal('collectionModal'); if(window.QuestEngine) window.QuestEngine.renderCollection();">📖 Buka Koleksi Molekul</button>
             </div>
 
             <div class="info-panel">
@@ -77,7 +77,7 @@
             <div class="info-panel quest-panel" style="background: rgba(0, 255, 128, 0.1); border-left: 4px solid #00ff80; text-align: center; margin-top: 15px;">
                 <h3>📜 Log Reaksi</h3>
                 <p style="font-size: 0.85rem; margin-bottom: 10px; color: #cbd5e1;">Buka jendela ini untuk melihat sejarah seluruh eksperimenmu.</p>
-                <button id="openReactionLogBtn" class="btn primary" style="width: 100%; font-size: 1rem; padding: 12px; font-weight: bold; background: #00b894; box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4);" onclick="document.getElementById('reactionLogModal').classList.remove('hidden')">Buka Log Reaksi</button>
+                <button id="openReactionLogBtn" class="btn primary" style="width: 100%; font-size: 1rem; padding: 12px; font-weight: bold; background: #00b894; box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4);" onclick="openModal('reactionLogModal')">Buka Log Reaksi</button>
             </div>
             
             <!-- Watermark -->
@@ -88,22 +88,22 @@
     </div>
 
     <!-- Modal Edukasi (Awalnya Tersembunyi) -->
-    <div id="eduModalOverlay" class="edu-modal-overlay hidden">
+    <div id="eduModalOverlay" class="edu-modal-overlay">
         <div class="edu-modal">
             <h2 id="eduModalTitle" class="edu-modal-title">Catatan Observasi</h2>
             <div id="eduModalContent" class="edu-modal-content">
                 Isi edukasi...
             </div>
-            <button id="eduModalBtn" class="btn primary edu-modal-btn" onclick="document.getElementById('eduModalOverlay').classList.add('hidden')">Tutup Catatan</button>
+            <button id="eduModalBtn" class="btn primary edu-modal-btn" onclick="closeModal('eduModalOverlay')">Tutup Catatan</button>
         </div>
     </div>
 
     <!-- Jurnal Misi Modal (Awalnya Tersembunyi) -->
-    <div id="questJournalModal" class="edu-modal-overlay hidden" style="z-index: 10000;">
+    <div id="questJournalModal" class="edu-modal-overlay" style="z-index: 10000;">
         <div class="edu-modal" style="max-width: 800px; width: 90%; max-height: 90vh; display: flex; flex-direction: column;">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 15px;">
                 <h2 style="margin: 0; color: #fbbf24; font-size: 1.5rem;">📜 Jurnal Eksperimen</h2>
-                <button onclick="document.getElementById('questJournalModal').classList.add('hidden')" style="background: none; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer;">&times;</button>
+                <button onclick="closeModal('questJournalModal')" style="background: none; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer;">&times;</button>
             </div>
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; overflow-y: auto; flex: 1; padding-right: 10px;">
@@ -127,12 +127,12 @@
     </div>
 
     <!-- Koleksi Molekul Modal -->
-    <div id="collectionModal" class="edu-modal-overlay hidden" style="z-index: 10000;">
+    <div id="collectionModal" class="edu-modal-overlay" style="z-index: 10000;">
         <div class="edu-modal" style="max-width: 800px; width: 90%; max-height: 90vh; display: flex; flex-direction: column;">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 15px;">
                 <h2 style="margin: 0; color: #a78bfa; font-size: 1.5rem;">📖 Ensiklopedia Molekul</h2>
                 <div style="color: #cbd5e1; font-weight: bold; font-size: 1.1rem;">Progres: <span id="collectionProgress" style="color: #4ade80;">0 / 0</span></div>
-                <button onclick="document.getElementById('collectionModal').classList.add('hidden')" style="background: none; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer;">&times;</button>
+                <button onclick="closeModal('collectionModal')" style="background: none; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer;">&times;</button>
             </div>
             
             <div id="collectionContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; overflow-y: auto; flex: 1; padding: 10px; align-content: start;">
@@ -142,21 +142,99 @@
     </div>
 
     <!-- Log Reaksi Modal (Awalnya Tersembunyi) -->
-    <div id="reactionLogModal" class="edu-modal-overlay hidden" style="z-index: 10000;">
+    <div id="reactionLogModal" class="edu-modal-overlay" style="z-index: 10000;">
         <div class="edu-modal" style="max-width: 600px; width: 90%; height: 75vh; max-height: 800px; display: flex; flex-direction: column; background: rgba(15, 23, 42, 0.95); border: 2px solid #00ff80; box-shadow: 0 0 30px rgba(0, 255, 128, 0.3);">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 15px; margin-bottom: 15px;">
                 <h2 style="margin: 0; font-size: 1.5rem; color: #00ff80;">📜 Log Reaksi</h2>
-                <button onclick="document.getElementById('reactionLogModal').classList.add('hidden')" style="background: none; border: none; color: #cbd5e1; font-size: 2rem; cursor: pointer; padding: 0 10px; line-height: 1;">&times;</button>
+                <button onclick="closeModal('reactionLogModal')" style="background: none; border: none; color: #cbd5e1; font-size: 2rem; cursor: pointer; padding: 0 10px; line-height: 1;">&times;</button>
             </div>
             
             <!-- Wadah Log -->
             <div id="reactionLog" class="reaction-log" style="flex: 1; overflow-y: auto; text-align: left; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); margin: 0;"></div>
             
             <div style="margin-top: 20px; text-align: center;">
-                <button class="btn" style="background: #00ff80; color: #0f172a; padding: 12px 30px; font-weight: bold; width: 100%; border-radius: 8px; font-size: 1rem;" onclick="document.getElementById('reactionLogModal').classList.add('hidden')">Tutup Log</button>
+                <button class="btn" style="background: #00ff80; color: #0f172a; padding: 12px 30px; font-weight: bold; width: 100%; border-radius: 8px; font-size: 1rem;" onclick="closeModal('reactionLogModal')">Tutup Log</button>
             </div>
         </div>
     </div>
+
+    <!-- Anime.js v4 - Animation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+
+    <!-- Helper Animasi Modal -->
+    <script>
+        /**
+         * Membuka modal dengan animasi Anime.js
+         * @param {string} modalId - ID elemen modal overlay
+         */
+        function openModal(modalId) {
+            const overlay = document.getElementById(modalId);
+            if (!overlay) return;
+            const box = overlay.querySelector('.edu-modal');
+
+            // Reset inline styles dari animasi sebelumnya
+            overlay.style.opacity = '';
+            if (box) {
+                box.style.opacity = '';
+                box.style.transform = '';
+            }
+
+            overlay.classList.add('visible');
+            anime.remove(overlay);
+            if (box) anime.remove(box);
+
+            // Fade in overlay
+            anime({
+                targets: overlay,
+                opacity: [0, 1],
+                duration: 250,
+                easing: 'easeOutQuart'
+            });
+            // Scale + slide in box dengan spring
+            if (box) {
+                anime({
+                    targets: box,
+                    scale: [0.88, 1],
+                    translateY: [30, 0],
+                    opacity: [0, 1],
+                    duration: 500,
+                    easing: 'spring(1, 70, 12, 0)'
+                });
+            }
+        }
+
+        /**
+         * Menutup modal dengan animasi Anime.js
+         * @param {string} modalId - ID elemen modal overlay
+         */
+        function closeModal(modalId) {
+            const overlay = document.getElementById(modalId);
+            if (!overlay) return;
+            const box = overlay.querySelector('.edu-modal');
+
+            anime.remove(overlay);
+            if (box) anime.remove(box);
+
+            // Animasi keluar
+            anime({
+                targets: overlay,
+                opacity: [1, 0],
+                duration: 250,
+                easing: 'easeInQuart',
+                complete: () => overlay.classList.remove('visible')
+            });
+            if (box) {
+                anime({
+                    targets: box,
+                    scale: [1, 0.9],
+                    translateY: [0, 20],
+                    opacity: [1, 0],
+                    duration: 250,
+                    easing: 'easeInQuart'
+                });
+            }
+        }
+    </script>
 
     <!-- Script Utama -->
     <script src="./static/data.js?v=55"></script>

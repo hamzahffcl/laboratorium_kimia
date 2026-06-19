@@ -210,7 +210,6 @@ input[type="range"]::-webkit-slider-thumb:hover {
     display: none !important;
 }
 
-/* Toast Reaction Notification */
 .toast {
     position: absolute;
     bottom: 20px;
@@ -224,13 +223,8 @@ input[type="range"]::-webkit-slider-thumb:hover {
     font-size: 0.9rem;
     box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
     opacity: 0;
-    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     pointer-events: none;
-}
-
-.toast.show {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
+    will-change: transform, opacity;
 }
 
 /* Reaction Log List */
@@ -317,7 +311,6 @@ input[type="range"]::-webkit-slider-thumb:hover {
     display: inline-block;
 }
 
-/* Achievement Toast Popup */
 .achievement-toast {
     position: fixed;
     top: -100px;
@@ -330,16 +323,11 @@ input[type="range"]::-webkit-slider-thumb:hover {
     font-weight: bold;
     box-shadow: 0 10px 25px rgba(0,0,0,0.5), 0 0 15px rgba(59, 130, 246, 0.5);
     border: 2px solid #3b82f6;
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     z-index: 1000;
     text-align: center;
     pointer-events: none;
     opacity: 0;
-}
-
-.achievement-toast.show {
-    top: 30px;
-    opacity: 1;
+    will-change: transform, opacity;
 }
 
 .achievement-toast.major {
@@ -365,14 +353,9 @@ input[type="range"]::-webkit-slider-thumb:hover {
     pointer-events: none;
     opacity: 0;
     transform: translateY(10px);
-    transition: all 0.3s ease;
     z-index: 9999;
     border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.auto-save-toast.show {
-    opacity: 1;
-    transform: translateY(0);
+    will-change: transform, opacity;
 }
 
 /* =========================================
@@ -387,13 +370,14 @@ input[type="range"]::-webkit-slider-thumb:hover {
     align-items: center;
     justify-content: center;
     z-index: 10000;
-    opacity: 1;
-    transition: opacity 0.3s ease;
-}
-
-.edu-modal-overlay.hidden {
     opacity: 0;
     pointer-events: none;
+    will-change: opacity;
+}
+
+.edu-modal-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .edu-modal {
@@ -404,13 +388,8 @@ input[type="range"]::-webkit-slider-thumb:hover {
     max-width: 500px;
     width: 90%;
     box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 20px rgba(59, 130, 246, 0.3);
-    transform: translateY(0);
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     text-align: center;
-}
-
-.edu-modal-overlay.hidden .edu-modal {
-    transform: translateY(50px);
+    will-change: transform, opacity;
 }
 
 .edu-modal-title {

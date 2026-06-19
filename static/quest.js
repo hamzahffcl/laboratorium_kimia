@@ -386,11 +386,26 @@ window.QuestEngine = {
         toast.innerHTML = message;
         document.body.appendChild(toast);
 
-        setTimeout(() => toast.classList.add('show'), 100);
-        setTimeout(() => {
-            toast.classList.remove('show');
-            setTimeout(() => toast.remove(), 500);
-        }, 5000);
+        // Animasi MASUK dari atas dengan spring yang sangat ekspresif
+        anime({
+            targets: toast,
+            top: ['-100px', '30px'],
+            opacity: [0, 1],
+            duration: 700,
+            easing: 'spring(1, 60, 8, 0)',
+            complete: () => {
+                // Animasi KELUAR setelah 5 detik
+                anime({
+                    targets: toast,
+                    top: [30, -100],
+                    opacity: [1, 0],
+                    duration: 500,
+                    delay: 5000,
+                    easing: 'easeInBack',
+                    complete: () => toast.remove()
+                });
+            }
+        });
     },
 
     // Render Panel Misi di Layar (Ke dalam Modal Jurnal)
@@ -457,18 +472,21 @@ window.QuestEngine = {
 
     // Menampilkan Modal Edukasi
     showEducationalModal(quest) {
-        const modalOverlay = document.getElementById('eduModalOverlay');
         const modalTitle = document.getElementById('eduModalTitle');
         const modalContent = document.getElementById('eduModalContent');
         
-        if (modalOverlay && modalTitle && modalContent) {
+        if (modalTitle && modalContent) {
             modalTitle.innerHTML = `🌟 ${quest.title} Selesai!`;
             let contentHTML = `<p>${quest.educationalText}</p>`;
             if (quest.rewardText) {
                 contentHTML += `<div style="margin-top:15px; padding:10px; background:rgba(251, 191, 36, 0.2); border: 1px dashed #fbbf24; border-radius:6px; color:#fbbf24; font-weight:bold;">🎁 Reward: ${quest.rewardText}</div>`;
             }
             modalContent.innerHTML = contentHTML;
-            modalOverlay.classList.remove('hidden');
+
+            // Gunakan openModal() global agar konsisten dengan modal lain
+            if (typeof openModal === 'function') {
+                openModal('eduModalOverlay');
+            }
         }
     },
 
@@ -490,7 +508,9 @@ window.QuestEngine = {
         
         // Hindari menumpuk toast
         if (document.querySelector('.auto-save-toast')) {
-            document.querySelector('.auto-save-toast').remove();
+            const existing = document.querySelector('.auto-save-toast');
+            anime.remove(existing);
+            existing.remove();
         }
         
         const toast = document.createElement('div');
@@ -498,11 +518,26 @@ window.QuestEngine = {
         toast.innerHTML = '💾 Auto-Saved';
         document.body.appendChild(toast);
         
-        setTimeout(() => toast.classList.add('show'), 50);
-        setTimeout(() => {
-            toast.classList.remove('show');
-            setTimeout(() => toast.remove(), 500);
-        }, 2000);
+        // Animasi masuk smooth
+        anime({
+            targets: toast,
+            opacity: [0, 1],
+            translateY: [10, 0],
+            duration: 300,
+            easing: 'easeOutQuart',
+            complete: () => {
+                // Animasi keluar setelah 2 detik
+                anime({
+                    targets: toast,
+                    opacity: [1, 0],
+                    translateY: [0, 10],
+                    duration: 400,
+                    delay: 2000,
+                    easing: 'easeInQuart',
+                    complete: () => toast.remove()
+                });
+            }
+        });
     },
 
     loadProgress() {
