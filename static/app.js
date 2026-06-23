@@ -1,5 +1,7 @@
 const canvas = document.getElementById('labCanvas');
 const ctx = canvas.getContext('2d');
+const liquidCanvas = document.getElementById('liquidCanvas');
+const liquidCtx = liquidCanvas ? liquidCanvas.getContext('2d') : null;
 
 window.DB = {
     periodicTable: [],
@@ -138,6 +140,7 @@ let particleCounter = 0; // Untuk ID partikel (digunakan di Spatial Grid)
 
 // Latar belakang saat ini (Netral putih)
 let currentBg = {r: 255, g: 255, b: 255};
+let currentPH = 7.0;
 
 function resizeCanvas() {
     canvas.width = canvas.parentElement.clientWidth;
@@ -179,6 +182,15 @@ async function initDB() {
         });
 
         DB.reactions = data.reactions;
+        DB.reactionMap = new Map();
+        if (data.reactions) {
+            data.reactions.forEach(r => {
+                let key1 = `${r.r1}::${r.r2}`;
+                let key2 = `${r.r2}::${r.r1}`;
+                DB.reactionMap.set(key1, r);
+                DB.reactionMap.set(key2, r);
+            });
+        }
         
         const datalist = document.getElementById('atomList');
         window.updateAtomDatalist = function() {
@@ -499,7 +511,7 @@ function applyReactionHeat(deltaH_kJ, numReactions) {
 }
 
 function checkChemistry(p1, p2, spatialGrid) {
-    let rReaction = DB.reactions.find(r => 
+    let rReaction = DB.reactionMap ? DB.reactionMap.get(`${p1.label}::${p2.label}`) : DB.reactions.find(r => 
         (r.r1 === p1.label && r.r2 === p2.label) || 
         (r.r1 === p2.label && r.r2 === p1.label)
     );
@@ -588,20 +600,26 @@ function checkChemistry(p1, p2, spatialGrid) {
     return null;
 }
 
+const CELL_SIZE = 80;
+const spatialGrid = new Map();
+
 function resolveCollisions() {
     let toRemove = new Set();
     let toAdd = [];
     
     // Spatial Partitioning Grid (Cell Size = 80)
-    const CELL_SIZE = 80;
-    let grid = new Map();
+    spatialGrid.clear();
     
     particles.forEach(p => {
         let cx = Math.floor(p.x / CELL_SIZE);
         let cy = Math.floor(p.y / CELL_SIZE);
         let key = `${cx},${cy}`;
-        if (!grid.has(key)) grid.set(key, []);
-        grid.get(key).push(p);
+        let cell = spatialGrid.get(key);
+        if (!cell) {
+            cell = [];
+            spatialGrid.set(key, cell);
+        }
+        cell.push(p);
         p._gridX = cx;
         p._gridY = cy;
     });
@@ -614,7 +632,7 @@ function resolveCollisions() {
         for (let dx = -1; dx <= 1; dx++) {
             for (let dy = -1; dy <= 1; dy++) {
                 let neighborKey = `${p1._gridX + dx},${p1._gridY + dy}`;
-                let cell = grid.get(neighborKey);
+                let cell = spatialGrid.get(neighborKey);
                 
                 if (cell) {
                     for (let p2 of cell) {
@@ -631,7 +649,7 @@ function resolveCollisions() {
                         
                         if (dist < minDist) {
                             // Check Chemistry dengan Passing Grid (untuk Katalis)
-                            let reaction = checkChemistry(p1, p2, grid);
+                            let reaction = checkChemistry(p1, p2, spatialGrid);
                             if (reaction) {
                                 toRemove.add(p1);
                                 toRemove.add(p2);
@@ -753,10 +771,9 @@ function updatePHIndicator() {
     const k = 0.35;
     const targetPH = 7.0 - Math.tanh(concentration / k) * 7.0;
 
-    if (typeof this._currentPH === 'undefined') this._currentPH = 7.0;
     // Transisi diperlambat (0.015) agar perubahan warnanya berjalan mengalun pelan
-    this._currentPH += (targetPH - this._currentPH) * 0.015; 
-    const pH = this._currentPH;
+    currentPH += (targetPH - currentPH) * 0.015; 
+    const pH = currentPH;
 
     let targetR = 255, targetG = 255, targetB = 255;
     
@@ -966,17 +983,18 @@ document.getElementById('clearBtn').addEventListener('click', () => {
 });
 
 document.getElementById('addAtomBtn').addEventListener('click', () => {
-    let input = document.getElementById('atomInput').value.trim();
-    if (!input) return;
+    let inputOriginal = document.getElementById('atomInput').value.trim();
+    if (!inputOriginal) return;
     
-    input = input.charAt(0).toUpperCase() + input.slice(1);
+    let inputUpper = inputOriginal.toUpperCase();
     let matchedLabel = null;
     let atomSymbols = [];
     
-    if (DB.periodicTable.find(a => a.symbol === input)) {
-        atomSymbols = [input];
+    let foundAtom = DB.periodicTable.find(a => a.symbol.toUpperCase() === inputUpper);
+    if (foundAtom) {
+        atomSymbols = [foundAtom.symbol];
     } else {
-        matchedLabel = Object.keys(DB.moleculeAtoms).find(lbl => lbl.startsWith(input + " ") || lbl === input);
+        matchedLabel = Object.keys(DB.moleculeAtoms).find(lbl => lbl.split(' ')[0].toUpperCase() === inputUpper);
         if (matchedLabel) {
             atomSymbols = DB.moleculeAtoms[matchedLabel];
         }
@@ -988,6 +1006,11 @@ document.getElementById('addAtomBtn').addEventListener('click', () => {
     if (matchedLabel && unlockedList.includes(matchedLabel)) isUnlocked = true;
     else if (!matchedLabel && atomSymbols.length === 1 && unlockedList.includes(atomSymbols[0])) isUnlocked = true;
     
+    if (atomSymbols.length === 0) {
+        alert("❌ Atom atau Senyawa tidak ditemukan! Pastikan ejaannya benar (contoh: H, HCl).");
+        return;
+    }
+
     if (!isUnlocked) {
         alert("🔒 Elemen atau Senyawa ini masih TERKUNCI! Selesaikan Misi untuk membukanya.");
         return;
@@ -1027,17 +1050,18 @@ canvas.addEventListener('mousedown', (e) => {
     } else {
         infoPanel.classList.add('hidden');
         
-        let input = document.getElementById('atomInput').value.trim();
-        if (!input) return;
+        let inputOriginal = document.getElementById('atomInput').value.trim();
+        if (!inputOriginal) return;
         
-        input = input.charAt(0).toUpperCase() + input.slice(1);
+        let inputUpper = inputOriginal.toUpperCase();
         let matchedLabel = null;
         let atomSymbols = [];
         
-        if (DB.periodicTable.find(a => a.symbol === input)) {
-            atomSymbols = [input];
+        let foundAtom = DB.periodicTable.find(a => a.symbol.toUpperCase() === inputUpper);
+        if (foundAtom) {
+            atomSymbols = [foundAtom.symbol];
         } else {
-            matchedLabel = Object.keys(DB.moleculeAtoms).find(lbl => lbl.startsWith(input + " ") || lbl === input);
+            matchedLabel = Object.keys(DB.moleculeAtoms).find(lbl => lbl.split(' ')[0].toUpperCase() === inputUpper);
             if (matchedLabel) {
                 atomSymbols = DB.moleculeAtoms[matchedLabel];
             }
@@ -1049,6 +1073,11 @@ canvas.addEventListener('mousedown', (e) => {
         if (matchedLabel && unlockedList.includes(matchedLabel)) isUnlocked = true;
         else if (!matchedLabel && atomSymbols.length === 1 && unlockedList.includes(atomSymbols[0])) isUnlocked = true;
         
+        if (atomSymbols.length === 0) {
+            showToast("❌ Atom atau Senyawa tidak ditemukan!");
+            return;
+        }
+
         if (!isUnlocked) {
             showToast("🔒 Elemen ini masih terkunci!");
             return;
