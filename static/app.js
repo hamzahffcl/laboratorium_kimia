@@ -1307,6 +1307,8 @@ canvas.addEventListener('mouseleave', () => {
 // Support untuk Touch Screen (HP)
 let initialPinchDistance = null;
 let initialZoom = 1.0;
+let lastTouchCenterX = 0;
+let lastTouchCenterY = 0;
 
 canvas.addEventListener('touchstart', (e) => {
     if (e.touches.length === 2) {
@@ -1314,6 +1316,12 @@ canvas.addEventListener('touchstart', (e) => {
         let dy = e.touches[0].clientY - e.touches[1].clientY;
         initialPinchDistance = Math.hypot(dx, dy);
         initialZoom = window.camera.targetZoom;
+        
+        const rect = canvas.getBoundingClientRect();
+        let touchCenterX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+        let touchCenterY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+        lastTouchCenterX = touchCenterX - rect.left;
+        lastTouchCenterY = touchCenterY - rect.top;
         return;
     }
     
@@ -1351,13 +1359,18 @@ canvas.addEventListener('touchmove', (e) => {
             
             let newZoom = Math.max(1.0, Math.min(initialZoom * scale, 5.0));
             
-            let worldX = (mouseX - window.camera.targetX) / window.camera.targetZoom;
-            let worldY = (mouseY - window.camera.targetY) / window.camera.targetZoom;
+            // Hitung koordinat dunia berdasarkan posisi jari SEBELUM ini dan zoom saat ini
+            let worldX = (lastTouchCenterX - window.camera.targetX) / window.camera.targetZoom;
+            let worldY = (lastTouchCenterY - window.camera.targetY) / window.camera.targetZoom;
 
             window.camera.targetZoom = newZoom;
+            // Pindahkan kamera agar worldX/Y tadi tepat jatuh di bawah posisi jari BARU (mouseX/Y)
             window.camera.targetX = mouseX - worldX * window.camera.targetZoom;
             window.camera.targetY = mouseY - worldY * window.camera.targetZoom;
             clampCamera();
+            
+            lastTouchCenterX = mouseX;
+            lastTouchCenterY = mouseY;
         }
         e.preventDefault();
         return;
