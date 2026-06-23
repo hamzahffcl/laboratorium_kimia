@@ -476,15 +476,20 @@ class Particle {
 
         // --- DRAW MOLECULE STRUCTURE (ZOOM IN) ---
         if (this.moleculeName && this.atomData.length > 1 && window.camera.currentZoom >= 1.5) {
-            let centerAtom = this.atomData[0];
-            let branches = this.atomData.slice(1);
+            // Cari atom pusat (valensi tertinggi)
+            let sortedAtoms = [...this.atomData].sort((a, b) => getValence(b.symbol) - getValence(a.symbol));
+            let centerAtom = sortedAtoms[0];
+            let branches = sortedAtoms.slice(1);
             
             targetCtx.save();
             targetCtx.translate(this.x, this.y);
             targetCtx.rotate((Date.now() * 0.0005) + this.id);
             
             let angleStep = (Math.PI * 2) / branches.length;
-            let bondLength = this.radius * 0.8;
+            // Jika cabang ada 2 (seperti H2O), buat agak bengkok sedikit agar tidak lurus 180 derajat
+            if (branches.length === 2) angleStep = Math.PI * 0.75; 
+            
+            let bondLength = this.radius * 1.4;
             
             // Tangan molekul
             targetCtx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
@@ -1356,7 +1361,8 @@ canvas.addEventListener('touchend', () => {
 // Zoom Mouse Wheel
 canvas.addEventListener('wheel', (e) => {
     e.preventDefault();
-    window.camera.targetZoom += e.deltaY * -0.002;
+    // Gunakan Math.sign agar scroll di semua device (trackpad/mouse) memiliki kecepatan seragam
+    window.camera.targetZoom += Math.sign(e.deltaY) * -0.3;
     window.camera.targetZoom = Math.max(0.5, Math.min(window.camera.targetZoom, 5.0));
 }, {passive: false});
 
