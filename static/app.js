@@ -217,6 +217,18 @@ function getAtomData(symbol) {
     return DB.periodicTable.find(a => a.symbol === symbol) || DB.periodicTable.find(a => a.symbol === 'C');
 }
 
+function getValence(symbol) {
+    const valences = {
+        'H': 1, 'Li': 1, 'Na': 1, 'K': 1, 'Rb': 1, 'Cs': 1, 'Fr': 1,
+        'F': 1, 'Cl': 1, 'Br': 1, 'I': 1,
+        'O': 2, 'S': 2, 'Se': 2, 'Te': 2, 'Be': 2, 'Mg': 2, 'Ca': 2, 'Sr': 2, 'Ba': 2, 'Ra': 2,
+        'N': 3, 'P': 3, 'As': 3, 'Sb': 3, 'Bi': 3, 'B': 3, 'Al': 3,
+        'C': 4, 'Si': 4, 'Ge': 4,
+        'He': 0, 'Ne': 0, 'Ar': 0, 'Kr': 0, 'Xe': 0, 'Rn': 0
+    };
+    return valences[symbol] || 0;
+}
+
 function showToast(msg) {
     const toast = document.getElementById('reaction-toast');
     toast.textContent = msg;
@@ -441,6 +453,36 @@ class Particle {
     draw() {
         // Tentukan kanvas target: Jika zat cair dan liquidCtx tersedia, gunakan liquidCtx
         let targetCtx = (this.state === "CAIR" && typeof liquidCtx !== 'undefined' && liquidCtx !== null) ? liquidCtx : ctx;
+
+        // --- DRAW VALENCE BONDS (TANGAN ATOM) ---
+        if (!this.moleculeName && this.atomData.length === 1 && this.state !== "CAIR") {
+            let valence = getValence(this.atomData[0].symbol);
+            if (valence > 0) {
+                targetCtx.save();
+                targetCtx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+                targetCtx.lineWidth = Math.max(2, this.radius * 0.15);
+                targetCtx.lineCap = 'round';
+                
+                // Animasi rotasi lambat
+                let timeOffset = Date.now() * 0.001 * 0.5;
+                let baseAngle = timeOffset + (this.id * 0.5);
+                let angleStep = (Math.PI * 2) / valence;
+                
+                for (let i = 0; i < valence; i++) {
+                    let angle = baseAngle + (i * angleStep);
+                    let startX = this.x + Math.cos(angle) * (this.radius * 0.8);
+                    let startY = this.y + Math.sin(angle) * (this.radius * 0.8);
+                    let endX = this.x + Math.cos(angle) * (this.radius * 1.5);
+                    let endY = this.y + Math.sin(angle) * (this.radius * 1.5);
+                    
+                    targetCtx.beginPath();
+                    targetCtx.moveTo(startX, startY);
+                    targetCtx.lineTo(endX, endY);
+                    targetCtx.stroke();
+                }
+                targetCtx.restore();
+            }
+        }
 
         targetCtx.beginPath();
         targetCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
