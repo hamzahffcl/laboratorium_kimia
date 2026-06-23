@@ -3,6 +3,21 @@ const ctx = canvas.getContext('2d');
 const liquidCanvas = document.getElementById('liquidCanvas');
 const liquidCtx = liquidCanvas ? liquidCanvas.getContext('2d') : null;
 
+window.camera = { targetZoom: 1.0, currentZoom: 1.0 };
+
+function getCanvasPos(clientX, clientY) {
+    const rect = canvas.getBoundingClientRect();
+    let rawX = clientX - rect.left;
+    let rawY = clientY - rect.top;
+    
+    let cx = canvas.width / 2;
+    let cy = canvas.height / 2;
+    
+    let mx = (rawX - cx) / window.camera.currentZoom + cx;
+    let my = (rawY - cy) / window.camera.currentZoom + cy;
+    return { mx, my };
+}
+
 window.DB = {
     periodicTable: [],
     molecules: [],
@@ -453,6 +468,70 @@ class Particle {
     draw() {
         // Tentukan kanvas target: Jika zat cair dan liquidCtx tersedia, gunakan liquidCtx
         let targetCtx = (this.state === "CAIR" && typeof liquidCtx !== 'undefined' && liquidCtx !== null) ? liquidCtx : ctx;
+        
+        // Break illusion of liquid if zoomed in
+        if (window.camera.currentZoom >= 1.5) {
+            targetCtx = ctx;
+        }
+
+        // --- DRAW MOLECULE STRUCTURE (ZOOM IN) ---
+        if (this.moleculeName && this.atomData.length > 1 && window.camera.currentZoom >= 1.5) {
+            let centerAtom = this.atomData[0];
+            let branches = this.atomData.slice(1);
+            
+            targetCtx.save();
+            targetCtx.translate(this.x, this.y);
+            targetCtx.rotate((Date.now() * 0.0005) + this.id);
+            
+            let angleStep = (Math.PI * 2) / branches.length;
+            let bondLength = this.radius * 0.8;
+            
+            // Tangan molekul
+            targetCtx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+            targetCtx.lineWidth = Math.max(2, this.radius * 0.1);
+            for (let i = 0; i < branches.length; i++) {
+                let angle = i * angleStep;
+                let bx = Math.cos(angle) * bondLength;
+                let by = Math.sin(angle) * bondLength;
+                
+                targetCtx.beginPath();
+                targetCtx.moveTo(0, 0);
+                targetCtx.lineTo(bx, by);
+                targetCtx.stroke();
+            }
+            
+            // Atom Pusat
+            targetCtx.beginPath();
+            targetCtx.arc(0, 0, this.radius * 0.5, 0, Math.PI * 2);
+            targetCtx.fillStyle = centerAtom.color;
+            targetCtx.fill();
+            targetCtx.strokeStyle = 'rgba(255,255,255,0.4)';
+            targetCtx.stroke();
+            
+            // Atom Cabang
+            for (let i = 0; i < branches.length; i++) {
+                let angle = i * angleStep;
+                let bx = Math.cos(angle) * bondLength;
+                let by = Math.sin(angle) * bondLength;
+                let bAtom = branches[i];
+                
+                targetCtx.beginPath();
+                targetCtx.arc(bx, by, this.radius * 0.4, 0, Math.PI * 2);
+                targetCtx.fillStyle = bAtom.color;
+                targetCtx.fill();
+                targetCtx.stroke();
+            }
+            targetCtx.restore();
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 10px Inter';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            let displayLabel = this.moleculeName.split(' ')[0];
+            ctx.fillText(displayLabel, this.x, this.y - this.radius * 1.2);
+            
+            return; // Selesai rendering molekul
+        }
 
         // --- DRAW VALENCE BONDS (TANGAN ATOM) ---
         if (!this.moleculeName && this.atomData.length === 1 && this.state !== "CAIR") {
@@ -845,8 +924,25 @@ function updatePHIndicator() {
 }
 
 function animate() {
+    window.camera.currentZoom += (window.camera.targetZoom - window.camera.currentZoom) * 0.15;
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (liquidCtx) liquidCtx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.save();
+    if (liquidCtx) liquidCtx.save();
+    
+    let cx = canvas.width / 2;
+    let cy = canvas.height / 2;
+    ctx.translate(cx, cy);
+    ctx.scale(window.camera.currentZoom, window.camera.currentZoom);
+    ctx.translate(-cx, -cy);
+    
+    if (liquidCtx) {
+        liquidCtx.translate(cx, cy);
+        liquidCtx.scale(window.camera.currentZoom, window.camera.currentZoom);
+        liquidCtx.translate(-cx, -cy);
+    }
     
     // Thermal Conductivity (Newton's Law of Cooling)
     let diff = targetTemp - currentTemp;
@@ -949,6 +1045,9 @@ function animate() {
             document.getElementById('infoExactMass').textContent = (molData && molData.exact_mass) ? molData.exact_mass.toFixed(4) + ' Da' : "N/A";
         }
     }
+    
+    ctx.restore();
+    if (liquidCtx) liquidCtx.restore();
     
     requestAnimationFrame(animate);
 }
@@ -1088,9 +1187,7 @@ let mouseVelocityX = 0;
 let mouseVelocityY = 0;
 
 canvas.addEventListener('mousedown', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const mx = e.clientX - rect.left;
-    const my = e.clientY - rect.top;
+    let { mx, my } = getCanvasPos(e.clientX, e.clientY);
     
     // Cari partikel dari atas ke bawah (z-index visual)
     selectedParticle = particles.slice().reverse().find(p => Math.hypot(p.x - mx, p.y - my) <= p.radius * 1.5);
@@ -1148,9 +1245,7 @@ canvas.addEventListener('mousedown', (e) => {
 
 // Logic untuk Tangan (Drag & Throw)
 canvas.addEventListener('mousemove', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const mx = e.clientX - rect.left;
-    const my = e.clientY - rect.top;
+    let { mx, my } = getCanvasPos(e.clientX, e.clientY);
 
     if (draggedParticle) {
         // Kalkulasi kecepatan mouse untuk efek melempar
@@ -1188,11 +1283,20 @@ canvas.addEventListener('mouseleave', () => {
 });
 
 // Support untuk Touch Screen (HP)
+let initialPinchDistance = null;
+let initialZoom = 1.0;
+
 canvas.addEventListener('touchstart', (e) => {
-    const rect = canvas.getBoundingClientRect();
+    if (e.touches.length === 2) {
+        let dx = e.touches[0].clientX - e.touches[1].clientX;
+        let dy = e.touches[0].clientY - e.touches[1].clientY;
+        initialPinchDistance = Math.hypot(dx, dy);
+        initialZoom = window.camera.targetZoom;
+        return;
+    }
+    
     const touch = e.touches[0];
-    const mx = touch.clientX - rect.left;
-    const my = touch.clientY - rect.top;
+    let { mx, my } = getCanvasPos(touch.clientX, touch.clientY);
     
     selectedParticle = particles.slice().reverse().find(p => Math.hypot(p.x - mx, p.y - my) <= p.radius * 2);
     const infoPanel = document.getElementById('particleInfo');
@@ -1209,11 +1313,22 @@ canvas.addEventListener('touchstart', (e) => {
 }, {passive: false});
 
 canvas.addEventListener('touchmove', (e) => {
+    if (e.touches.length === 2) {
+        let dx = e.touches[0].clientX - e.touches[1].clientX;
+        let dy = e.touches[0].clientY - e.touches[1].clientY;
+        let dist = Math.hypot(dx, dy);
+        if (initialPinchDistance) {
+            let scale = dist / initialPinchDistance;
+            window.camera.targetZoom = initialZoom * scale;
+            window.camera.targetZoom = Math.max(0.5, Math.min(window.camera.targetZoom, 5.0));
+        }
+        e.preventDefault();
+        return;
+    }
+
     if (draggedParticle) {
-        const rect = canvas.getBoundingClientRect();
         const touch = e.touches[0];
-        const mx = touch.clientX - rect.left;
-        const my = touch.clientY - rect.top;
+        let { mx, my } = getCanvasPos(touch.clientX, touch.clientY);
 
         mouseVelocityX = mx - lastMouseX;
         mouseVelocityY = my - lastMouseY;
@@ -1230,12 +1345,20 @@ canvas.addEventListener('touchmove', (e) => {
 }, {passive: false});
 
 canvas.addEventListener('touchend', () => {
+    initialPinchDistance = null;
     if (draggedParticle) {
         draggedParticle.dx = mouseVelocityX * 0.8;
         draggedParticle.dy = mouseVelocityY * 0.8;
         draggedParticle = null;
     }
 });
+
+// Zoom Mouse Wheel
+canvas.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    window.camera.targetZoom += e.deltaY * -0.002;
+    window.camera.targetZoom = Math.max(0.5, Math.min(window.camera.targetZoom, 5.0));
+}, {passive: false});
 
 initDB().then(() => {
     if (window.QuestEngine) {
