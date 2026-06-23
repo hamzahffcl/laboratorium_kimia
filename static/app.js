@@ -1037,16 +1037,29 @@ document.getElementById('addAtomBtn').addEventListener('click', () => {
 });
 
 let selectedParticle = null;
+let draggedParticle = null;
+
+// Track mouse speed for throwing
+let lastMouseX = 0;
+let lastMouseY = 0;
+let mouseVelocityX = 0;
+let mouseVelocityY = 0;
+
 canvas.addEventListener('mousedown', (e) => {
     const rect = canvas.getBoundingClientRect();
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
     
-    selectedParticle = particles.find(p => Math.hypot(p.x - mx, p.y - my) <= p.radius);
+    // Cari partikel dari atas ke bawah (z-index visual)
+    selectedParticle = particles.slice().reverse().find(p => Math.hypot(p.x - mx, p.y - my) <= p.radius * 1.5);
     const infoPanel = document.getElementById('particleInfo');
     
     if (selectedParticle) {
         infoPanel.classList.remove('hidden');
+        draggedParticle = selectedParticle;
+        
+        lastMouseX = mx;
+        lastMouseY = my;
     } else {
         infoPanel.classList.add('hidden');
         
@@ -1084,9 +1097,101 @@ canvas.addEventListener('mousedown', (e) => {
         }
         
         if (atomSymbols.length > 0) {
+            playPopSFX();
             particles.push(new Particle(atomSymbols, mx, my, matchedLabel));
             if (window.QuestEngine) window.QuestEngine.saveProgress();
         }
+    }
+});
+
+// Logic untuk Tangan (Drag & Throw)
+canvas.addEventListener('mousemove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+
+    if (draggedParticle) {
+        // Kalkulasi kecepatan mouse untuk efek melempar
+        mouseVelocityX = mx - lastMouseX;
+        mouseVelocityY = my - lastMouseY;
+        
+        draggedParticle.x = mx;
+        draggedParticle.y = my;
+        draggedParticle.dx = 0;
+        draggedParticle.dy = 0;
+        
+        lastMouseX = mx;
+        lastMouseY = my;
+    } else {
+        // Ubah kursor menjadi tangan jika di atas partikel
+        const hover = particles.some(p => Math.hypot(p.x - mx, p.y - my) <= p.radius * 1.5);
+        canvas.style.cursor = hover ? 'grab' : 'default';
+    }
+});
+
+canvas.addEventListener('mouseup', () => {
+    if (draggedParticle) {
+        // Berikan momentum lemparan
+        draggedParticle.dx = mouseVelocityX * 0.8;
+        draggedParticle.dy = mouseVelocityY * 0.8;
+        draggedParticle = null;
+        canvas.style.cursor = 'grab';
+    }
+});
+
+canvas.addEventListener('mouseleave', () => {
+    if (draggedParticle) {
+        draggedParticle = null;
+    }
+});
+
+// Support untuk Touch Screen (HP)
+canvas.addEventListener('touchstart', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const touch = e.touches[0];
+    const mx = touch.clientX - rect.left;
+    const my = touch.clientY - rect.top;
+    
+    selectedParticle = particles.slice().reverse().find(p => Math.hypot(p.x - mx, p.y - my) <= p.radius * 2);
+    const infoPanel = document.getElementById('particleInfo');
+    
+    if (selectedParticle) {
+        infoPanel.classList.remove('hidden');
+        draggedParticle = selectedParticle;
+        lastMouseX = mx;
+        lastMouseY = my;
+        e.preventDefault(); // Mencegah scrolling saat drag
+    } else {
+        infoPanel.classList.add('hidden');
+    }
+}, {passive: false});
+
+canvas.addEventListener('touchmove', (e) => {
+    if (draggedParticle) {
+        const rect = canvas.getBoundingClientRect();
+        const touch = e.touches[0];
+        const mx = touch.clientX - rect.left;
+        const my = touch.clientY - rect.top;
+
+        mouseVelocityX = mx - lastMouseX;
+        mouseVelocityY = my - lastMouseY;
+        
+        draggedParticle.x = mx;
+        draggedParticle.y = my;
+        draggedParticle.dx = 0;
+        draggedParticle.dy = 0;
+        
+        lastMouseX = mx;
+        lastMouseY = my;
+        e.preventDefault();
+    }
+}, {passive: false});
+
+canvas.addEventListener('touchend', () => {
+    if (draggedParticle) {
+        draggedParticle.dx = mouseVelocityX * 0.8;
+        draggedParticle.dy = mouseVelocityY * 0.8;
+        draggedParticle = null;
     }
 });
 
