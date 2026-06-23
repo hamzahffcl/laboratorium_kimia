@@ -3,19 +3,28 @@ const ctx = canvas.getContext('2d');
 const liquidCanvas = document.getElementById('liquidCanvas');
 const liquidCtx = liquidCanvas ? liquidCanvas.getContext('2d') : null;
 
-window.camera = { targetZoom: 1.0, currentZoom: 1.0 };
+window.camera = { 
+    targetZoom: 1.0, zoom: 1.0,
+    targetX: 0, x: 0,
+    targetY: 0, y: 0
+};
 
 function getCanvasPos(clientX, clientY) {
     const rect = canvas.getBoundingClientRect();
     let rawX = clientX - rect.left;
     let rawY = clientY - rect.top;
     
-    let cx = canvas.width / 2;
-    let cy = canvas.height / 2;
-    
-    let mx = (rawX - cx) / window.camera.currentZoom + cx;
-    let my = (rawY - cy) / window.camera.currentZoom + cy;
+    let mx = (rawX - window.camera.x) / window.camera.zoom;
+    let my = (rawY - window.camera.y) / window.camera.zoom;
     return { mx, my };
+}
+
+function clampCamera() {
+    let minX = canvas.width - canvas.width * window.camera.targetZoom;
+    let minY = canvas.height - canvas.height * window.camera.targetZoom;
+    
+    window.camera.targetX = Math.min(0, Math.max(window.camera.targetX, minX));
+    window.camera.targetY = Math.min(0, Math.max(window.camera.targetY, minY));
 }
 
 window.DB = {
@@ -470,12 +479,12 @@ class Particle {
         let targetCtx = (this.state === "CAIR" && typeof liquidCtx !== 'undefined' && liquidCtx !== null) ? liquidCtx : ctx;
         
         // Break illusion of liquid if zoomed in
-        if (window.camera.currentZoom >= 1.5) {
+        if (window.camera.zoom >= 1.5) {
             targetCtx = ctx;
         }
 
         // --- DRAW MOLECULE STRUCTURE (ZOOM IN) ---
-        if (this.moleculeName && this.atomData.length > 1 && window.camera.currentZoom >= 1.5) {
+        if (this.moleculeName && this.atomData.length > 1 && window.camera.zoom >= 1.5) {
             // Cari atom pusat (valensi tertinggi)
             let sortedAtoms = [...this.atomData].sort((a, b) => getValence(b.symbol) - getValence(a.symbol));
             let centerAtom = sortedAtoms[0];
@@ -528,12 +537,16 @@ class Particle {
             }
             targetCtx.restore();
             
+            ctx.save();
+            ctx.translate(this.x, this.y - this.radius * 1.2);
+            ctx.scale(1 / window.camera.zoom, 1 / window.camera.zoom);
             ctx.fillStyle = '#ffffff';
             ctx.font = 'bold 10px Inter';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             let displayLabel = this.moleculeName.split(' ')[0];
-            ctx.fillText(displayLabel, this.x, this.y - this.radius * 1.2);
+            ctx.fillText(displayLabel, 0, 0);
+            ctx.restore();
             
             return; // Selesai rendering molekul
         }
@@ -596,10 +609,16 @@ class Particle {
         let displayLabel = this.moleculeName ? this.moleculeName.split(' ')[0] : this.label;
         if (displayLabel.length > 5) displayLabel = displayLabel.substring(0,5) + '..';
         
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.scale(1 / window.camera.zoom, 1 / window.camera.zoom);
+        
         ctx.shadowColor = "rgba(0,0,0,0.8)";
         ctx.shadowBlur = 2;
-        ctx.fillText(displayLabel, this.x, this.y);
+        ctx.fillText(displayLabel, 0, 0);
         ctx.shadowBlur = 0;
+        
+        ctx.restore();
     }
 }
 
@@ -929,7 +948,8 @@ function updatePHIndicator() {
 }
 
 function animate() {
-    window.camera.currentZoom += (window.camera.targetZoom - window.camera.currentZoom) * 0.15;
+    window.camera.zoom += (window.camera.targetZoom - window.camera.zoom) * 0.15;
+    window.camera.x += (window.camera.targetX - window.camera.x) * 0.15;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (liquidCtx) liquidCtx.clearRect(0, 0, canvas.width, canvas.height);
@@ -937,16 +957,12 @@ function animate() {
     ctx.save();
     if (liquidCtx) liquidCtx.save();
     
-    let cx = canvas.width / 2;
-    let cy = canvas.height / 2;
-    ctx.translate(cx, cy);
-    ctx.scale(window.camera.currentZoom, window.camera.currentZoom);
-    ctx.translate(-cx, -cy);
+    ctx.translate(window.camera.x, window.camera.y);
+    ctx.scale(window.camera.zoom, window.camera.zoom);
     
     if (liquidCtx) {
-        liquidCtx.translate(cx, cy);
-        liquidCtx.scale(window.camera.currentZoom, window.camera.currentZoom);
-        liquidCtx.translate(-cx, -cy);
+        liquidCtx.translate(window.camera.x, window.camera.y);
+        liquidCtx.scale(window.camera.zoom, window.camera.zoom);
     }
     
     // Thermal Conductivity (Newton's Law of Cooling)
@@ -1324,8 +1340,23 @@ canvas.addEventListener('touchmove', (e) => {
         let dist = Math.hypot(dx, dy);
         if (initialPinchDistance) {
             let scale = dist / initialPinchDistance;
-            window.camera.targetZoom = initialZoom * scale;
-            window.camera.targetZoom = Math.max(0.5, Math.min(window.camera.targetZoom, 5.0));
+            
+            let touchCenterX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+            let touchCenterY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+            
+            const rect = canvas.getBoundingClientRect();
+            let mouseX = touchCenterX - rect.left;
+            let mouseY = touchCenterY - rect.top;
+            
+            let newZoom = Math.max(1.0, Math.min(initialZoom * scale, 5.0));
+            
+            let worldX = (mouseX - window.camera.targetX) / window.camera.targetZoom;
+            let worldY = (mouseY - window.camera.targetY) / window.camera.targetZoom;
+
+            window.camera.targetZoom = newZoom;
+            window.camera.targetX = mouseX - worldX * window.camera.targetZoom;
+            window.camera.targetY = mouseY - worldY * window.camera.targetZoom;
+            clampCamera();
         }
         e.preventDefault();
         return;
@@ -1361,9 +1392,20 @@ canvas.addEventListener('touchend', () => {
 // Zoom Mouse Wheel
 canvas.addEventListener('wheel', (e) => {
     e.preventDefault();
-    // Gunakan Math.sign agar scroll di semua device (trackpad/mouse) memiliki kecepatan seragam
-    window.camera.targetZoom += Math.sign(e.deltaY) * -0.3;
-    window.camera.targetZoom = Math.max(0.5, Math.min(window.camera.targetZoom, 5.0));
+    const rect = canvas.getBoundingClientRect();
+    let mouseX = e.clientX - rect.left;
+    let mouseY = e.clientY - rect.top;
+    
+    let deltaZoom = Math.sign(e.deltaY) * -0.3;
+    let newZoom = Math.max(1.0, Math.min(window.camera.targetZoom + deltaZoom, 5.0));
+    
+    let worldX = (mouseX - window.camera.targetX) / window.camera.targetZoom;
+    let worldY = (mouseY - window.camera.targetY) / window.camera.targetZoom;
+
+    window.camera.targetZoom = newZoom;
+    window.camera.targetX = mouseX - worldX * window.camera.targetZoom;
+    window.camera.targetY = mouseY - worldY * window.camera.targetZoom;
+    clampCamera();
 }, {passive: false});
 
 initDB().then(() => {
