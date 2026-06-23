@@ -950,6 +950,7 @@ function updatePHIndicator() {
 function animate() {
     window.camera.zoom += (window.camera.targetZoom - window.camera.zoom) * 0.15;
     window.camera.x += (window.camera.targetX - window.camera.x) * 0.15;
+    window.camera.y += (window.camera.targetY - window.camera.y) * 0.15;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (liquidCtx) liquidCtx.clearRect(0, 0, canvas.width, canvas.height);
