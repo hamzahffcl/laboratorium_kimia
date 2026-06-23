@@ -1208,6 +1208,12 @@ let lastMouseY = 0;
 let mouseVelocityX = 0;
 let mouseVelocityY = 0;
 
+let isPanning = false;
+let panStartMouseX = 0;
+let panStartMouseY = 0;
+let panStartCameraX = 0;
+let panStartCameraY = 0;
+
 canvas.addEventListener('mousedown', (e) => {
     let { mx, my } = getCanvasPos(e.clientX, e.clientY);
     
@@ -1223,6 +1229,14 @@ canvas.addEventListener('mousedown', (e) => {
         lastMouseY = my;
     } else {
         infoPanel.classList.add('hidden');
+        
+        // Mulai Panning (geser layar)
+        const rect = canvas.getBoundingClientRect();
+        panStartMouseX = e.clientX - rect.left;
+        panStartMouseY = e.clientY - rect.top;
+        panStartCameraX = window.camera.targetX;
+        panStartCameraY = window.camera.targetY;
+        isPanning = true;
         
         let inputOriginal = document.getElementById('atomInput').value.trim();
         if (!inputOriginal) return;
@@ -1281,6 +1295,16 @@ canvas.addEventListener('mousemove', (e) => {
         
         lastMouseX = mx;
         lastMouseY = my;
+    } else if (isPanning) {
+        const rect = canvas.getBoundingClientRect();
+        let currentMouseX = e.clientX - rect.left;
+        let currentMouseY = e.clientY - rect.top;
+        
+        let dx = currentMouseX - panStartMouseX;
+        let dy = currentMouseY - panStartMouseY;
+        window.camera.targetX = panStartCameraX + dx;
+        window.camera.targetY = panStartCameraY + dy;
+        clampCamera();
     } else {
         // Ubah kursor menjadi tangan jika di atas partikel
         const hover = particles.some(p => Math.hypot(p.x - mx, p.y - my) <= p.radius * 1.5);
@@ -1289,6 +1313,7 @@ canvas.addEventListener('mousemove', (e) => {
 });
 
 canvas.addEventListener('mouseup', () => {
+    isPanning = false;
     if (draggedParticle) {
         // Berikan momentum lemparan
         draggedParticle.dx = mouseVelocityX * 0.8;
@@ -1299,6 +1324,7 @@ canvas.addEventListener('mouseup', () => {
 });
 
 canvas.addEventListener('mouseleave', () => {
+    isPanning = false;
     if (draggedParticle) {
         draggedParticle = null;
     }
@@ -1339,6 +1365,14 @@ canvas.addEventListener('touchstart', (e) => {
         e.preventDefault(); // Mencegah scrolling saat drag
     } else {
         infoPanel.classList.add('hidden');
+        
+        // Mulai Panning untuk layar sentuh
+        const rect = canvas.getBoundingClientRect();
+        panStartMouseX = touch.clientX - rect.left;
+        panStartMouseY = touch.clientY - rect.top;
+        panStartCameraX = window.camera.targetX;
+        panStartCameraY = window.camera.targetY;
+        isPanning = true;
     }
 }, {passive: false});
 
@@ -1391,11 +1425,26 @@ canvas.addEventListener('touchmove', (e) => {
         lastMouseX = mx;
         lastMouseY = my;
         e.preventDefault();
+    } else if (isPanning) {
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        let currentMouseX = touch.clientX - rect.left;
+        let currentMouseY = touch.clientY - rect.top;
+        
+        let dx = currentMouseX - panStartMouseX;
+        let dy = currentMouseY - panStartMouseY;
+        window.camera.targetX = panStartCameraX + dx;
+        window.camera.targetY = panStartCameraY + dy;
+        clampCamera();
+        e.preventDefault();
     }
 }, {passive: false});
 
-canvas.addEventListener('touchend', () => {
-    initialPinchDistance = null;
+canvas.addEventListener('touchend', (e) => {
+    if (e.touches.length === 0) {
+        initialPinchDistance = null;
+        isPanning = false;
+    }
     if (draggedParticle) {
         draggedParticle.dx = mouseVelocityX * 0.8;
         draggedParticle.dy = mouseVelocityY * 0.8;
