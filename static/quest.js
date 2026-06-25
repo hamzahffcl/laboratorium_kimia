@@ -241,6 +241,9 @@ window.QuestEngine = {
         if (window.updateAtomDatalist) {
             window.updateAtomDatalist();
         }
+        
+        // Cek jika ada misi yang bisa langsung diselesaikan dari riwayat
+        setTimeout(() => this.checkQuests(null), 500);
     },
 
     // ==========================================
@@ -324,11 +327,10 @@ window.QuestEngine = {
         } 
         // Logika untuk Tipe Sintesis (Default)
         else {
-            // Harus bereaksi secara langsung saat misi aktif (tidak ada auto-complete dari riwayat)
             if (Array.isArray(activeQuest.target)) {
-                isTargetMet = activeQuest.target.includes(moleculeLabel);
+                isTargetMet = activeQuest.target.includes(moleculeLabel) || activeQuest.target.some(t => this.state.discoveredMolecules.includes(t));
             } else {
-                isTargetMet = activeQuest.target === moleculeLabel;
+                isTargetMet = activeQuest.target === moleculeLabel || this.state.discoveredMolecules.includes(activeQuest.target);
             }
         }
 
