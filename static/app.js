@@ -676,7 +676,14 @@ function checkChemistry(p1, p2, spatialGrid) {
                     let cell = spatialGrid.get(cellKey);
                     if (cell) {
                         for (let cp of cell) {
-                            if (cp !== p1 && cp !== p2 && !cp.moleculeName && cp.atomData[0].symbol === rReaction.catalyst) {
+                            let isCatalyst = false;
+                            if (rReaction.catalyst.includes('(')) {
+                                isCatalyst = (cp.label === rReaction.catalyst);
+                            } else {
+                                isCatalyst = (!cp.moleculeName && cp.atomData[0].symbol === rReaction.catalyst);
+                            }
+                            
+                            if (cp !== p1 && cp !== p2 && isCatalyst) {
                                 let dist = Math.hypot(mx - cp.x, my - cp.y);
                                 if (dist <= 60) {
                                     catalystFound = true;

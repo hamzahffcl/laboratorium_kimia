@@ -18,7 +18,8 @@ window.QuestEngine = {
             target: ["H2 (Gas Hidrogen)", "Cl2 (Gas Klorin)"],
             rewardText: "Unsur Karbon (C) Terbuka.",
             rewardAtoms: ["C"],
-            educationalText: "Gas Hidrogen (H2) dan Klorin (Cl2) terbentuk karena dua atom saling meminjamkan elektron. Ikatan ini dinamakan ikatan kovalen, yang membuat molekul menjadi sangat stabil di alam."
+            educationalText: "Gas Hidrogen (H2) dan Klorin (Cl2) terbentuk karena dua atom saling meminjamkan elektron. Ikatan ini dinamakan ikatan kovalen, yang membuat molekul menjadi sangat stabil di alam.",
+            hint: "Hidrogen dan Klorin adalah gas diatomik, yang berarti mereka selalu berpasangan di alam bebas. Keluarkan dua atom H, lalu dekatkan mereka sampai menempel!"
         },
         {
             id: "Q2",
@@ -27,7 +28,8 @@ window.QuestEngine = {
             target: "HCl (Asam Klorida)",
             rewardText: "Unsur Oksigen (O) Terbuka.",
             rewardAtoms: ["O", "O2 (Gas Oksigen)"],
-            educationalText: "Asam Klorida (HCl) adalah contoh asam kuat. Sifat asam berarti ia sangat mudah melepaskan ion H+ di dalam larutan, sehingga terasa asam dan bisa menyebabkan korosi."
+            educationalText: "Asam Klorida (HCl) adalah contoh asam kuat. Sifat asam berarti ia sangat mudah melepaskan ion H+ di dalam larutan, sehingga terasa asam dan bisa menyebabkan korosi.",
+            hint: "Coba jatuhkan atom Hidrogen (H) dan atom Klorin (Cl) secara bersamaan. Di dunia nyata, Asam Klorida adalah komponen utama cairan asam di dalam lambung kita lho!"
         },
         {
             id: "Q3",
@@ -36,7 +38,8 @@ window.QuestEngine = {
             target: "H2O (Air)",
             rewardText: "Unsur Natrium (Na) Terbuka.",
             rewardAtoms: ["Na"],
-            educationalText: "Air (H2O) memiliki bentuk molekul yang agak bengkok. Berkat bentuk bengkok inilah air menjadi bersifat polar, membuatnya sangat ahli dalam melarutkan zat-zat lain."
+            educationalText: "Air (H2O) memiliki bentuk molekul yang agak bengkok. Berkat bentuk bengkok inilah air menjadi bersifat polar, membuatnya sangat ahli dalam melarutkan zat-zat lain.",
+            hint: "Air terdiri dari 2 atom Hidrogen dan 1 atom Oksigen. Tapi ingat, oksigen yang kamu punya berwujud gas O2 (dua oksigen menempel). Tabrakkan Hidrogen ke Oksigen!"
         },
         {
             id: "Q4",
@@ -45,7 +48,8 @@ window.QuestEngine = {
             target: "NaOH (Natrium Hidroksida)",
             rewardText: "Seng (Zn) & Belerang (S) Terbuka.",
             rewardAtoms: ["Zn", "S"],
-            educationalText: "Berbeda dengan asam, Natrium Hidroksida (NaOH) adalah basa kuat. Ia sangat suka menangkap ion H+ dan memiliki tekstur yang terasa licin seperti sabun jika mengenai kulit."
+            educationalText: "Berbeda dengan asam, Natrium Hidroksida (NaOH) adalah basa kuat. Ia sangat suka menangkap ion H+ dan memiliki tekstur yang terasa licin seperti sabun jika mengenai kulit.",
+            hint: "Natrium (Na) sangat reaktif. Tabrakkan Natrium dengan Oksigen dan Hidrogen untuk membuat senyawa basa yang sangat kuat ini."
         },
         {
             id: "Q5",
@@ -54,7 +58,8 @@ window.QuestEngine = {
             target: "NaCl (Garam Dapur)",
             rewardText: "Besi (Fe) & Tembaga (Cu) Terbuka.",
             rewardAtoms: ["Fe", "Cu"],
-            educationalText: "Reaksi antara asam (HCl) dan basa (NaOH) disebut reaksi netralisasi. Hasil pencampurannya tidak lagi berbahaya, karena mereka berubah menjadi garam biasa (NaCl) dan air."
+            educationalText: "Reaksi antara asam (HCl) dan basa (NaOH) disebut reaksi netralisasi. Hasil pencampurannya tidak lagi berbahaya, karena mereka berubah menjadi garam biasa (NaCl) dan air.",
+            hint: "Asam (HCl) dan Basa (NaOH) jika bertemu akan saling menetralkan, membuang air, dan menyisakan garam murni."
         },
         {
             id: "Q6",
@@ -64,7 +69,8 @@ window.QuestEngine = {
             targetAmount: 5,
             rewardText: "Golongan Non-Logam (N, P, Si, Al) Terbuka.",
             rewardAtoms: ["N", "P", "Si", "Al"],
-            educationalText: "Bagus! Kamu sudah mulai terbiasa mencoba kombinasi sendiri. Dalam dunia kimia sungguhan, banyak penemuan besar juga diawali dari eksperimen coba-coba seperti ini."
+            educationalText: "Bagus! Kamu sudah mulai terbiasa mencoba kombinasi sendiri. Dalam dunia kimia sungguhan, banyak penemuan besar juga diawali dari eksperimen coba-coba seperti ini.",
+            hint: "Lihat rumus kimianya di target misi, lalu tarik elemen-elemen yang dibutuhkan dari laci (tombol Tambah) dan tabrakkan semuanya!"
         },
         {
             id: "Q7",
@@ -73,7 +79,8 @@ window.QuestEngine = {
             target: "NH3 (Gas Amonia)",
             rewardText: "Klan Halogen & Logam Alkali Terbuka.",
             rewardAtoms: ["F", "Br", "I", "K", "Mg", "Ca"],
-            educationalText: "Amonia (NH3) banyak dipakai di pabrik sebagai bahan dasar pembuat pupuk tanaman. Jadi meski baunya menyengat, kehadirannya sangat membantu pertanian global."
+            educationalText: "Amonia (NH3) banyak dipakai di pabrik sebagai bahan dasar pembuat pupuk tanaman. Jadi meski baunya menyengat, kehadirannya sangat membantu pertanian global.",
+            hint: "Amonia butuh 1 atom Nitrogen (N) dan 3 atom Hidrogen (H). Tarik mereka semua ke area tengah kanvas."
         },
         {
             id: "Q8",
@@ -83,7 +90,8 @@ window.QuestEngine = {
             targetAmount: 12,
             rewardText: "Logam Transisi Berat (Ag, Pb, Ti) Terbuka.",
             rewardAtoms: ["Ag", "Pb", "Ti"],
-            educationalText: "Suhu dan tekanan sangat memengaruhi reaksi kimia. Ada beberapa molekul yang wujud awalnya berupa padatan atau gas, tapi bisa berubah jika kamu menaikkan atau menurunkan suhunya."
+            educationalText: "Suhu dan tekanan sangat memengaruhi reaksi kimia. Ada beberapa molekul yang wujud awalnya berupa padatan atau gas, tapi bisa berubah jika kamu menaikkan atau menurunkan suhunya.",
+            hint: "Lihat rumus kimianya di target misi, lalu tarik elemen-elemen yang dibutuhkan dari laci (tombol Tambah) dan tabrakkan semuanya!"
         },
         {
             id: "Q9",
@@ -93,7 +101,8 @@ window.QuestEngine = {
             targetAmount: 20,
             rewardText: "Gas Mulia (He, Ne, Ar, Kr, Xe, Rn) Terbuka.",
             rewardAtoms: ["He", "Ne", "Ar", "Kr", "Xe", "Rn"],
-            educationalText: "Kamu sudah membuka kumpulan unsur Gas Mulia. Golongan gas ini disebut 'mulia' karena sifatnya sangat mandiri dan hampir tidak mau bereaksi dengan atom apa pun."
+            educationalText: "Kamu sudah membuka kumpulan unsur Gas Mulia. Golongan gas ini disebut 'mulia' karena sifatnya sangat mandiri dan hampir tidak mau bereaksi dengan atom apa pun.",
+            hint: "Lihat rumus kimianya di target misi, lalu tarik elemen-elemen yang dibutuhkan dari laci (tombol Tambah) dan tabrakkan semuanya!"
         },
         {
             id: "Q10",
@@ -102,7 +111,8 @@ window.QuestEngine = {
             target: "AgCl (Endapan Perak Klorida)",
             rewardText: "Logam Ekstrem & Lantanida Terbuka.",
             rewardAtoms: ["Au", "Pt", "U", "Pu", "Ce", "Nd"],
-            educationalText: "Perak Klorida (AgCl) adalah contoh garam yang sulit larut dalam air. Di zaman dulu, senyawa ini sangat penting untuk teknologi cuci cetak lembaran foto analog."
+            educationalText: "Perak Klorida (AgCl) adalah contoh garam yang sulit larut dalam air. Di zaman dulu, senyawa ini sangat penting untuk teknologi cuci cetak lembaran foto analog.",
+            hint: "Perak (Ag) dan Klorin (Cl) akan langsung bereaksi saat bersentuhan, membentuk endapan garam perak putih."
         },
         
         {
@@ -112,7 +122,8 @@ window.QuestEngine = {
             target: "CO2 (Karbon Dioksida)",
             rewardText: "Logam Alkali Tanah Terbuka.",
             rewardAtoms: ["Ba", "Sr", "Be"],
-            educationalText: "Karbon Dioksida (CO2) sangat erat dengan proses kehidupan. Meski sering disorot sebagai penyebab pemanasan global, tanaman justru membutuhkannya sebagai 'makanan' fotosintesis."
+            educationalText: "Karbon Dioksida (CO2) sangat erat dengan proses kehidupan. Meski sering disorot sebagai penyebab pemanasan global, tanaman justru membutuhkannya sebagai 'makanan' fotosintesis.",
+            hint: "Pembakaran selalu melibatkan Oksigen. Gabungkan atom Karbon (C) dari pensilmu dengan Gas Oksigen (O2) di udara."
         },
         {
             id: "Q13",
@@ -121,7 +132,8 @@ window.QuestEngine = {
             target: "Fe2O3 (Karat Besi)",
             rewardText: "Material Oksida Terbuka.",
             rewardAtoms: ["O3 (Ozon)"],
-            educationalText: "Karat besi (Fe2O3) adalah reaksi oksidasi lambat. Oksigen perlahan mengikat atom besi, membuat logam yang tadinya keras menjadi rapuh dan keropos."
+            educationalText: "Karat besi (Fe2O3) adalah reaksi oksidasi lambat. Oksigen perlahan mengikat atom besi, membuat logam yang tadinya keras menjadi rapuh dan keropos.",
+            hint: "Proses karat tidak bisa terjadi tanpa Air! Pertama, buat Besi (Fe) bersentuhan dengan Oksigen (O2) dan Oksigen tunggal. Lalu, teteskan Air (H2O) di dekat mereka untuk menjadi katalisator pengantar elektron yang mempercepat karat!"
         },
         {
             id: "Q14",
@@ -130,7 +142,8 @@ window.QuestEngine = {
             target: "H2SO4 (Asam Sulfat)",
             rewardText: "Unsur Sintetik dan Berat Terbuka.",
             rewardAtoms: ["Tl", "Bi", "Po", "At"],
-            educationalText: "Asam Sulfat (H2SO4) adalah salah satu bahan kimia yang paling banyak diproduksi di industri. Ia bisa menyerap molekul air dari bahan organik dengan sangat agresif."
+            educationalText: "Asam Sulfat (H2SO4) adalah salah satu bahan kimia yang paling banyak diproduksi di industri. Ia bisa menyerap molekul air dari bahan organik dengan sangat agresif.",
+            hint: "Asam Sulfat (H2SO4) butuh 2 Hidrogen, 1 Sulfur, dan 4 Oksigen. Gabungkan perlahan!"
         },
         {
             id: "Q15",
@@ -139,7 +152,8 @@ window.QuestEngine = {
             target: "PbI2 (Endapan Kuning Timbal Iodida)",
             rewardText: "Halogen Ekstrem Terbuka.",
             rewardAtoms: ["As", "Se", "Sb", "Te"],
-            educationalText: "Timbal(II) Iodida (PbI2) adalah serbuk padat kuning terang. Jika serbuk ini dilarutkan ke air lalu didinginkan perlahan, akan muncul efek cantik layaknya hujan bubuk emas."
+            educationalText: "Timbal(II) Iodida (PbI2) adalah serbuk padat kuning terang. Jika serbuk ini dilarutkan ke air lalu didinginkan perlahan, akan muncul efek cantik layaknya hujan bubuk emas.",
+            hint: "Lihat rumus kimianya di target misi, lalu tarik elemen-elemen yang dibutuhkan dari laci (tombol Tambah) dan tabrakkan semuanya!"
         },
         {
             id: "Q16",
@@ -148,7 +162,8 @@ window.QuestEngine = {
             target: "CH4 (Gas Metana)",
             rewardText: "Isotop Karbon dan Boron Terbuka.",
             rewardAtoms: ["B", "Li"],
-            educationalText: "Metana (CH4) mudah terbakar sehingga sering digunakan untuk gas kompor. Gas ini secara alami sering muncul dari rawa-rawa atau pembusukan tumpukan sampah."
+            educationalText: "Metana (CH4) mudah terbakar sehingga sering digunakan untuk gas kompor. Gas ini secara alami sering muncul dari rawa-rawa atau pembusukan tumpukan sampah.",
+            hint: "Metana (CH4) adalah komponen utama gas alam. Satu atom Karbon bisa memegang maksimal empat atom Hidrogen."
         },
         {
             id: "Q17",
@@ -157,7 +172,8 @@ window.QuestEngine = {
             target: "O3 (Gas Ozon)",
             rewardText: "Logam Transisi Langka Terbuka.",
             rewardAtoms: ["V", "Cr", "Mn", "Co", "Ni"],
-            educationalText: "Ozon (O3) di langit tinggi berfungsi melindungi bumi dari radiasi ultraviolet matahari. Tapi jika Ozon berada terlalu dekat di darat, ia bisa menjadi polusi yang mengganggu pernapasan."
+            educationalText: "Ozon (O3) di langit tinggi berfungsi melindungi bumi dari radiasi ultraviolet matahari. Tapi jika Ozon berada terlalu dekat di darat, ia bisa menjadi polusi yang mengganggu pernapasan.",
+            hint: "Ozon adalah O3. Coba tabrakkan Gas Oksigen (O2) dengan satu atom Oksigen tunggal (O)."
         },
         {
             id: "Q18",
@@ -166,7 +182,8 @@ window.QuestEngine = {
             target: "CH3OH (Metanol)",
             rewardText: "Logam Tambahan Terbuka.",
             rewardAtoms: ["Ga", "Ge"],
-            educationalText: "Metanol adalah bentuk alkohol yang paling sederhana tapi paling berbahaya. Mengonsumsi metanol sedikit saja sudah cukup untuk merusak saraf dan menyebabkan kebutaan."
+            educationalText: "Metanol adalah bentuk alkohol yang paling sederhana tapi paling berbahaya. Mengonsumsi metanol sedikit saja sudah cukup untuk merusak saraf dan menyebabkan kebutaan.",
+            hint: "Lihat rumus kimianya di target misi, lalu tarik elemen-elemen yang dibutuhkan dari laci (tombol Tambah) dan tabrakkan semuanya!"
         },
         {
             id: "Q19",
@@ -175,7 +192,8 @@ window.QuestEngine = {
             target: "NH4Cl (Amonium Klorida / Salmiak)",
             rewardText: "Logam Katalis Terbuka.",
             rewardAtoms: ["Rb", "Cs"],
-            educationalText: "Saat amonia dan uap asam klorida bertemu di udara terbuka, mereka langsung membentuk partikel debu halus Amonium Klorida. Secara kasat mata, reaksinya terlihat seperti asap putih tebal."
+            educationalText: "Saat amonia dan uap asam klorida bertemu di udara terbuka, mereka langsung membentuk partikel debu halus Amonium Klorida. Secara kasat mata, reaksinya terlihat seperti asap putih tebal.",
+            hint: "Coba jatuhkan molekul Amonia (NH3) dan Asam Klorida (HCl). Keduanya akan bereaksi di udara membentuk partikel garam padat!"
         },
         {
             id: "Q20",
@@ -184,7 +202,8 @@ window.QuestEngine = {
             target: "H2O2 (Hidrogen Peroksida)",
             rewardText: "Unsur Transisi Bawah Terbuka.",
             rewardAtoms: ["Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Cd"],
-            educationalText: "Hidrogen Peroksida (H2O2) sangat suka melepaskan sisa oksigen tambahannya. Karena pelepasan tersebut, cairan ini sering dipakai sebagai pemutih pakaian atau obat antiseptik luka."
+            educationalText: "Hidrogen Peroksida (H2O2) sangat suka melepaskan sisa oksigen tambahannya. Karena pelepasan tersebut, cairan ini sering dipakai sebagai pemutih pakaian atau obat antiseptik luka.",
+            hint: "Hidrogen Peroksida (H2O2) mirip dengan Air (H2O), tapi kelebihan satu Oksigen. Tabrakkan Air dengan Oksigen tambahan!"
         },
         {
             id: "Q21",
@@ -193,7 +212,8 @@ window.QuestEngine = {
             target: "K2SO4 (Kalium Sulfat)",
             rewardText: "Lantanida Utama Terbuka.",
             rewardAtoms: ["Pr", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu"],
-            educationalText: "Garam Kalium Sulfat ini banyak ditebar di lahan pertanian untuk menyuburkan tanah. Petani menyukainya karena tidak mengandung zat klorida yang kadang buruk untuk beberapa tanaman."
+            educationalText: "Garam Kalium Sulfat ini banyak ditebar di lahan pertanian untuk menyuburkan tanah. Petani menyukainya karena tidak mengandung zat klorida yang kadang buruk untuk beberapa tanaman.",
+            hint: "Lihat rumus kimianya di target misi, lalu tarik elemen-elemen yang dibutuhkan dari laci (tombol Tambah) dan tabrakkan semuanya!"
         },
         {
             id: "Q22",
@@ -202,7 +222,8 @@ window.QuestEngine = {
             target: "HCN (Asam Sianida)",
             rewardText: "Unsur Radioaktif Aktinida Terbuka.",
             rewardAtoms: ["Th", "Pa", "Np", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr"],
-            educationalText: "Asam sianida (HCN) cukup terkenal lewat novel detektif karena aromanya mirip kacang almond pahit. Ini adalah gas yang sangat amat beracun dan mematikan."
+            educationalText: "Asam sianida (HCN) cukup terkenal lewat novel detektif karena aromanya mirip kacang almond pahit. Ini adalah gas yang sangat amat beracun dan mematikan.",
+            hint: "Lihat rumus kimianya di target misi, lalu tarik elemen-elemen yang dibutuhkan dari laci (tombol Tambah) dan tabrakkan semuanya!"
         },
         {
             id: "Q23",
@@ -211,7 +232,8 @@ window.QuestEngine = {
             target: "TiO2 (Titanium Dioksida)",
             rewardText: "Sisa Elemen Post-Transisi Terbuka.",
             rewardAtoms: ["In", "Sn"],
-            educationalText: "Hampir semua benda berwarna putih di rumahmu (seperti cat dinding atau pasta gigi) mengandung senyawa Titanium Dioksida (TiO2), karena sifatnya yang luar biasa dalam memantulkan cahaya."
+            educationalText: "Hampir semua benda berwarna putih di rumahmu (seperti cat dinding atau pasta gigi) mengandung senyawa Titanium Dioksida (TiO2), karena sifatnya yang luar biasa dalam memantulkan cahaya.",
+            hint: "Lihat rumus kimianya di target misi, lalu tarik elemen-elemen yang dibutuhkan dari laci (tombol Tambah) dan tabrakkan semuanya!"
         },
         {
             id: "Q24",
@@ -220,7 +242,8 @@ window.QuestEngine = {
             target: "SF6 (Sulfur Heksafluorida)",
             rewardText: "Elemen Langka Tersisa Terbuka.",
             rewardAtoms: ["Hf", "Ta", "W", "Re", "Os", "Ir"],
-            educationalText: "Sulfur Heksafluorida (SF6) adalah gas yang tidak berwarna dan tidak berbau. Menariknya, massanya enam kali lebih padat dari udara biasa, jadi kamu bahkan bisa mengapungkan perahu mainan di atas gas ini."
+            educationalText: "Sulfur Heksafluorida (SF6) adalah gas yang tidak berwarna dan tidak berbau. Menariknya, massanya enam kali lebih padat dari udara biasa, jadi kamu bahkan bisa mengapungkan perahu mainan di atas gas ini.",
+            hint: "Belerang (S) ada di tengah, dikelilingi oleh enam Fluorin (F). Ini butuh ketelatenan ekstra."
         },
         {
             id: "Q25",
@@ -230,7 +253,8 @@ window.QuestEngine = {
             targetAmount: 45,
             rewardText: "Seluruh 118 Unsur Tabel Periodik Terbuka Penuh.",
             rewardAtoms: ["ALL"],
-            educationalText: "Selamat! Kamu telah merampungkan semua misi dasar. Sekarang kamu punya akses utuh ke 118 unsur di tabel periodik. Bersenang-senanglah bermain secara bebas di mode lab tanpa batas ini!"
+            educationalText: "Selamat! Kamu telah merampungkan semua misi dasar. Sekarang kamu punya akses utuh ke 118 unsur di tabel periodik. Bersenang-senanglah bermain secara bebas di mode lab tanpa batas ini!",
+            hint: "Lihat rumus kimianya di target misi, lalu tarik elemen-elemen yang dibutuhkan dari laci (tombol Tambah) dan tabrakkan semuanya!"
         }
     ],
 
@@ -464,8 +488,20 @@ window.QuestEngine = {
                         <p style="color: #94a3b8; font-family: monospace; font-size: 0.85rem; line-height: 1.5; margin-top: 8px;">"${quest.description}"</p>
                         ${progressText}
                         <div class="quest-reward" style="margin-top: 10px; border-left: 3px solid #fbbf24; padding-left: 8px;"><strong>Reward:</strong> <span style="color:#e2e8f0">${quest.rewardText}</span></div>
+                        <div id="hintBtnContainer-${quest.id}" style="margin-top: 10px; text-align: center;"></div>
                     </div>
                 `;
+
+                // Tampilkan tombol hint setelah 15 detik
+                setTimeout(() => {
+                    const hintContainer = document.getElementById(`hintBtnContainer-${quest.id}`);
+                    if (hintContainer && hintContainer.innerHTML === '') {
+                        hintContainer.innerHTML = `<button onclick="QuestEngine.showHintModal('${quest.id}')" style="background: rgba(251, 191, 36, 0.2); border: 1px dashed #fbbf24; border-radius: 6px; color: #fbbf24; font-weight: bold; padding: 5px 15px; cursor: pointer; transition: all 0.3s; width: 100%;">💡 Tampilkan Petunjuk</button>`;
+                        if (window.anime) {
+                            anime({ targets: hintContainer.children[0], scale: [0.8, 1], opacity: [0, 1], duration: 500, easing: 'spring(1, 80, 10, 0)' });
+                        }
+                    }
+                }, 15000);
             } 
             // Tampilkan misi yang sudah selesai
             else if (isCompleted) {
@@ -519,6 +555,23 @@ window.QuestEngine = {
         const quest = this.quests.find(q => q.id === questId);
         if (quest) {
             this.showEducationalModal(quest);
+        }
+    },
+
+    // Menampilkan Hint
+    showHintModal(questId) {
+        const quest = this.quests.find(q => q.id === questId);
+        if (quest && quest.hint) {
+            const modalTitle = document.getElementById('eduModalTitle');
+            const modalContent = document.getElementById('eduModalContent');
+            
+            if (modalTitle && modalContent) {
+                modalTitle.innerHTML = `💡 Petunjuk Misi`;
+                modalContent.innerHTML = `<p style="color: #cbd5e1; font-size: 1.05rem; line-height: 1.6;">${quest.hint}</p>`;
+                if (typeof openModal === 'function') {
+                    openModal('eduModalOverlay');
+                }
+            }
         }
     },
 

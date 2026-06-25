@@ -18554,6 +18554,42 @@
       "min_temp_catalyzed": null,
       "is_exothermic": 1,
       "delta_H_kJ": -50
+    },
+    {
+      "r1": "Fe",
+      "r2": "O",
+      "products": [
+        "FeO (Besi(II) Oksida)"
+      ],
+      "min_temp": 5000,
+      "catalyst": "H2O (Air)",
+      "min_temp_catalyzed": 20,
+      "is_exothermic": 1,
+      "delta_H_kJ": -50
+    },
+    {
+      "r1": "Fe",
+      "r2": "O2 (Gas Oksigen)",
+      "products": [
+        "[FeO2]* (Kompleks Oksidasi Besi)"
+      ],
+      "min_temp": 5000,
+      "catalyst": "H2O (Air)",
+      "min_temp_catalyzed": 20,
+      "is_exothermic": 1,
+      "delta_H_kJ": -50
+    },
+    {
+      "r1": "[FeO2]* (Kompleks Oksidasi Besi)",
+      "r2": "FeO (Besi(II) Oksida)",
+      "products": [
+        "Fe2O3 (Karat Besi)"
+      ],
+      "min_temp": 5000,
+      "catalyst": "H2O (Air)",
+      "min_temp_catalyzed": 20,
+      "is_exothermic": 1,
+      "delta_H_kJ": -100
     }
   ],
   "periodic_table": [
