@@ -383,12 +383,12 @@ class Particle {
     updatePhysics() {
         let thermo = DB.moleculeThermo[this.label];
         let mp = -273.15, bp = -273.15;
-        if (thermo) {
+        if (thermo && thermo.mp !== undefined) {
             mp = thermo.mp;
             bp = thermo.bp;
         } else if (!this.moleculeName) {
             let atm = this.atomData[0];
-            if (atm.mp !== undefined && atm.bp !== undefined && atm.mp !== 0.0) {
+            if (atm && atm.mp !== undefined && atm.bp !== undefined && atm.mp !== 0.0) {
                 mp = atm.mp;
                 bp = atm.bp;
             } else {
