@@ -6704,6 +6704,20 @@
       "acid_base_type": null,
       "acid_base_strength": null,
       "ionization_factor": null
+    },
+    {
+      "label": "[FeO2]* (Kompleks Oksidasi Besi)",
+      "atoms_csv": "Fe,O,O",
+      "mp": 500,
+      "bp": 1000,
+      "acid_base_type": "Netral",
+      "acid_base_strength": "Tidak Ada",
+      "ionization_factor": 0,
+      "bond_type": "Radikal Bebas",
+      "molar_mass": 87.84,
+      "density": 4.5,
+      "charge": 0,
+      "complexity": 10
     }
   ],
   "reactions": [
@@ -18536,43 +18550,6 @@
         "C6H6 (Benzena)"
       ],
       "min_temp": 25,
-      "catalyst": null,
-      "min_temp_catalyzed": null,
-      "is_exothermic": 1,
-      "delta_H_kJ": -50
-    },
-    {
-      "r1": "FeO (Besi(II) Oksida)",
-      "r2": "O2 (Gas Oksigen)",
-      "products": [
-        "Fe2O3 (Karat Besi)"
-      ],
-      "min_temp": 20,
-      "catalyst": null,
-      "min_temp_catalyzed": null,
-      "is_exothermic": 1,
-      "delta_H_kJ": -100
-    },
-    {
-      "r1": "Fe",
-      "r2": "O2 (Gas Oksigen)",
-      "products": [
-        "Fe2O3 (Karat Besi)"
-      ],
-      "min_temp": 20,
-      "catalyst": null,
-      "min_temp_catalyzed": null,
-      "is_exothermic": 1,
-      "delta_H_kJ": -100
-    },
-    {
-      "r1": "FeO (Besi(II) Oksida)",
-      "r2": "FeO (Besi(II) Oksida)",
-      "products": [
-        "Fe2O3 (Karat Besi)",
-        "Fe"
-      ],
-      "min_temp": 20,
       "catalyst": null,
       "min_temp_catalyzed": null,
       "is_exothermic": 1,
