@@ -207,12 +207,18 @@ async function initDB() {
 
         DB.reactions = data.reactions;
         DB.reactionMap = new Map();
+        DB.catalystMap = new Map();
         if (data.reactions) {
             data.reactions.forEach(r => {
                 let key1 = `${r.r1}::${r.r2}`;
                 let key2 = `${r.r2}::${r.r1}`;
                 DB.reactionMap.set(key1, r);
                 DB.reactionMap.set(key2, r);
+                
+                if (r.catalyst) {
+                    DB.catalystMap.set(`${r.r1}::${r.catalyst}`, true);
+                    DB.catalystMap.set(`${r.r2}::${r.catalyst}`, true);
+                }
             });
         }
         
@@ -752,6 +758,21 @@ function checkChemistry(p1, p2, spatialGrid) {
     return null;
 }
 
+function areParticlesRelated(p1, p2) {
+    if (DB.reactionMap && DB.reactionMap.has(`${p1.label}::${p2.label}`)) return true;
+    
+    if (DB.catalystMap) {
+        let catKey1 = p2.moleculeName ? p2.label : (p2.atomData.length === 1 ? p2.atomData[0].symbol : p2.label);
+        let catKey2 = p1.moleculeName ? p1.label : (p1.atomData.length === 1 ? p1.atomData[0].symbol : p1.label);
+        
+        if (DB.catalystMap.has(`${p1.label}::${catKey1}`)) return true;
+        if (DB.catalystMap.has(`${p2.label}::${catKey2}`)) return true;
+        if (DB.catalystMap.has(`${p1.label}::${p2.label}`)) return true;
+        if (DB.catalystMap.has(`${p2.label}::${p1.label}`)) return true;
+    }
+    return false;
+}
+
 const CELL_SIZE = 80;
 const spatialGrid = new Map();
 
@@ -798,6 +819,21 @@ function resolveCollisions() {
                         let distY = p1.y - p2.y;
                         let dist = Math.hypot(distX, distY);
                         let minDist = p1.radius + p2.radius;
+                        
+                        // --- GAYA TARIK KIMIA (CHEMICAL ATTRACTION) ---
+                        if (dist >= minDist && dist < minDist + 150) {
+                            if (areParticlesRelated(p1, p2)) {
+                                // Kekuatan tarik mengecil sesuai jarak
+                                let force = 0.08 * (1 - (dist - minDist) / 150); 
+                                let nx = distX / dist;
+                                let ny = distY / dist;
+                                
+                                p1.dx -= nx * force / p1.mass;
+                                p1.dy -= ny * force / p1.mass;
+                                p2.dx += nx * force / p2.mass;
+                                p2.dy += ny * force / p2.mass;
+                            }
+                        }
                         
                         if (dist < minDist) {
                             // Check Chemistry dengan Passing Grid (untuk Katalis)
