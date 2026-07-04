@@ -823,16 +823,16 @@ function resolveCollisions() {
                         // --- GAYA TARIK KIMIA (CHEMICAL ATTRACTION) ---
                         if (dist >= minDist && dist < minDist + 150) {
                             if (areParticlesRelated(p1, p2)) {
-                                // Kekuatan tarik mengecil sesuai jarak. Dikalikan konstanta besar (25.0) 
-                                // agar ketika dibagi massa partikel (misal Fe=55, H2O=18), akselerasinya tetap terasa (~0.5 - 1.0 per frame).
-                                let force = 25.0 * (1 - (dist - minDist) / 150); 
+                                // Memindahkan posisi (x,y) secara langsung agar efek tarikan mutlak terjadi
+                                // dan tidak teredam oleh gesekan (friction) atau gravitasi di updatePhysics.
+                                let pullSpeed = 2.0 * (1 - (dist - minDist) / 150); 
                                 let nx = distX / dist;
                                 let ny = distY / dist;
                                 
-                                p1.dx -= nx * force / p1.mass;
-                                p1.dy -= ny * force / p1.mass;
-                                p2.dx += nx * force / p2.mass;
-                                p2.dy += ny * force / p2.mass;
+                                p1.x -= nx * pullSpeed;
+                                p1.y -= ny * pullSpeed;
+                                p2.x += nx * pullSpeed;
+                                p2.y += ny * pullSpeed;
                             }
                         }
                         
