@@ -773,7 +773,7 @@ function areParticlesRelated(p1, p2) {
     return false;
 }
 
-const CELL_SIZE = 80;
+const CELL_SIZE = 200;
 const spatialGrid = new Map();
 
 function resolveCollisions() {
@@ -823,8 +823,9 @@ function resolveCollisions() {
                         // --- GAYA TARIK KIMIA (CHEMICAL ATTRACTION) ---
                         if (dist >= minDist && dist < minDist + 150) {
                             if (areParticlesRelated(p1, p2)) {
-                                // Kekuatan tarik mengecil sesuai jarak
-                                let force = 0.08 * (1 - (dist - minDist) / 150); 
+                                // Kekuatan tarik mengecil sesuai jarak. Dikalikan konstanta besar (25.0) 
+                                // agar ketika dibagi massa partikel (misal Fe=55, H2O=18), akselerasinya tetap terasa (~0.5 - 1.0 per frame).
+                                let force = 25.0 * (1 - (dist - minDist) / 150); 
                                 let nx = distX / dist;
                                 let ny = distY / dist;
                                 
