@@ -236,6 +236,9 @@ async function initDB() {
             });
         };
         updateAtomDatalist();
+        if (window.AtomSpriteSystem && window.AtomSpriteSystem.preload) {
+            window.AtomSpriteSystem.preload();
+        }
 
     } catch (e) {
         console.error("Gagal memuat data", e);
@@ -244,16 +247,18 @@ async function initDB() {
 }
 
 function getAtomData(symbol) {
-    return DB.periodicTable.find(a => a.symbol === symbol) || DB.periodicTable.find(a => a.symbol === 'C');
+    let found = DB.periodicTable.find(a => a.symbol === symbol);
+    if (found) return found;
+    return { symbol: symbol, name: symbol, mass: 12, color: '#64748b', charge: 0 };
 }
 
 function getValence(symbol) {
     const valences = {
         'H': 1, 'Li': 1, 'Na': 1, 'K': 1, 'Rb': 1, 'Cs': 1, 'Fr': 1,
-        'F': 1, 'Cl': 1, 'Br': 1, 'I': 1,
-        'O': 2, 'Se': 2, 'Te': 2, 'Be': 2, 'Mg': 2, 'Ca': 2, 'Sr': 2, 'Ba': 2, 'Ra': 2,
-        'N': 3, 'As': 3, 'Sb': 3, 'Bi': 3, 'B': 3, 'Al': 3,
-        'C': 4, 'Si': 4, 'Ge': 4,
+        'F': 1, 'Cl': 1, 'Br': 1, 'I': 1, 'At': 1, 'Ag': 1,
+        'O': 2, 'Se': 2, 'Te': 2, 'Be': 2, 'Mg': 2, 'Ca': 2, 'Sr': 2, 'Ba': 2, 'Ra': 2, 'Zn': 2, 'Cu': 2, 'Cd': 2, 'Hg': 2,
+        'N': 3, 'As': 3, 'Sb': 3, 'Bi': 3, 'B': 3, 'Al': 3, 'Fe': 3, 'Au': 3, 'Cr': 3,
+        'C': 4, 'Si': 4, 'Ge': 4, 'Sn': 4, 'Pb': 4, 'Ti': 4, 'Pt': 4,
         'P': 5,
         'S': 6,
         'He': 0, 'Ne': 0, 'Ar': 0, 'Kr': 0, 'Xe': 0, 'Rn': 0
@@ -363,8 +368,15 @@ window.AtomSpriteSystem = {
             this.sprites[symbol] = { img, loaded: false, error: false };
             img.onload = () => { this.sprites[symbol].loaded = true; };
             img.onerror = () => { this.sprites[symbol].error = true; };
+            if (img.complete && img.naturalWidth > 0) {
+                this.sprites[symbol].loaded = true;
+            }
         }
-        return this.sprites[symbol].loaded ? this.sprites[symbol].img : null;
+        return (this.sprites[symbol].loaded || (this.sprites[symbol].img && this.sprites[symbol].img.complete && this.sprites[symbol].img.naturalWidth > 0)) ? this.sprites[symbol].img : null;
+    },
+    preload(symbolList) {
+        const list = symbolList || Object.keys(this.mapping);
+        list.forEach(sym => this.getSprite(sym));
     },
     drawAtom(targetCtx, symbol, x, y, radius, particleId) {
         if (!this.enabled) return false;
@@ -438,7 +450,7 @@ class Particle {
         
         // Hitung radius partikel berdasarkan kelompok Ar / Mr
         let m = this.mass;
-        if (moleculeName) {
+        if (moleculeName && this.atomData.length > 1) {
             // Molekul menggunakan massa total (Mr) dengan sedikit penyesuaian
             if (m <= 10) this.radius = 16;
             else if (m <= 30) this.radius = 22;
@@ -598,10 +610,10 @@ class Particle {
             }
         }
 
-        let cleanMolFormula = this.moleculeName ? this.moleculeName.split(' ')[0].trim() : '';
+        let cleanMolFormula = this.moleculeName ? this.moleculeName.split(' ')[0].trim() : this.atomData.map(a => a.symbol).join('');
 
         // Dukung SEMUA molekul majemuk (termasuk molekul panjang seperti H2SO4, Na2SO4, C2H5OH, dll)
-        if (this.moleculeName && this.atomData.length > 1) {
+        if (this.atomData.length > 1) {
             try {
                 // Cari atom pusat (valensi tertinggi, atau atom pertama jika sama)
                 let sortedAtoms = [...this.atomData].sort((a, b) => getValence(b.symbol) - getValence(a.symbol));
@@ -724,7 +736,7 @@ class Particle {
         }
 
         // --- DRAW VALENCE BONDS (TANGAN ATOM) ---
-        if (!this.moleculeName && this.atomData.length === 1 && this.state !== "CAIR") {
+        if (this.atomData.length === 1 && this.state !== "CAIR") {
             let valence = getValence(this.atomData[0].symbol);
             if (valence > 0) {
                 targetCtx.save();
@@ -754,7 +766,7 @@ class Particle {
         }
 
         let drawnWithSprite = false;
-        if (!this.moleculeName && this.atomData.length === 1) {
+        if (this.atomData.length === 1) {
             drawnWithSprite = window.AtomSpriteSystem.drawAtom(targetCtx, this.atomData[0].symbol, this.x, this.y, this.radius, this.id);
         }
 
