@@ -474,7 +474,8 @@ class Particle {
             else if (moleculeName.includes('Ester') || moleculeName.includes('Karboksilat')) this.color = '#f59e0b';
             else this.color = '#64748b';
         } else {
-            this.color = this.atomData[0].color;
+            let baseColor = (this.atomData[0] && this.atomData[0].color) ? this.atomData[0].color : '#64748b';
+            this.color = baseColor.replace(/\s+/g, '');
         }
         
         this.state = "GAS";
@@ -766,7 +767,11 @@ class Particle {
                 this.x, this.y, this.radius
             );
             gradient.addColorStop(0, '#ffffff');
-            gradient.addColorStop(1, this.color);
+            try {
+                gradient.addColorStop(1, this.color || '#64748b');
+            } catch (err) {
+                gradient.addColorStop(1, '#64748b');
+            }
             
             targetCtx.fillStyle = gradient;
             targetCtx.fill();
@@ -1162,128 +1167,136 @@ function updatePHIndicator() {
 }
 
 function animate() {
-    window.camera.zoom += (window.camera.targetZoom - window.camera.zoom) * 0.15;
-    window.camera.x += (window.camera.targetX - window.camera.x) * 0.15;
-    window.camera.y += (window.camera.targetY - window.camera.y) * 0.15;
+    try {
+        window.camera.zoom += (window.camera.targetZoom - window.camera.zoom) * 0.15;
+        window.camera.x += (window.camera.targetX - window.camera.x) * 0.15;
+        window.camera.y += (window.camera.targetY - window.camera.y) * 0.15;
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (liquidCtx) liquidCtx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    ctx.save();
-    if (liquidCtx) liquidCtx.save();
-    
-    ctx.translate(window.camera.x, window.camera.y);
-    ctx.scale(window.camera.zoom, window.camera.zoom);
-    
-    if (liquidCtx) {
-        liquidCtx.translate(window.camera.x, window.camera.y);
-        liquidCtx.scale(window.camera.zoom, window.camera.zoom);
-    }
-    
-    // Thermal Conductivity (Newton's Law of Cooling)
-    let diff = targetTemp - currentTemp;
-    let step = diff * 0.01;
-    
-    // Batasi kecepatan pemanasan ekstrim (misal ke 5000C) agar tidak instan
-    if (step > 2.5) step = 2.5; 
-    if (step < -5.0) step = -5.0; // Pendinginan boleh lebih cepat sedikit
-    
-    currentTemp += step;
-    
-    updatePHIndicator();
-    
-    particles.forEach(p => p.updatePhysics());
-    resolveCollisions();
-    
-    // Draw Particles
-    particles.forEach(p => p.draw());
-    
-    // Draw Flashes
-    flashes.forEach(f => {
-        f.update();
-        f.draw();
-    });
-    flashes = flashes.filter(f => f.alpha > 0);
-    
-    // Draw VFX Particles
-    visualEffects.forEach(v => {
-        v.update();
-        v.draw();
-    });
-    visualEffects = visualEffects.filter(v => v.life > 0);
-    
-    // --- THERMAL VISUAL CUES ---
-    if (currentTemp > 80) {
-        let intensity = Math.min((currentTemp - 80) / 200, 1.0);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (liquidCtx) liquidCtx.clearRect(0, 0, canvas.width, canvas.height);
         
-        // Embers / Heat wave overlay (tanpa mengganggu pH background color)
         ctx.save();
-        ctx.fillStyle = `rgba(255, 60, 0, ${0.05 * intensity})`;
-        ctx.fillRect(0, canvas.height - 50 * intensity, canvas.width, 50 * intensity);
+        if (liquidCtx) liquidCtx.save();
         
-        // Spawn heat distortion / embers
-        if (Math.random() < 0.2 * intensity && particles.length > 0) {
-            let px = Math.random() * canvas.width;
-            let py = canvas.height - Math.random() * 20;
-            let vfx = new VisualEffect(px, py, 'smoke');
-            vfx.color = '255, 100, 0'; // api/oranye
-            vfx.life = 0.5 + Math.random() * 0.5;
-            visualEffects.push(vfx);
+        ctx.translate(window.camera.x, window.camera.y);
+        ctx.scale(window.camera.zoom, window.camera.zoom);
+        
+        if (liquidCtx) {
+            liquidCtx.translate(window.camera.x, window.camera.y);
+            liquidCtx.scale(window.camera.zoom, window.camera.zoom);
         }
-        ctx.restore();
-    } else if (currentTemp < 0) {
-        let intensity = Math.min(Math.abs(currentTemp) / 100, 1.0);
         
-        // Frost border vignette
-        ctx.save();
-        ctx.strokeStyle = `rgba(200, 240, 255, ${0.4 * intensity})`;
-        ctx.lineWidth = 15 * intensity;
-        ctx.strokeRect(0, 0, canvas.width, canvas.height);
+        // Thermal Conductivity (Newton's Law of Cooling)
+        let diff = targetTemp - currentTemp;
+        let step = diff * 0.01;
         
-        // Spawn frost / ice crystals
-        if (Math.random() < 0.1 * intensity && particles.length > 0) {
-            let px = Math.random() * canvas.width;
-            let py = Math.random() * canvas.height;
-            let vfx = new VisualEffect(px, py, 'smoke');
-            vfx.color = '200, 240, 255'; // es
-            vfx.vx = (Math.random() - 0.5) * 0.5;
-            vfx.vy = Math.random() * 0.5 + 0.1; // jatuh ke bawah
-            vfx.life = 0.8 + Math.random() * 0.5;
-            visualEffects.push(vfx);
-        }
-        ctx.restore();
-    }
-    
-    // Live update Info Panel
-    if (selectedParticle) {
-        if (!particles.includes(selectedParticle)) {
-            selectedParticle = null;
-            document.getElementById('particleInfo').classList.add('hidden');
-        } else {
-            let molData = DB.molecules.find(m => m.label === selectedParticle.label);
-            document.getElementById('infoName').textContent = selectedParticle.label;
-            document.getElementById('infoCurrentTemp').textContent = currentTemp.toFixed(1) + ' °C';
-            document.getElementById('infoMolarMass').textContent = (molData && molData.molar_mass) ? molData.molar_mass.toFixed(2) + ' g/mol' : selectedParticle.mass.toFixed(2) + ' g/mol (Kalkulasi)';
-            document.getElementById('infoDensity').textContent = (molData && molData.density) ? molData.density + ' g/cm³' : 'N/A';
-            document.getElementById('infoMP').textContent = (selectedParticle.current_mp !== undefined ? selectedParticle.current_mp.toFixed(1) : "N/A") + ' °C';
-            document.getElementById('infoBP').textContent = (selectedParticle.current_bp !== undefined ? selectedParticle.current_bp.toFixed(1) : "N/A") + ' °C';
-            document.getElementById('infoPhase').textContent = selectedParticle.state;
+        // Batasi kecepatan pemanasan ekstrim (misal ke 5000C) agar tidak instan
+        if (step > 2.5) step = 2.5; 
+        if (step < -5.0) step = -5.0; // Pendinginan boleh lebih cepat sedikit
+        
+        currentTemp += step;
+        
+        updatePHIndicator();
+        
+        particles.forEach(p => p.updatePhysics());
+        resolveCollisions();
+        
+        // Draw Particles
+        particles.forEach(p => p.draw());
+        
+        // Draw Flashes
+        flashes.forEach(f => {
+            f.update();
+            f.draw();
+        });
+        flashes = flashes.filter(f => f.alpha > 0);
+        
+        // Draw VFX Particles
+        visualEffects.forEach(v => {
+            v.update();
+            v.draw();
+        });
+        visualEffects = visualEffects.filter(v => v.life > 0);
+        
+        // --- THERMAL VISUAL CUES ---
+        if (currentTemp > 80) {
+            let intensity = Math.min((currentTemp - 80) / 200, 1.0);
             
-            let abType = DB.moleculeAcidBase[selectedParticle.label];
-            let abText = "Netral";
-            if (abType === 'ACID') abText = "Asam";
-            else if (abType === 'BASE') abText = "Basa";
-            document.getElementById('infoAcidBase').textContent = abText;
+            // Embers / Heat wave overlay (tanpa mengganggu pH background color)
+            ctx.save();
+            ctx.fillStyle = `rgba(255, 60, 0, ${0.05 * intensity})`;
+            ctx.fillRect(0, canvas.height - 50 * intensity, canvas.width, 50 * intensity);
             
-            let bondText = molData && molData.bond_type ? molData.bond_type : "Tidak Diketahui";
-            document.getElementById('infoBondType').textContent = bondText;
-            document.getElementById('infoIUPAC').textContent = (molData && molData.iupac_name) ? molData.iupac_name : "N/A";
-            document.getElementById('infoExactMass').textContent = (molData && molData.exact_mass) ? molData.exact_mass.toFixed(4) + ' Da' : "N/A";
+            // Spawn heat distortion / embers
+            if (Math.random() < 0.2 * intensity && particles.length > 0) {
+                let px = Math.random() * canvas.width;
+                let py = canvas.height - Math.random() * 20;
+                let vfx = new VisualEffect(px, py, 'smoke');
+                vfx.color = '255, 100, 0'; // api/oranye
+                vfx.life = 0.5 + Math.random() * 0.5;
+                visualEffects.push(vfx);
+            }
+            ctx.restore();
+        } else if (currentTemp < 0) {
+            let intensity = Math.min(Math.abs(currentTemp) / 100, 1.0);
+            
+            // Frost border vignette
+            ctx.save();
+            ctx.strokeStyle = `rgba(200, 240, 255, ${0.4 * intensity})`;
+            ctx.lineWidth = 15 * intensity;
+            ctx.strokeRect(0, 0, canvas.width, canvas.height);
+            
+            // Spawn frost / ice crystals
+            if (Math.random() < 0.1 * intensity && particles.length > 0) {
+                let px = Math.random() * canvas.width;
+                let py = Math.random() * canvas.height;
+                let vfx = new VisualEffect(px, py, 'smoke');
+                vfx.color = '200, 240, 255'; // es
+                vfx.vx = (Math.random() - 0.5) * 0.5;
+                vfx.vy = Math.random() * 0.5 + 0.1; // jatuh ke bawah
+                vfx.life = 0.8 + Math.random() * 0.5;
+                visualEffects.push(vfx);
+            }
+            ctx.restore();
         }
+        
+        // Live update Info Panel
+        if (selectedParticle) {
+            if (!particles.includes(selectedParticle)) {
+                selectedParticle = null;
+                document.getElementById('particleInfo').classList.add('hidden');
+            } else {
+                let molData = DB.molecules.find(m => m.label === selectedParticle.label);
+                document.getElementById('infoName').textContent = selectedParticle.label;
+                document.getElementById('infoCurrentTemp').textContent = currentTemp.toFixed(1) + ' °C';
+                document.getElementById('infoMolarMass').textContent = (molData && molData.molar_mass) ? molData.molar_mass.toFixed(2) + ' g/mol' : selectedParticle.mass.toFixed(2) + ' g/mol (Kalkulasi)';
+                document.getElementById('infoDensity').textContent = (molData && molData.density) ? molData.density + ' g/cm³' : 'N/A';
+                document.getElementById('infoMP').textContent = (selectedParticle.current_mp !== undefined ? selectedParticle.current_mp.toFixed(1) : "N/A") + ' °C';
+                document.getElementById('infoBP').textContent = (selectedParticle.current_bp !== undefined ? selectedParticle.current_bp.toFixed(1) : "N/A") + ' °C';
+                document.getElementById('infoPhase').textContent = selectedParticle.state;
+                
+                let abType = DB.moleculeAcidBase[selectedParticle.label];
+                let abText = "Netral";
+                if (abType === 'ACID') abText = "Asam";
+                else if (abType === 'BASE') abText = "Basa";
+                document.getElementById('infoAcidBase').textContent = abText;
+                
+                let bondText = molData && molData.bond_type ? molData.bond_type : "Tidak Diketahui";
+                document.getElementById('infoBondType').textContent = bondText;
+                document.getElementById('infoIUPAC').textContent = (molData && molData.iupac_name) ? molData.iupac_name : "N/A";
+                document.getElementById('infoExactMass').textContent = (molData && molData.exact_mass) ? molData.exact_mass.toFixed(4) + ' Da' : "N/A";
+            }
+        }
+        
+        ctx.restore();
+        if (liquidCtx) liquidCtx.restore();
+    } catch (err) {
+        console.error("Simulation error in animate:", err);
+        try {
+            ctx.restore();
+            if (liquidCtx) liquidCtx.restore();
+        } catch (_) {}
     }
-    
-    ctx.restore();
-    if (liquidCtx) liquidCtx.restore();
     
     requestAnimationFrame(animate);
 }

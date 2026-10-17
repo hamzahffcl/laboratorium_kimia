@@ -21026,7 +21026,7 @@
       "symbol": "Br",
       "name": "Bromine",
       "mass": 79.904,
-      "color": "dark red",
+      "color": "darkred",
       "charge": -1
     },
     {
@@ -21040,7 +21040,7 @@
       "symbol": "Ca",
       "name": "Calcium",
       "mass": 40.078,
-      "color": "dark gray",
+      "color": "darkgray",
       "charge": 2
     },
     {
@@ -21096,7 +21096,7 @@
       "symbol": "Mg",
       "name": "Magnesium",
       "mass": 24.305,
-      "color": "dark gray",
+      "color": "darkgray",
       "charge": 2
     },
     {
