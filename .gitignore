@@ -10,3 +10,9 @@ scratch/
 test.js
 test_parse.js
 *_report.txt
+
+# Temporary / duplicate data files (tetap ada di lokal, tidak di-commit)
+temp_data.json
+test_old.json
+static/data.json
+*.backup

@@ -347,6 +347,74 @@ class ReactionFlash {
     }
 }
 
+// --- ATOM SPRITE ANIMATION SYSTEM (PIXEL ART) ---
+window.AtomSpriteSystem = {
+    enabled: true,
+    fps: 14, // Kecepatan animasi pantulan pixel art
+    sprites: {},
+    mapping: {"H": "001_H.png", "He": "002_He.png", "Li": "003_Li.png", "Be": "004_Be.png", "B": "005_B.png", "C": "006_C.png", "N": "007_N.png", "O": "008_O.png", "F": "009_F.png", "Ne": "010_Ne.png", "Na": "011_Na.png", "Mg": "012_Mg.png", "Al": "013_Al.png", "Si": "014_Si.png", "P": "015_P.png", "S": "016_S.png", "Cl": "017_Cl.png", "Ar": "018_Ar.png", "K": "019_K.png", "Ca": "020_Ca.png", "Sc": "021_Sc.png", "Ti": "022_Ti.png", "V": "023_V.png", "Cr": "024_Cr.png", "Mn": "025_Mn.png", "Fe": "026_Fe.png", "Co": "027_Co.png", "Ni": "028_Ni.png", "Cu": "029_Cu.png", "Zn": "030_Zn.png", "Ga": "031_Ga.png", "Ge": "032_Ge.png", "As": "033_As.png", "Se": "034_Se.png", "Br": "035_Br.png", "Kr": "036_Kr.png", "Rb": "037_Rb.png", "Sr": "038_Sr.png", "Y": "039_Y.png", "Zr": "040_Zr.png", "Nb": "041_Nb.png", "Mo": "042_Mo.png", "Tc": "043_Tc.png", "Ru": "044_Ru.png", "Rh": "045_Rh.png", "Pd": "046_Pd.png", "Ag": "047_Ag.png", "Cd": "048_Cd.png", "In": "049_In.png", "Sn": "050_Sn.png", "Sb": "051_Sb.png", "Te": "052_Te.png", "I": "053_I.png", "Xe": "054_Xe.png", "Cs": "055_Cs.png", "Ba": "056_Ba.png", "La": "057_La.png", "Ce": "058_Ce.png", "Pr": "059_Pr.png", "Nd": "060_Nd.png", "Pm": "061_Pm.png", "Sm": "062_Sm.png", "Eu": "063_Eu.png", "Gd": "064_Gd.png", "Tb": "065_Tb.png", "Dy": "066_Dy.png", "Ho": "067_Ho.png", "Er": "068_Er.png", "Tm": "069_Tm.png", "Yb": "070_Yb.png", "Lu": "071_Lu.png", "Hf": "072_Hf.png", "Ta": "073_Ta.png", "W": "074_W.png", "Re": "075_Re.png", "Os": "076_Os.png", "Ir": "077_Ir.png", "Pt": "078_Pt.png", "Au": "079_Au.png", "Hg": "080_Hg.png", "Tl": "081_Tl.png", "Pb": "082_Pb.png", "Bi": "083_Bi.png", "Po": "084_Po.png", "At": "085_At.png", "Rn": "086_Rn.png", "Fr": "087_Fr.png", "Ra": "088_Ra.png", "Ac": "089_Ac.png", "Th": "090_Th.png", "Pa": "091_Pa.png", "U": "092_U.png", "Np": "093_Np.png", "Pu": "094_Pu.png", "Am": "095_Am.png", "Cm": "096_Cm.png", "Bk": "097_Bk.png", "Cf": "098_Cf.png", "Es": "099_Es.png", "Fm": "100_Fm.png", "Md": "101_Md.png", "No": "102_No.png", "Lr": "103_Lr.png", "Rf": "104_Rf.png", "Db": "105_Db.png", "Sg": "106_Sg.png", "Bh": "107_Bh.png", "Hs": "108_Hs.png", "Mt": "109_Mt.png", "Ds": "110_Ds.png", "Rg": "111_Rg.png", "Cn": "112_Cn.png", "Nh": "113_Nh.png", "Fl": "114_Fl.png", "Mc": "115_Mc.png", "Lv": "116_Lv.png", "Ts": "117_Ts.png", "Og": "118_Og.png"},
+    getSprite(symbol) {
+        if (!this.mapping[symbol]) return null;
+        if (!this.sprites[symbol]) {
+            const img = new Image();
+            img.src = `./static/atoms/${this.mapping[symbol]}`;
+            this.sprites[symbol] = { img, loaded: false, error: false };
+            img.onload = () => { this.sprites[symbol].loaded = true; };
+            img.onerror = () => { this.sprites[symbol].error = true; };
+        }
+        return this.sprites[symbol].loaded ? this.sprites[symbol].img : null;
+    },
+    drawAtom(targetCtx, symbol, x, y, radius, particleId) {
+        if (!this.enabled) return false;
+        const img = this.getSprite(symbol);
+        if (!img) return false;
+        try {
+            const totalFrames = 16;
+            const frameW = 160;
+            const frameH = 176;
+            
+            // Variasi fase agar tidak memantul kaku serempak
+            const time = Date.now() / 1000;
+            const offset = ((particleId || 0) * 0.38);
+            const frameIndex = Math.floor((time + offset) * this.fps) % totalFrames;
+            
+            // Hitung ukuran rendering proporsional terhadap radius
+            const drawW = (radius * 2) * (160 / 88);
+            const drawH = drawW * (176 / 160);
+            const drawX = x - drawW * 0.5;
+            const drawY = y - drawH * (80 / 176);
+            
+            targetCtx.save();
+            targetCtx.imageSmoothingEnabled = false; // Efek tajam pixel art
+            targetCtx.drawImage(
+                img,
+                frameIndex * frameW, 0, frameW, frameH,
+                drawX, drawY, drawW, drawH
+            );
+            targetCtx.restore();
+            return true;
+        } catch (err) {
+            return false;
+        }
+    }
+};
+
+window.toggleAtomStyle = function() {
+    if (!window.AtomSpriteSystem) return;
+    window.AtomSpriteSystem.enabled = !window.AtomSpriteSystem.enabled;
+    const btn = document.getElementById('toggleSpriteBtn');
+    if (btn) {
+        if (window.AtomSpriteSystem.enabled) {
+            btn.textContent = '🎨 Gaya Bola: Pixel Art (Aktif)';
+            btn.style.background = 'linear-gradient(135deg, #3b82f6, #8b5cf6)';
+        } else {
+            btn.textContent = '🔮 Gaya Bola: Klasik 3D (Aktif)';
+            btn.style.background = '#475569';
+        }
+    }
+    showToast(`Mode Tampilan Atom: ${window.AtomSpriteSystem.enabled ? 'Pixel Art' : 'Klasik 3D'}`);
+};
+
 class Particle {
     constructor(atomSymbols, x, y, moleculeName = null) {
         this.id = particleCounter++;
@@ -358,17 +426,19 @@ class Particle {
         
         let rad = 0;
         if (moleculeName) {
-            rad = Math.max(8, Math.log1p(this.mass) * 4);
+            rad = 44 + Math.min(this.mass, 76);
         } else {
-            rad = Math.max(6, this.mass * 0.9);
+            // Rumus ukuran atom: jika Ar = 1 (H) -> 45px, Ar = 2 -> 46px, dst.
+            rad = 44 + this.mass;
         }
-        this.radius = Math.min(rad, 40);
+        this.radius = Math.min(rad, 120); // Batas maksimal 120px agar atom berat tetap proporsional
         
         this.x = x || Math.random() * (canvas.width - 100) + 50;
         this.y = y || Math.random() * (canvas.height - 100) + 50;
         
-        this.dx = (Math.random() - 0.5) * 4;
-        this.dy = (Math.random() - 0.5) * 4;
+        // Kecepatan gerak awal diperlambat 1.5x
+        this.dx = ((Math.random() - 0.5) * 4) / 1.5;
+        this.dy = ((Math.random() - 0.5) * 4) / 1.5;
         this.restitution = 0.8;
         
         if (moleculeName) {
@@ -431,7 +501,7 @@ class Particle {
         if (currentTemp >= dynamic_bp) {
             if (this.state !== "GAS") {
                 this.state = "GAS";
-                this.dy -= 3;
+                this.dy -= 3 / 1.5;
             }
         } else if (currentTemp >= dynamic_mp) {
             this.state = "CAIR";
@@ -439,8 +509,9 @@ class Particle {
             this.state = "PADAT";
         }
         
-        let speedMult = (currentTemp + 273.15) / 298.15;
-        speedMult = Math.max(0.1, Math.min(speedMult, 3.0));
+        // Kecepatan fisika diperlambat 1.5x
+        let speedMult = ((currentTemp + 273.15) / 298.15) / 1.5;
+        speedMult = Math.max(0.1 / 1.5, Math.min(speedMult, 3.0 / 1.5));
         
         if (this.state === "GAS") {
             this.restitution = 1.0;
@@ -449,9 +520,9 @@ class Particle {
             this.dy += (Math.random() - 0.5) * 0.2 * speedMult;
         } else if (this.state === "CAIR") {
             this.restitution = 0.3; // Tidak memantul seperti bola karet
-            this.dy += 0.4; // Jatuh ke dasar wadah
+            this.dy += 0.4 / 1.5; // Jatuh ke dasar wadah
             if (currentTemp > -273) {
-                let jitter = (currentTemp + 273) * 0.00005;
+                let jitter = ((currentTemp + 273) * 0.00005) / 1.5;
                 this.dx += (Math.random() - 0.5) * jitter;
                 this.dy += (Math.random() - 0.5) * jitter;
             }
@@ -460,15 +531,16 @@ class Particle {
         } else {
             // PADAT
             this.restitution = 0.1; // Sangat kaku
-            this.dy += 0.6; // Cepat jatuh
+            this.dy += 0.6 / 1.5; // Cepat jatuh
             this.dx *= 0.85; // Gesekan padat tinggi
             this.dy *= 0.85;
         }
         
         let v = Math.hypot(this.dx, this.dy);
-        if (v > 10) {
-            this.dx = (this.dx/v)*10;
-            this.dy = (this.dy/v)*10;
+        const maxSpeed = 10 / 1.5;
+        if (v > maxSpeed) {
+            this.dx = (this.dx / v) * maxSpeed;
+            this.dy = (this.dy / v) * maxSpeed;
         }
         
         this.x += this.dx;
@@ -587,44 +659,53 @@ class Particle {
             }
         }
 
-        targetCtx.beginPath();
-        targetCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        
-        let gradient = targetCtx.createRadialGradient(
-            this.x - this.radius * 0.3, this.y - this.radius * 0.3, this.radius * 0.1,
-            this.x, this.y, this.radius
-        );
-        gradient.addColorStop(0, '#ffffff');
-        gradient.addColorStop(1, this.color);
-        
-        targetCtx.fillStyle = gradient;
-        targetCtx.fill();
-        
-        // Garis tepi putih pudar untuk efek 3D
-        targetCtx.strokeStyle = 'rgba(255,255,255,0.3)';
-        targetCtx.lineWidth = 1;
-        targetCtx.stroke();
-        
+        let drawnWithSprite = false;
+        if (!this.moleculeName && this.atomData.length === 1) {
+            drawnWithSprite = window.AtomSpriteSystem.drawAtom(targetCtx, this.atomData[0].symbol, this.x, this.y, this.radius, this.id);
+        }
+
+        if (!drawnWithSprite) {
+            targetCtx.beginPath();
+            targetCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            
+            let gradient = targetCtx.createRadialGradient(
+                this.x - this.radius * 0.3, this.y - this.radius * 0.3, this.radius * 0.1,
+                this.x, this.y, this.radius
+            );
+            gradient.addColorStop(0, '#ffffff');
+            gradient.addColorStop(1, this.color);
+            
+            targetCtx.fillStyle = gradient;
+            targetCtx.fill();
+            
+            // Garis tepi putih pudar untuk efek 3D
+            targetCtx.strokeStyle = 'rgba(255,255,255,0.3)';
+            targetCtx.lineWidth = 1;
+            targetCtx.stroke();
+        }
+
         // --- LABEL NAMA ATOM / MOLEKUL ---
-        // Selalu gambar teks di canvas utama (ctx) agar teks tidak ikut terdistorsi filter svg metaball
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 10px Inter';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        
-        let displayLabel = this.moleculeName ? this.moleculeName.split(' ')[0] : this.label;
-        if (displayLabel.length > 5) displayLabel = displayLabel.substring(0,5) + '..';
-        
-        ctx.save();
-        ctx.translate(this.x, this.y);
-        ctx.scale(1 / window.camera.zoom, 1 / window.camera.zoom);
-        
-        ctx.shadowColor = "rgba(0,0,0,0.8)";
-        ctx.shadowBlur = 2;
-        ctx.fillText(displayLabel, 0, 0);
-        ctx.shadowBlur = 0;
-        
-        ctx.restore();
+        // Gambar teks jika ini molekul ATAU jika sprite tidak aktif (agar simbol di pixel art tidak tertumpuk)
+        if (this.moleculeName || !drawnWithSprite) {
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 10px Inter';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            let displayLabel = this.moleculeName ? this.moleculeName.split(' ')[0] : this.label;
+            if (displayLabel.length > 5) displayLabel = displayLabel.substring(0,5) + '..';
+            
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.scale(1 / window.camera.zoom, 1 / window.camera.zoom);
+            
+            ctx.shadowColor = "rgba(0,0,0,0.8)";
+            ctx.shadowBlur = 2;
+            ctx.fillText(displayLabel, 0, 0);
+            ctx.shadowBlur = 0;
+            
+            ctx.restore();
+        }
     }
 }
 
@@ -773,7 +854,7 @@ function areParticlesRelated(p1, p2) {
     return false;
 }
 
-const CELL_SIZE = 200;
+const CELL_SIZE = 250;
 const spatialGrid = new Map();
 
 function resolveCollisions() {
@@ -825,7 +906,7 @@ function resolveCollisions() {
                             if (areParticlesRelated(p1, p2)) {
                                 // Memindahkan posisi (x,y) secara langsung agar efek tarikan mutlak terjadi
                                 // dan tidak teredam oleh gesekan (friction) atau gravitasi di updatePhysics.
-                                let pullSpeed = 2.0 * (1 - (dist - minDist) / 150); 
+                                let pullSpeed = (2.0 * (1 - (dist - minDist) / 150)) / 1.5; 
                                 let nx = distX / dist;
                                 let ny = distY / dist;
                                 
@@ -1160,8 +1241,8 @@ window.restoreCanvasState = function(savedData) {
         particles = [];
         savedData.particles.forEach(sp => {
             let p = new Particle(sp.atomSymbols, sp.x, sp.y, sp.moleculeName);
-            p.dx = sp.dx !== undefined ? sp.dx : (Math.random() - 0.5) * 4;
-            p.dy = sp.dy !== undefined ? sp.dy : (Math.random() - 0.5) * 4;
+            p.dx = sp.dx !== undefined ? sp.dx : ((Math.random() - 0.5) * 4) / 1.5;
+            p.dy = sp.dy !== undefined ? sp.dy : ((Math.random() - 0.5) * 4) / 1.5;
             if (sp.state) p.state = sp.state;
             particles.push(p);
         });
@@ -1360,8 +1441,8 @@ canvas.addEventListener('mouseup', () => {
     isPanning = false;
     if (draggedParticle) {
         // Berikan momentum lemparan
-        draggedParticle.dx = mouseVelocityX * 0.8;
-        draggedParticle.dy = mouseVelocityY * 0.8;
+        draggedParticle.dx = (mouseVelocityX * 0.8) / 1.5;
+        draggedParticle.dy = (mouseVelocityY * 0.8) / 1.5;
         draggedParticle = null;
         canvas.style.cursor = 'grab';
     }
@@ -1490,8 +1571,8 @@ canvas.addEventListener('touchend', (e) => {
         isPanning = false;
     }
     if (draggedParticle) {
-        draggedParticle.dx = mouseVelocityX * 0.8;
-        draggedParticle.dy = mouseVelocityY * 0.8;
+        draggedParticle.dx = (mouseVelocityX * 0.8) / 1.5;
+        draggedParticle.dy = (mouseVelocityY * 0.8) / 1.5;
         draggedParticle = null;
     }
 });
