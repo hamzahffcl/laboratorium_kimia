@@ -1,7 +1,51 @@
 const canvas = document.getElementById('labCanvas');
 const ctx = canvas.getContext('2d');
-const liquidCanvas = document.getElementById('liquidCanvas');
-const liquidCtx = liquidCanvas ? liquidCanvas.getContext('2d') : null;
+ctx.imageSmoothingEnabled = false;
+
+const W = 192, H = 108;
+canvas.width = W;
+canvas.height = H;
+
+let tick = 0;
+let bubbles = [];
+
+const PHC = ["#b13e53","#d3524a","#ef7d57","#f4a261","#ffcd75","#e8e36a","#a7f070","#38b764","#2fa586","#257179","#3b8fb5","#41a6f6","#3b5dc9","#5d4fb0","#5d275d"];
+
+// Fungsi pembantu persegi piksel
+const R = (x, y, w, h, c) => {
+    ctx.fillStyle = c;
+    ctx.fillRect(Math.round(x), Math.round(y), w, h);
+};
+
+// Fungsi pembantu piringan piksel tajam
+function disc(cx, cy, r, c) {
+    cx = Math.round(cx);
+    cy = Math.round(cy);
+    for (let dy = -r; dy <= r; dy++) {
+        const hw = Math.round(Math.sqrt(r * r - dy * dy));
+        ctx.fillStyle = c;
+        ctx.fillRect(cx - hw, cy + dy, hw * 2 + 1, 1);
+    }
+}
+
+function fitCanvas() {
+    const wrap = document.getElementById('wrap') || canvas.parentElement;
+    if (!wrap) return;
+    const k = Math.max(1, Math.floor((wrap.clientWidth - 16) / W));
+    canvas.style.width = (W * k) + "px";
+    canvas.style.height = (H * k) + "px";
+}
+window.addEventListener('resize', fitCanvas);
+fitCanvas();
+
+function getCanvasPos(clientX, clientY) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = W / rect.width;
+    const scaleY = H / rect.height;
+    let mx = (clientX - rect.left) * scaleX;
+    let my = (clientY - rect.top) * scaleY;
+    return { mx, my };
+}
 
 window.camera = { 
     targetZoom: 1.0, zoom: 1.0,
@@ -9,20 +53,9 @@ window.camera = {
     targetY: 0, y: 0
 };
 
-function getCanvasPos(clientX, clientY) {
-    const rect = canvas.getBoundingClientRect();
-    let rawX = clientX - rect.left;
-    let rawY = clientY - rect.top;
-    
-    let mx = (rawX - window.camera.x) / window.camera.zoom;
-    let my = (rawY - window.camera.y) / window.camera.zoom;
-    return { mx, my };
-}
-
 function clampCamera() {
-    let minX = canvas.width - canvas.width * window.camera.targetZoom;
-    let minY = canvas.height - canvas.height * window.camera.targetZoom;
-    
+    let minX = W - W * window.camera.targetZoom;
+    let minY = H - H * window.camera.targetZoom;
     window.camera.targetX = Math.min(0, Math.max(window.camera.targetX, minX));
     window.camera.targetY = Math.min(0, Math.max(window.camera.targetY, minY));
 }
@@ -78,15 +111,16 @@ function playPopSFX() {
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.05);
+        // 8-bit square wave dengan arpeggio bertahap
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.03);
         
-        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.08);
         
         osc.start();
-        osc.stop(audioCtx.currentTime + 0.1);
+        osc.stop(audioCtx.currentTime + 0.08);
         osc.onended = () => { activeOscillators = Math.max(0, activeOscillators - 1); };
     } catch (_) {
         activeOscillators = Math.max(0, activeOscillators - 1);
@@ -104,15 +138,16 @@ function playBoomSFX(energy) {
         gain.connect(audioCtx.destination);
         
         let isExo = (energy === undefined || energy === null || energy <= 0);
-        osc.type = isExo ? 'square' : 'triangle';
-        osc.frequency.setValueAtTime(isExo ? 120 : 300, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(isExo ? 45 : 100, audioCtx.currentTime + 0.3);
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(isExo ? 150 : 350, audioCtx.currentTime);
+        osc.frequency.setValueAtTime(isExo ? 75 : 180, audioCtx.currentTime + 0.08);
+        osc.frequency.setValueAtTime(isExo ? 40 : 90, audioCtx.currentTime + 0.16);
         
-        gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.4);
+        gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.3);
         
         osc.start();
-        osc.stop(audioCtx.currentTime + 0.4);
+        osc.stop(audioCtx.currentTime + 0.3);
         osc.onended = () => { activeOscillators = Math.max(0, activeOscillators - 1); };
     } catch (_) {
         activeOscillators = Math.max(0, activeOscillators - 1);
@@ -121,62 +156,52 @@ function playBoomSFX(energy) {
 
 class VisualEffect {
     constructor(x, y, type) {
-        this.x = x;
-        this.y = y;
+        this.x = Math.round(x);
+        this.y = Math.round(y);
         this.type = type; // 'smoke' atau 'bubble'
         this.life = 1.0;
+        this.tick = 0;
         
         if (type === 'smoke') {
-            this.vx = (Math.random() - 0.5) * 2;
-            this.vy = -Math.random() * 2 - 1;
-            this.radius = Math.random() * 10 + 5;
-            this.color = `255, 255, 255`;
+            this.vx = (Math.random() - 0.5) * 1.5;
+            this.vy = -0.8 - Math.random() * 0.8;
+            this.color = '#94b0c2';
         } else {
             // bubble
             this.vx = 0;
-            this.vy = -Math.random() * 1 - 0.5;
-            this.radius = Math.random() * 5 + 3;
-            this.color = `173, 216, 230`;
+            this.vy = -0.8 - Math.random() * 0.6;
+            this.color = '#f4f4f4';
             this.wobblePhase = Math.random() * Math.PI * 2;
-            this.wobbleSpeed = Math.random() * 0.1 + 0.05;
         }
     }
     
     update() {
-        if (this.type === 'smoke') {
-            this.x += this.vx;
-            this.y += this.vy;
-            this.radius += 0.5;
-            this.life -= 0.02;
-        } else {
-            // bubble
-            this.wobblePhase += this.wobbleSpeed;
-            this.x += Math.sin(this.wobblePhase) * 1.5;
-            this.y += this.vy;
-            this.radius += 0.1;
-            this.life -= 0.015;
+        this.tick++;
+        if (this.tick % 2 === 0) { // Stepped motion (14-15 fps feel)
+            if (this.type === 'smoke') {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life -= 0.04;
+            } else {
+                this.wobblePhase += 0.4;
+                this.x += Math.sin(this.wobblePhase) * 0.8;
+                this.y += this.vy;
+                this.life -= 0.03;
+            }
         }
     }
     
     draw() {
-        ctx.save();
-        ctx.beginPath();
+        if (this.life <= 0) return;
+        ctx.fillStyle = this.color;
         if (this.type === 'smoke') {
-            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(${this.color}, ${Math.max(0, this.life * 0.5)})`;
-            ctx.fill();
+            // Kotak 4x4 piksel untuk efek asap / api reaksi
+            let s = this.life > 0.5 ? 4 : 2;
+            ctx.fillRect(Math.round(this.x), Math.round(this.y), s, s);
         } else {
-            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(${this.color}, ${Math.max(0, this.life)})`;
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            // inner highlight
-            ctx.beginPath();
-            ctx.arc(this.x - this.radius*0.3, this.y - this.radius*0.3, this.radius*0.2, 0, Math.PI*2);
-            ctx.fillStyle = `rgba(255,255,255, ${Math.max(0, this.life)})`;
-            ctx.fill();
+            // Kotak 2x2 piksel untuk gelembung air
+            ctx.fillRect(Math.round(this.x), Math.round(this.y), 2, 2);
         }
-        ctx.restore();
     }
 }
 
@@ -189,17 +214,6 @@ let particleCounter = 0; // Untuk ID partikel (digunakan di Spatial Grid)
 // Latar belakang saat ini (Netral putih)
 let currentBg = {r: 255, g: 255, b: 255};
 let currentPH = 7.0;
-
-function resizeCanvas() {
-    canvas.width = canvas.parentElement.clientWidth;
-    canvas.height = canvas.parentElement.clientHeight;
-    if (liquidCanvas) {
-        liquidCanvas.width = canvas.width;
-        liquidCanvas.height = canvas.height;
-    }
-}
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
 
 // Ambil Data dari API JSON Lokal (Static Site)
 async function initDB() {
@@ -302,30 +316,31 @@ function getValence(symbol) {
 
 function showToast(msg) {
     const toast = document.getElementById('reaction-toast');
+    if (!toast) return;
     toast.textContent = msg;
     toast.classList.remove('hidden');
 
     // Hentikan animasi sebelumnya jika ada
     anime.remove(toast);
 
-    // Animasi MASUK - spring bouncy
+    // Animasi MASUK bertahap (stepped 8-bit)
     anime({
         targets: toast,
-        translateX: ['-50%', '-50%'], // jaga posisi horizontal tetap
-        translateY: [20, 0],
+        translateX: ['-50%', '-50%'],
+        translateY: [15, 0],
         opacity: [0, 1],
-        duration: 500,
-        easing: 'spring(1, 80, 10, 0)',
+        duration: 160,
+        easing: 'steps(4)',
         complete: () => {
             // Animasi KELUAR setelah 2.5 detik
             anime({
                 targets: toast,
                 translateX: '-50%',
-                translateY: [0, -15],
+                translateY: [0, -10],
                 opacity: [1, 0],
-                duration: 400,
-                delay: 2500,
-                easing: 'easeInCubic',
+                duration: 160,
+                delay: 2400,
+                easing: 'steps(4)',
                 complete: () => toast.classList.add('hidden')
             });
         }
@@ -337,18 +352,8 @@ function showToast(msg) {
         entry.className = 'log-entry';
         const time = new Date().toLocaleTimeString();
         entry.textContent = `[${time}] ${msg}`;
-        // Animasi entri log baru
-        entry.style.opacity = '0';
-        entry.style.transform = 'translateX(-10px)';
         log.appendChild(entry);
         log.scrollTop = log.scrollHeight;
-        anime({
-            targets: entry,
-            opacity: [0, 1],
-            translateX: [-10, 0],
-            duration: 300,
-            easing: 'easeOutQuart'
-        });
     }
 }
 
@@ -366,37 +371,46 @@ function canTriggerFlash() {
 
 class ReactionFlash {
     constructor(x, y, isExothermic, deltaT) {
-        this.x = x;
-        this.y = y;
-        
-        // Ukuran kilatan bergantung pada seberapa ekstrim suhunya naik/turun
-        let intensity = 1.0;
-        if (deltaT) {
-            intensity = Math.max(0.5, Math.min(3.0, Math.abs(deltaT) / 5.0));
-        }
-        
-        this.r = 8 * intensity;
-        this.alpha = 0.8;
-        // Eksotermik = Kuning Emas/Orange. Endotermik = Biru Es
-        this.color = isExothermic ? '#FFD700' : '#87CEEB';
+        this.x = Math.round(x);
+        this.y = Math.round(y);
+        this.isExothermic = isExothermic;
+        this.life = 1.0;
+        this.step = 0;
+        // Palet retro 16-warna: Kilatan Emas vs Kristal Es
+        this.colors = isExothermic 
+            ? ['#f4f4f4', '#ffcd75', '#ef7d57', '#b13e53']
+            : ['#f4f4f4', '#73eff7', '#41a6f6', '#3b5dc9'];
     }
 
     update() {
-        this.r += 2.5;
-        this.alpha -= 0.025;
+        this.step++;
+        this.life -= 0.08;
     }
 
     draw() {
-        ctx.save();
-        ctx.globalAlpha = Math.max(0, this.alpha);
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-        let grad = ctx.createRadialGradient(this.x, this.y, this.r * 0.2, this.x, this.y, this.r);
-        grad.addColorStop(0, this.color);
-        grad.addColorStop(1, 'transparent');
-        ctx.fillStyle = grad;
-        ctx.fill();
-        ctx.restore();
+        if (this.life <= 0) return;
+        const s = this.step;
+        const color = this.colors[Math.min(this.colors.length - 1, Math.floor(s / 2))];
+        ctx.fillStyle = color;
+        
+        // Kotak 4x4 piksel menyebar dalam pola bintang 8-arah (emas) atau salib kristal es
+        const offsets = this.isExothermic
+            ? [
+                [0, -s * 2], [0, s * 2], [-s * 2, 0], [s * 2, 0],
+                [-s * 1.5, -s * 1.5], [s * 1.5, -s * 1.5], [-s * 1.5, s * 1.5], [s * 1.5, s * 1.5],
+                [0, 0]
+              ]
+            : [
+                [0, -s * 2], [0, s * 2], [-s * 2, 0], [s * 2, 0],
+                [-s, -s], [s, -s], [-s, s], [s, s],
+                [-s * 2, -s], [s * 2, -s], [-s * 2, s], [s * 2, s]
+              ];
+              
+        offsets.forEach(([dx, dy]) => {
+            let px = Math.round(this.x + dx);
+            let py = Math.round(this.y + dy);
+            ctx.fillRect(px - 2, py - 2, 4, 4);
+        });
     }
 }
 
@@ -479,35 +493,27 @@ class Particle {
         this.mass = this.atomData.reduce((sum, a) => sum + (a.mass || 12), 0);
         if (!this.mass || isNaN(this.mass) || this.mass <= 0) this.mass = 12;
         
-        // Hitung radius partikel berdasarkan kelompok Ar / Mr (Skala presisi main branch)
+        // Hitung radius partikel skala resolusi rendah (192x108)
         let m = this.mass;
         if (moleculeName && this.atomData.length > 1) {
-            // Molekul menggunakan massa total (Mr) dengan sedikit penyesuaian
-            if (m <= 10) this.radius = 16;
-            else if (m <= 30) this.radius = 22;
-            else if (m <= 50) this.radius = 26;
-            else if (m <= 80) this.radius = 29;
-            else this.radius = 32;
+            if (m <= 20) this.radius = 6.5;
+            else if (m <= 50) this.radius = 7.5;
+            else this.radius = 8.5;
         } else {
-            // Skala Ar atom tunggal sesuai permintaan:
-            // Ar 1 - 10  : 15 px
-            // Ar 11 - 30 : 20 px
-            // Ar 31 - 50 : 25 px
-            // Ar 51 - 80 : 28 px
-            // Ar > 80    : 30 px
-            if (m <= 10) this.radius = 15;
-            else if (m <= 30) this.radius = 20;
-            else if (m <= 50) this.radius = 25;
-            else if (m <= 80) this.radius = 28;
-            else this.radius = 30;
+            // Skala atom tunggal di canvas 192x108:
+            if (m <= 4) this.radius = 5;
+            else if (m <= 30) this.radius = 6;
+            else if (m <= 80) this.radius = 6.5;
+            else this.radius = 7;
         }
         
-        this.x = x || Math.random() * (canvas.width - 100) + 50;
-        this.y = y || Math.random() * (canvas.height - 100) + 50;
+        // Spawn aman di dalam gelas kimia (x: 62-120, y: 52-78)
+        this.x = (x !== undefined && x !== null) ? x : (62 + Math.random() * 58);
+        this.y = (y !== undefined && y !== null) ? y : (52 + Math.random() * 26);
         
         // Kecepatan gerak awal tenang dan terkontrol
-        this.dx = (Math.random() - 0.5) * 1.5;
-        this.dy = (Math.random() - 0.5) * 1.5;
+        this.dx = (Math.random() - 0.5) * 0.8;
+        this.dy = (Math.random() - 0.5) * 0.8;
         this.restitution = 0.8;
         
         if (moleculeName) {
@@ -635,26 +641,30 @@ class Particle {
         this.x += this.dx;
         this.y += this.dy;
         
-        if (isNaN(this.x) || !isFinite(this.x)) this.x = Math.random() * (canvas.width - 100) + 50;
-        if (isNaN(this.y) || !isFinite(this.y)) this.y = Math.random() * (canvas.height - 100) + 50;
+        if (isNaN(this.x) || !isFinite(this.x)) this.x = 64 + Math.random() * 56;
+        if (isNaN(this.y) || !isFinite(this.y)) this.y = 52 + Math.random() * 26;
         
-        if (this.x - this.radius < 0) { this.x = this.radius; this.dx *= -this.restitution; }
-        if (this.x + this.radius > canvas.width) { this.x = canvas.width - this.radius; this.dx *= -this.restitution; }
-        if (this.y - this.radius < 0) { this.y = this.radius; this.dy *= -this.restitution; }
-        if (this.y + this.radius > canvas.height) { this.y = canvas.height - this.radius; this.dy *= -this.restitution; }
+        // Cek pantulan batas gelas kimia
+        const BEAKER = { left: 57, right: 127, bottom: 88, topRim: 26, liquidTop: 48 };
+        let inBeakerX = this.x >= BEAKER.left - 4 && this.x <= BEAKER.right + 4;
+        if (inBeakerX) {
+            let topBound = this.state === "GAS" ? BEAKER.topRim : Math.max(BEAKER.liquidTop, BEAKER.topRim);
+            if (this.x - this.radius < BEAKER.left) { this.x = BEAKER.left + this.radius; this.dx = Math.abs(this.dx) * this.restitution; }
+            if (this.x + this.radius > BEAKER.right) { this.x = BEAKER.right - this.radius; this.dx = -Math.abs(this.dx) * this.restitution; }
+            if (this.y - this.radius < topBound) { this.y = topBound + this.radius; this.dy = Math.abs(this.dy) * this.restitution; }
+            if (this.y + this.radius > BEAKER.bottom) { this.y = BEAKER.bottom - this.radius; this.dy = -Math.abs(this.dy) * this.restitution; }
+        } else {
+            if (this.x - this.radius < 0) { this.x = this.radius; this.dx = Math.abs(this.dx) * this.restitution; }
+            if (this.x + this.radius > W) { this.x = W - this.radius; this.dx = -Math.abs(this.dx) * this.restitution; }
+            if (this.y - this.radius < 0) { this.y = this.radius; this.dy = Math.abs(this.dy) * this.restitution; }
+            if (this.y + this.radius > 92) { this.y = 92 - this.radius; this.dy = -Math.abs(this.dy) * this.restitution; }
+        }
     }
 
     draw() {
-        // Tentukan kanvas target: Jika zat cair dan liquidCtx tersedia, gunakan liquidCtx
-        let targetCtx = (this.state === "CAIR" && typeof liquidCtx !== 'undefined' && liquidCtx !== null) ? liquidCtx : ctx;
-        
-        // Break illusion of liquid if zoomed in
-        if (window.camera.zoom >= 1.5) {
-            targetCtx = ctx;
-        }
+        let targetCtx = ctx;
 
         // --- DRAW EXPERIMENTAL COMPOSITE MOLECULE STRUCTURE ---
-        // Jika atomData kurang dari 2 karena data lama di localStorage, pulihkan dari DB
         if (this.moleculeName && this.atomData.length <= 1 && window.DB && window.DB.moleculeAtoms) {
             let formula = this.moleculeName.split(' ')[0].trim();
             let foundKey = Object.keys(window.DB.moleculeAtoms).find(k => k.split(' ')[0] === formula);
@@ -665,42 +675,34 @@ class Particle {
 
         let cleanMolFormula = this.moleculeName ? this.moleculeName.split(' ')[0].trim() : this.atomData.map(a => a.symbol).join('');
 
-        // Dukung SEMUA molekul majemuk (termasuk molekul panjang seperti H2SO4, Na2SO4, C2H5OH, dll)
         if (this.atomData.length > 1) {
             try {
-                // Cari atom pusat (valensi tertinggi, atau atom pertama jika sama)
                 let sortedAtoms = [...this.atomData].sort((a, b) => getValence(b.symbol) - getValence(a.symbol));
                 let centerAtom = sortedAtoms[0];
                 let branches = sortedAtoms.slice(1);
 
-                // Ukuran radius visual atom penyusun di dalam molekul
                 const getSubRadius = (sym, mass) => {
                     let m = mass || 1;
-                    if (m <= 10) return 10;
-                    if (m <= 30) return 13;
-                    if (m <= 50) return 15;
-                    return 17;
+                    if (m <= 10) return 3.5;
+                    if (m <= 30) return 4.5;
+                    return 5.5;
                 };
 
                 let centerR = getSubRadius(centerAtom.symbol, centerAtom.mass);
 
-                // Tentukan sudut geometri alami
                 let angles = [];
                 if (branches.length === 1) {
                     angles = [0];
                 } else if (branches.length === 2) {
                     if (cleanMolFormula === 'CO2') {
-                        angles = [0, Math.PI]; // Linear 180°
+                        angles = [0, Math.PI];
                     } else {
-                        // H2O: Bent ~104.5°
                         let halfAngle = (104.5 * Math.PI) / 360;
                         angles = [-halfAngle, halfAngle];
                     }
                 } else if (branches.length === 3) {
-                    // NH3: Trigonal
                     angles = [-Math.PI * 0.45, Math.PI * 0.45, Math.PI];
                 } else if (branches.length === 4) {
-                    // CH4: Tetrahedral projection
                     angles = [-Math.PI * 0.35, Math.PI * 0.35, Math.PI * 0.75, -Math.PI * 0.75];
                 } else {
                     let step = (Math.PI * 2) / branches.length;
@@ -709,19 +711,14 @@ class Particle {
 
                 targetCtx.save();
                 targetCtx.translate(this.x, this.y);
-                targetCtx.rotate((Date.now() * 0.0004) + (this.id * 1.2)); // Rotasi lambat dan estetik
+                targetCtx.rotate((Date.now() * 0.0004) + (this.id * 1.2));
 
-                // 1. Gambar Tangan-Tangan Ikatan (Bond Arms)
                 targetCtx.strokeStyle = 'rgba(255, 255, 255, 0.75)';
-                targetCtx.lineWidth = Math.max(2.5, this.radius * 0.12);
-                targetCtx.lineCap = 'round';
+                targetCtx.lineWidth = 1;
+                targetCtx.lineCap = 'square';
 
                 let branchPositions = [];
-                // Jarak ikatan adaptif: untuk molekul dengan banyak cabang (seperti H2SO4 dengan 6 cabang), jaraknya meluas agar tidak bertabrakan
-                let minCircumference = branches.length * 20;
-                let neededDist = minCircumference / (2 * Math.PI);
-                let defaultDist = centerR + 13;
-                let bondDist = Math.max(defaultDist, neededDist);
+                let bondDist = centerR + 5;
 
                 for (let i = 0; i < branches.length; i++) {
                     let bAtom = branches[i];
@@ -737,21 +734,14 @@ class Particle {
                     targetCtx.stroke();
                 }
 
-                // 2. Gambar Atom Pusat (Sprite atau Fallback Lingkaran)
                 let drawnCenter = false;
                 if (window.AtomSpriteSystem && window.AtomSpriteSystem.enabled) {
                     drawnCenter = window.AtomSpriteSystem.drawAtom(targetCtx, centerAtom.symbol, 0, 0, centerR, this.id);
                 }
                 if (!drawnCenter) {
-                    targetCtx.beginPath();
-                    targetCtx.arc(0, 0, centerR, 0, Math.PI * 2);
-                    targetCtx.fillStyle = centerAtom.color || '#3b82f6';
-                    targetCtx.fill();
-                    targetCtx.strokeStyle = 'rgba(255,255,255,0.4)';
-                    targetCtx.stroke();
+                    disc(this.x, this.y, centerR, centerAtom.color || '#3b82f6');
                 }
 
-                // 3. Gambar Atom Cabang (Sprite atau Fallback Lingkaran)
                 for (let i = 0; i < branchPositions.length; i++) {
                     let bp = branchPositions[i];
                     let drawnBranch = false;
@@ -759,45 +749,34 @@ class Particle {
                         drawnBranch = window.AtomSpriteSystem.drawAtom(targetCtx, bp.bAtom.symbol, bp.bx, bp.by, bp.branchR, this.id + i + 1);
                     }
                     if (!drawnBranch) {
-                        targetCtx.beginPath();
-                        targetCtx.arc(bp.bx, bp.by, bp.branchR, 0, Math.PI * 2);
-                        targetCtx.fillStyle = bp.bAtom.color || '#94a3b8';
-                        targetCtx.fill();
-                        targetCtx.strokeStyle = 'rgba(255,255,255,0.4)';
-                        targetCtx.stroke();
+                        disc(this.x + bp.bx, this.y + bp.by, bp.branchR, bp.bAtom.color || '#94a3b8');
                     }
                 }
 
                 targetCtx.restore();
 
-                // 4. Label Nama Molekul di atas partikel (bersih tanpa shadow)
-                ctx.save();
-                ctx.translate(this.x, this.y - this.radius * 1.3);
-                ctx.scale(1 / window.camera.zoom, 1 / window.camera.zoom);
+                // Formula Label (Press Start 2P)
                 ctx.fillStyle = '#ffffff';
-                ctx.font = 'bold 10px Inter';
+                ctx.font = "8px 'Press Start 2P'";
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText(cleanMolFormula, 0, 0);
-                ctx.restore();
+                ctx.fillText(cleanMolFormula, Math.round(this.x), Math.round(this.y - this.radius - 4));
 
-                return; // Berhasil render molekul uji coba!
+                return;
             } catch (err) {
-                console.warn("Fallback rendering molekul karena:", err);
-                // Jika ada kendala, otomatis lanjut ke rendering default di bawah tanpa crash!
+                console.warn("Fallback rendering molekul:", err);
             }
         }
 
-        // --- DRAW VALENCE BONDS (TANGAN ATOM) ---
+        // Tangan Ikatan Atom Tunggal (Valensi)
         if (this.atomData.length === 1 && this.state !== "CAIR") {
             let valence = getValence(this.atomData[0].symbol);
             if (valence > 0) {
                 targetCtx.save();
                 targetCtx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
-                targetCtx.lineWidth = Math.max(2, this.radius * 0.15);
-                targetCtx.lineCap = 'round';
+                targetCtx.lineWidth = 1;
+                targetCtx.lineCap = 'square';
                 
-                // Animasi rotasi lambat
                 let timeOffset = Date.now() * 0.001 * 0.5;
                 let baseAngle = timeOffset + (this.id * 0.5);
                 let angleStep = (Math.PI * 2) / valence;
@@ -806,8 +785,8 @@ class Particle {
                     let angle = baseAngle + (i * angleStep);
                     let startX = this.x + Math.cos(angle) * (this.radius * 0.8);
                     let startY = this.y + Math.sin(angle) * (this.radius * 0.8);
-                    let endX = this.x + Math.cos(angle) * (this.radius * 1.5);
-                    let endY = this.y + Math.sin(angle) * (this.radius * 1.5);
+                    let endX = this.x + Math.cos(angle) * (this.radius * 1.4);
+                    let endY = this.y + Math.sin(angle) * (this.radius * 1.4);
                     
                     targetCtx.beginPath();
                     targetCtx.moveTo(startX, startY);
@@ -819,51 +798,26 @@ class Particle {
         }
 
         let drawnWithSprite = false;
-        if (this.atomData.length === 1) {
+        if (this.atomData.length === 1 && window.AtomSpriteSystem && window.AtomSpriteSystem.enabled) {
             drawnWithSprite = window.AtomSpriteSystem.drawAtom(targetCtx, this.atomData[0].symbol, this.x, this.y, this.radius, this.id);
         }
 
         if (!drawnWithSprite) {
-            targetCtx.beginPath();
-            targetCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            
-            let gradient = targetCtx.createRadialGradient(
-                this.x - this.radius * 0.3, this.y - this.radius * 0.3, this.radius * 0.1,
-                this.x, this.y, this.radius
-            );
-            gradient.addColorStop(0, '#ffffff');
-            try {
-                gradient.addColorStop(1, this.color || '#64748b');
-            } catch (err) {
-                gradient.addColorStop(1, '#64748b');
-            }
-            
-            targetCtx.fillStyle = gradient;
-            targetCtx.fill();
-            
-            // Garis tepi putih pudar untuk efek 3D
-            targetCtx.strokeStyle = 'rgba(255,255,255,0.3)';
-            targetCtx.lineWidth = 1;
-            targetCtx.stroke();
+            disc(this.x, this.y, this.radius + 1, "#0d0f1c");
+            disc(this.x, this.y, this.radius, this.color || "#41a6f6");
+            ctx.fillStyle = "#ffffffcc";
+            ctx.fillRect(Math.round(this.x - 2), Math.round(this.y - 2), 2, 2);
         }
 
-        // --- LABEL NAMA ATOM / MOLEKUL ---
-        // Gambar teks jika ini molekul ATAU jika sprite tidak aktif (agar simbol di pixel art tidak tertumpuk)
         if (this.moleculeName || !drawnWithSprite) {
             ctx.fillStyle = '#ffffff';
-            let fontSize = Math.max(8, Math.min(11, Math.floor(this.radius * 0.75)));
-            ctx.font = `bold ${fontSize}px Inter`;
+            ctx.font = "8px 'Press Start 2P'";
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             
             let displayLabel = this.moleculeName ? this.moleculeName.split(' ')[0] : this.label;
-            if (displayLabel.length > 5) displayLabel = displayLabel.substring(0,5) + '..';
-            
-            ctx.save();
-            ctx.translate(this.x, this.y);
-            ctx.scale(1 / window.camera.zoom, 1 / window.camera.zoom);
-            ctx.fillText(displayLabel, 0, 0);
-            ctx.restore();
+            if (displayLabel.length > 4) displayLabel = displayLabel.substring(0, 4);
+            ctx.fillText(displayLabel, Math.round(this.x), Math.round(this.y + 1));
         }
     }
 }
@@ -1005,14 +959,14 @@ function areParticlesRelated(p1, p2) {
     return false;
 }
 
-const CELL_SIZE = 250;
+const CELL_SIZE = 24;
 const spatialGrid = new Map();
 
 function resolveCollisions() {
     let toRemove = new Set();
     let toAdd = [];
     
-    // Spatial Partitioning Grid (Cell Size = 80)
+    // Spatial Partitioning Grid (Cell Size = 24 untuk canvas 192x108)
     spatialGrid.clear();
     
     particles.forEach(p => {
@@ -1053,12 +1007,11 @@ function resolveCollisions() {
                         let minDist = p1.radius + p2.radius;
                         
                         // --- GAYA TARIK KIMIA (CHEMICAL ATTRACTION) ---
-                        // Tarikan halus hanya saat partikel sudah cukup dekat (radius 35 px dari batas tabrakan)
-                        const ATTRACTION_RANGE = 35;
+                        const ATTRACTION_RANGE = 12;
                         if (dist >= minDist && dist < minDist + ATTRACTION_RANGE) {
                             if (areParticlesRelated(p1, p2)) {
                                 let pullFactor = (1 - (dist - minDist) / ATTRACTION_RANGE);
-                                let pullSpeed = 0.4 * pullFactor; 
+                                let pullSpeed = 0.2 * pullFactor; 
                                 let nx = dist > 0 ? (distX / dist) : 1;
                                 let ny = dist > 0 ? (distY / dist) : 0;
                                 
@@ -1070,22 +1023,19 @@ function resolveCollisions() {
                         }
                         
                         if (dist < minDist) {
-                            // Check Chemistry dengan Passing Grid (untuk Katalis)
                             let reaction = checkChemistry(p1, p2, spatialGrid);
                             if (reaction) {
                                 toRemove.add(p1);
                                 toRemove.add(p2);
                                 
-                                // Kalkulasi Panas & Termodinamika
                                 let dTemp = applyReactionHeat(reaction.delta_H_kJ, 1);
                                 
-                                // VFX Screen Shake & Audio
                                 if (Math.abs(reaction.delta_H_kJ) > 20) {
                                     playBoomSFX(reaction.delta_H_kJ);
-                                    let container = document.querySelector('.app-container');
+                                    let container = document.querySelector('.stage-wrap') || document.querySelector('.app');
                                     if (container) {
                                         container.classList.remove('bump-active');
-                                        void container.offsetWidth; // trigger reflow
+                                        void container.offsetWidth;
                                         container.classList.add('bump-active');
                                     }
                                 }
@@ -1101,18 +1051,16 @@ function resolveCollisions() {
                                 let msg = `💥 ${r1Name} + ${r2Name} -> ${productNames} | Suhu: ${currentTemp.toFixed(1)}°C | ${enthalpyStr}${heatStr}`;
                                 showToast(msg);
                                 
-                                let mx = (p1.x + p2.x)/2;
-                                let my = (p1.y + p2.y)/2;
+                                let mx = (p1.x + p2.x) / 2;
+                                let my = (p1.y + p2.y) / 2;
                                 
-                                // P2.12: Batasi kilatan cahaya maksimum 3 per detik (WCAG 2.3.1)
                                 if (canTriggerFlash()) {
                                     flashes.push(new ReactionFlash(mx, my, reaction.is_exothermic, dTemp));
                                 }
                                 
-                                // Spawn visual effects
                                 let isAqueous = reaction.products.some(p => p.includes("Air") || p.includes("Asam") || p.includes("Hidroksida"));
                                 let vfxType = isAqueous ? 'bubble' : 'smoke';
-                                for(let i=0; i<8; i++) {
+                                for (let i = 0; i < 6; i++) {
                                     visualEffects.push(new VisualEffect(mx, my, vfxType));
                                 }
                                 
@@ -1120,7 +1068,6 @@ function resolveCollisions() {
                                     let atoms = DB.moleculeAtoms[prodName] || ['C'];
                                     toAdd.push(new Particle(atoms, mx, my, prodName));
                                     
-                                    // TRIGGER QUEST ENGINE DISCOVERY
                                     if (window.QuestEngine) {
                                         window.QuestEngine.checkDiscovery(prodName);
                                     }
@@ -1175,7 +1122,6 @@ function resolveCollisions() {
 
 const Kw = 1e-14;
 function calculatePH(nH, nOH, V = 1.0) {
-    // P0.5: Skala pH logaritmik nyata menggunakan Kw dan net konsentrasi H+/OH-
     const net = (nH - nOH) / V;
     const s = Math.sqrt(net * net + 4.0 * Kw);
     const h = net >= 0 ? (net + s) / 2.0 : Kw / ((-net + s) / 2.0);
@@ -1183,8 +1129,8 @@ function calculatePH(nH, nOH, V = 1.0) {
 }
 
 function updatePHIndicator() {
-    const N0 = 0.01; // mol per partikel (konstanta simulasi)
-    const V = 1.0;   // 1 Liter wadah simulasi
+    const N0 = 0.01;
+    const V = 1.0;
     
     let nH = 0;
     let nOH = 0;
@@ -1203,59 +1149,43 @@ function updatePHIndicator() {
     });
 
     const targetPH = calculatePH(nH, nOH, V);
-    currentPH += (targetPH - currentPH) * 0.03; 
+    currentPH += (targetPH - currentPH) * 0.05;
     const pH = currentPH;
 
-    let targetR = 255, targetG = 255, targetB = 255;
-    
-    if (pH < 3) { targetR = 255; targetG = 20; targetB = 20; }      
-    else if (pH < 5) { targetR = 255; targetG = 100; targetB = 100; } 
-    else if (pH < 6.5) { targetR = 255; targetG = 180; targetB = 80; } 
-    else if (pH <= 7.5) { targetR = 255; targetG = 255; targetB = 255; } 
-    else if (pH <= 9) { targetR = 100; targetG = 180; targetB = 255; } 
-    else if (pH <= 11) { targetR = 60; targetG = 80; targetB = 255; } 
-    else { targetR = 80; targetG = 0; targetB = 200; }             
-
-    currentBg.r += (targetR - currentBg.r) * 0.02;
-    currentBg.g += (targetG - currentBg.g) * 0.02;
-    currentBg.b += (targetB - currentBg.b) * 0.02;
-
-    const wrapper = document.querySelector('.canvas-wrapper');
-    if (wrapper) {
-        if (pH > 6.8 && pH < 7.2) {
-             wrapper.style.backgroundColor = `rgba(255, 255, 255, 0.05)`; 
-        } else {
-             wrapper.style.backgroundColor = `rgba(${Math.round(currentBg.r)}, ${Math.round(currentBg.g)}, ${Math.round(currentBg.b)}, 0.25)`;
-        }
-    }
-
-    // P2.13: Tampilkan angka pH visual
+    // Tampilkan angka pH visual di HUD
     const phValEl = document.getElementById('phValue');
     const phStatusEl = document.getElementById('phStatus');
     if (phValEl) phValEl.textContent = pH.toFixed(2);
     if (phStatusEl) {
-        if (pH < 6.8) phStatusEl.textContent = 'Asam';
-        else if (pH > 7.2) phStatusEl.textContent = 'Basa';
-        else phStatusEl.textContent = 'Netral';
+        if (pH < 6.5) phStatusEl.textContent = 'ASAM';
+        else if (pH > 7.5) phStatusEl.textContent = 'BASA';
+        else phStatusEl.textContent = 'NETRAL';
+    }
+
+    // Perbarui segmen pita pH (15 segmen)
+    const phStrip = document.getElementById('phStrip');
+    if (phStrip) {
+        const activeIdx = Math.max(0, Math.min(14, Math.round(pH)));
+        [...phStrip.children].forEach((el, i) => {
+            el.classList.toggle('on', i === activeIdx);
+        });
     }
 }
 
-// P1.6: Fixed Timestep 60 Hz Physics Loop
+// Fixed Timestep 60 Hz Physics Loop
 const FIXED_STEP = 1.0 / 60.0;
 let physicsAccumulator = 0;
 let lastFrameTimestamp = performance.now();
 
 function updatePhysicsStep() {
-    // Thermal Conductivity (Newton's Law of Cooling)
     let diff = targetTemp - currentTemp;
     let step = diff * 0.04;
     if (step > 4.0) step = 4.0; 
     if (step < -8.0) step = -8.0;
     currentTemp += step;
     
-    // Tampilkan suhu aktual kanvas secara langsung
     const tempEl = document.getElementById('tempValue');
-    if (tempEl) tempEl.textContent = currentTemp.toFixed(1);
+    if (tempEl) tempEl.textContent = currentTemp.toFixed(1) + ' °C';
     
     updatePHIndicator();
     particles.forEach(p => p.updatePhysics());
@@ -1264,6 +1194,7 @@ function updatePhysicsStep() {
 
 function animate(now = performance.now()) {
     try {
+        tick++;
         let dt = Math.min(0.1, (now - lastFrameTimestamp) / 1000.0);
         lastFrameTimestamp = now;
         physicsAccumulator += dt;
@@ -1273,122 +1204,111 @@ function animate(now = performance.now()) {
             physicsAccumulator -= FIXED_STEP;
         }
 
-        window.camera.zoom += (window.camera.targetZoom - window.camera.zoom) * 0.15;
-        window.camera.x += (window.camera.targetX - window.camera.x) * 0.15;
-        window.camera.y += (window.camera.targetY - window.camera.y) * 0.15;
+        ctx.clearRect(0, 0, W, H);
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        if (liquidCtx) liquidCtx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        ctx.save();
-        if (liquidCtx) liquidCtx.save();
-        
-        ctx.translate(window.camera.x, window.camera.y);
-        ctx.scale(window.camera.zoom, window.camera.zoom);
-        
-        if (liquidCtx) {
-            liquidCtx.translate(window.camera.x, window.camera.y);
-            liquidCtx.scale(window.camera.zoom, window.camera.zoom);
+        // 1. Gambar latar kotak-kotak piksel 4x4
+        for (let y = 0; y < H; y += 4) {
+            for (let x = 0; x < W; x += 4) {
+                R(x, y, 4, 4, ((x + y) / 4) % 2 ? "#232850" : "#1d2142");
+            }
         }
-        
-        // Draw Particles
+
+        // 2. Meja Laboratorium
+        R(0, 92, W, 16, "#333c57");
+        for (let x = 0; x < W; x += 16) R(x + ((92 / 16 | 0) % 2 ? 8 : 0), 96, 1, 12, "#1a1c2c");
+        R(0, 92, W, 2, "#0d0f1c");
+
+        // 3. Warna Cairan Berdasarkan pH
+        const lc = PHC[Math.max(0, Math.min(14, Math.round(currentPH)))];
+
+        // 4. Bayangan Belakang Gelas Kimia
+        R(54, 30, 76, 62, "#2b3560");
+
+        // 5. Cairan Berlapis Flat & Gelombang Permukaan Bergerak per Langkah (Stepped Wave)
+        const waveTop = 48 + ((tick >> 2) % 2);
+        R(57, waveTop, 70, 89 - waveTop, lc);
+        R(57, waveTop, 70, 2, "#f4f4f4aa"); // Sorotan permukaan cairan
+
+        // 6. Gelembung saat Mendidih / Suhu Tinggi
+        if (Math.random() < Math.max(0, currentTemp - 60) / 1500 + 0.02) {
+            bubbles.push({ x: 60 + Math.random() * 64, y: 86, v: 1 + Math.random() * 2 });
+        }
+        bubbles = bubbles.filter(b => (b.y -= b.v) > waveTop);
+        bubbles.forEach(b => R(b.x, b.y, 2, 2, "#f4f4f4"));
+
+        // 7. Garis Tepi Kaca Gelas Kimia (Crisp Beaker Rim)
+        R(54, 26, 3, 66, "#94b0c2"); // Dinding kiri
+        R(127, 26, 3, 66, "#94b0c2"); // Dinding kanan
+        R(54, 89, 76, 3, "#94b0c2"); // Dasar gelas
+        R(50, 24, 8, 3, "#f4f4f4"); // Corong kiri
+        R(126, 24, 8, 3, "#f4f4f4"); // Corong kanan
+
+        // 8. Partikel Atom & Molekul
         particles.forEach(p => p.draw());
-        
-        // Draw Flashes (P2.12: Hormati prefers-reduced-motion)
+
+        // 9. Kilatan Reaksi (Reaction Flash)
         const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         flashes.forEach(f => {
             f.update();
-            if (!prefersReducedMotion) {
-                f.draw();
-            }
+            if (!prefersReducedMotion) f.draw();
         });
-        flashes = flashes.filter(f => f.alpha > 0);
-        
-        // Draw VFX Particles
+        flashes = flashes.filter(f => f.life > 0);
+
+        // 10. Efek Asap / Gelembung
         visualEffects.forEach(v => {
             v.update();
             v.draw();
         });
         visualEffects = visualEffects.filter(v => v.life > 0);
-        
-        // --- THERMAL VISUAL CUES ---
+
+        // 11. Efek Termal Ekstrim
         if (currentTemp > 80) {
             let intensity = Math.min((currentTemp - 80) / 200, 1.0);
-            
-            // Embers / Heat wave overlay
-            ctx.save();
-            ctx.fillStyle = `rgba(255, 60, 0, ${0.05 * intensity})`;
-            ctx.fillRect(0, canvas.height - 50 * intensity, canvas.width, 50 * intensity);
-            
-            // Spawn heat distortion / embers
-            if (Math.random() < 0.2 * intensity && particles.length > 0) {
-                let px = Math.random() * canvas.width;
-                let py = canvas.height - Math.random() * 20;
-                let vfx = new VisualEffect(px, py, 'smoke');
-                vfx.color = '255, 100, 0';
-                vfx.life = 0.5 + Math.random() * 0.5;
-                visualEffects.push(vfx);
+            if (Math.random() < 0.2 * intensity) {
+                visualEffects.push(new VisualEffect(57 + Math.random() * 70, 86, 'smoke'));
             }
-            ctx.restore();
-        } else if (currentTemp < 0) {
-            let intensity = Math.min(Math.abs(currentTemp) / 100, 1.0);
-            
-            // Frost border vignette
-            ctx.save();
-            ctx.strokeStyle = `rgba(200, 240, 255, ${0.4 * intensity})`;
-            ctx.lineWidth = 15 * intensity;
-            ctx.strokeRect(0, 0, canvas.width, canvas.height);
-            
-            // Spawn frost / ice crystals
-            if (Math.random() < 0.1 * intensity && particles.length > 0) {
-                let px = Math.random() * canvas.width;
-                let py = canvas.height - Math.random() * 20;
-                let vfx = new VisualEffect(px, py, 'smoke');
-                vfx.color = '200, 240, 255';
-                vfx.vx = (Math.random() - 0.5) * 0.5;
-                vfx.vy = Math.random() * 0.5 + 0.1;
-                vfx.life = 0.8 + Math.random() * 0.5;
-                visualEffects.push(vfx);
-            }
-            ctx.restore();
         }
-        
+
         // Live update Info Panel
+        const particleInfoBox = document.getElementById('particleInfoBox');
+        const particleInfoPrompt = document.getElementById('particleInfoPrompt');
+        const particleInfo = document.getElementById('particleInfo');
+        
         if (selectedParticle) {
             if (!particles.includes(selectedParticle)) {
                 selectedParticle = null;
-                document.getElementById('particleInfo').classList.add('hidden');
+                if (particleInfo) particleInfo.classList.add('hidden');
+                if (particleInfoPrompt) particleInfoPrompt.classList.remove('hidden');
             } else {
+                if (particleInfoPrompt) particleInfoPrompt.classList.add('hidden');
+                if (particleInfo) particleInfo.classList.remove('hidden');
                 let molData = DB.molecules ? DB.molecules.find(m => m.label === selectedParticle.label) : null;
-                document.getElementById('infoName').textContent = selectedParticle.label;
-                document.getElementById('infoCurrentTemp').textContent = currentTemp.toFixed(1) + ' °C';
-                document.getElementById('infoMolarMass').textContent = (molData && molData.molar_mass) ? molData.molar_mass.toFixed(2) + ' g/mol' : selectedParticle.mass.toFixed(2) + ' g/mol (Kalkulasi)';
-                document.getElementById('infoDensity').textContent = (molData && molData.density) ? molData.density + ' g/cm³' : 'N/A';
-                document.getElementById('infoMP').textContent = (selectedParticle.current_mp !== undefined && selectedParticle.current_mp !== null ? selectedParticle.current_mp.toFixed(1) + ' °C' : "N/A (Sublimasi/Radikal)");
-                document.getElementById('infoBP').textContent = (selectedParticle.current_bp !== undefined && selectedParticle.current_bp !== null && selectedParticle.current_bp !== Infinity ? selectedParticle.current_bp.toFixed(1) + ' °C' : "N/A (Terurai/Radikal)");
-                document.getElementById('infoPhase').textContent = selectedParticle.state;
+                const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+                setTxt('infoName', selectedParticle.label);
+                setTxt('infoCurrentTemp', currentTemp.toFixed(1) + ' °C');
+                setTxt('infoMolarMass', (molData && molData.molar_mass) ? molData.molar_mass.toFixed(2) + ' g/mol' : selectedParticle.mass.toFixed(2) + ' g/mol');
+                setTxt('infoDensity', (molData && molData.density) ? molData.density + ' g/cm³' : 'N/A');
+                setTxt('infoMP', (selectedParticle.current_mp !== undefined && selectedParticle.current_mp !== null ? selectedParticle.current_mp.toFixed(1) + ' °C' : "N/A"));
+                setTxt('infoBP', (selectedParticle.current_bp !== undefined && selectedParticle.current_bp !== null && selectedParticle.current_bp !== Infinity ? selectedParticle.current_bp.toFixed(1) + ' °C' : "N/A"));
+                setTxt('infoPhase', selectedParticle.state);
                 
                 let abType = DB.moleculeAcidBase[selectedParticle.label];
                 let abText = "Netral";
                 if (abType === 'ACID') abText = "Asam";
                 else if (abType === 'BASE') abText = "Basa";
-                document.getElementById('infoAcidBase').textContent = abText;
+                setTxt('infoAcidBase', abText);
                 
-                let bondText = molData && molData.bond_type ? molData.bond_type : "Tidak Diketahui";
-                document.getElementById('infoBondType').textContent = bondText;
-                document.getElementById('infoIUPAC').textContent = (molData && molData.iupac_name) ? molData.iupac_name : "N/A";
-                document.getElementById('infoExactMass').textContent = (molData && molData.exact_mass) ? molData.exact_mass.toFixed(4) + ' Da' : "N/A";
+                setTxt('infoBondType', molData && molData.bond_type ? molData.bond_type : "Tidak Diketahui");
+                setTxt('infoIUPAC', (molData && molData.iupac_name) ? molData.iupac_name : "N/A");
+                setTxt('infoExactMass', (molData && molData.exact_mass) ? molData.exact_mass.toFixed(4) + ' Da' : "N/A");
             }
+        } else {
+            if (particleInfo) particleInfo.classList.add('hidden');
+            if (particleInfoPrompt) particleInfoPrompt.classList.remove('hidden');
         }
-        
-        ctx.restore();
-        if (liquidCtx) liquidCtx.restore();
+
     } catch (err) {
         console.error("Simulation error in animate:", err);
-        try {
-            ctx.restore();
-            if (liquidCtx) liquidCtx.restore();
-        } catch (_) {}
     }
     
     requestAnimationFrame(animate);
@@ -1420,49 +1340,58 @@ window.restoreCanvasState = function(savedData) {
         targetTemp = savedData.targetTemp !== undefined ? savedData.targetTemp : 25.0;
         const tempEl = document.getElementById('tempValue');
         const tempSl = document.getElementById('tempSlider');
-        if (tempEl) tempEl.textContent = targetTemp.toFixed(0);
-        if (tempSl) tempSl.value = targetTemp.toFixed(0);
+        if (tempEl) tempEl.textContent = targetTemp.toFixed(1) + ' °C';
+        if (tempSl) tempSl.value = String(Math.round(tInv(targetTemp)));
     }
     
     if (savedData.press !== undefined) {
         currentPress = savedData.press;
         const pressEl = document.getElementById('pressValue');
         const pressSl = document.getElementById('pressSlider');
-        if (pressEl) pressEl.textContent = currentPress.toFixed(1);
-        if (pressSl) pressSl.value = currentPress.toFixed(1);
+        if (pressEl) pressEl.textContent = currentPress.toFixed(1) + ' atm';
+        if (pressSl) pressSl.value = String(Math.round(pInv(currentPress)));
     }
     
     if (savedData.particles && Array.isArray(savedData.particles)) {
         particles = [];
         savedData.particles.forEach(sp => {
             let p = new Particle(sp.atomSymbols, sp.x, sp.y, sp.moleculeName);
-            p.dx = sp.dx !== undefined ? sp.dx : ((Math.random() - 0.5) * 4) / 1.5;
-            p.dy = sp.dy !== undefined ? sp.dy : ((Math.random() - 0.5) * 4) / 1.5;
+            p.dx = sp.dx !== undefined ? sp.dx : ((Math.random() - 0.5) * 0.8);
+            p.dy = sp.dy !== undefined ? sp.dy : ((Math.random() - 0.5) * 0.8);
             if (sp.state) p.state = sp.state;
             particles.push(p);
         });
     }
 };
 
+// Skala Sliders Non-linear
+const tMap = s => s <= 20 ? -273.15 + (s / 20) * 273.15 : s <= 60 ? ((s - 20) / 40) * 1000 : 1000 + ((s - 60) / 40) * 4000;
+const tInv = T => T <= 0 ? ((T + 273.15) / 273.15) * 20 : T <= 1000 ? 20 + (T / 1000) * 40 : 60 + ((T - 1000) / 4000) * 40;
+
+const pMap = s => 0.1 * Math.pow(10, 3 * s / 100);
+const pInv = P => Math.max(0, Math.min(100, Math.round(100 * Math.log10(Math.max(0.1, P) / 0.1) / 3)));
+
 // Event Listeners
 const tempSliderEl = document.getElementById('tempSlider');
-
 if (tempSliderEl) {
     tempSliderEl.addEventListener('input', (e) => {
-        targetTemp = parseFloat(e.target.value);
-        // Jika selisih suhu besar, percepat sinkronisasi awal
+        targetTemp = tMap(parseFloat(e.target.value));
         if (Math.abs(currentTemp - targetTemp) > 100) {
             currentTemp += (targetTemp - currentTemp) * 0.25;
         }
         const tempEl = document.getElementById('tempValue');
-        if (tempEl) tempEl.textContent = currentTemp.toFixed(1);
+        if (tempEl) tempEl.textContent = currentTemp.toFixed(1) + ' °C';
     });
 }
 
-document.getElementById('pressSlider').addEventListener('input', (e) => {
-    currentPress = parseFloat(e.target.value);
-    document.getElementById('pressValue').textContent = currentPress.toFixed(1);
-});
+const pressSliderEl = document.getElementById('pressSlider');
+if (pressSliderEl) {
+    pressSliderEl.addEventListener('input', (e) => {
+        currentPress = pMap(parseFloat(e.target.value));
+        const pressEl = document.getElementById('pressValue');
+        if (pressEl) pressEl.textContent = currentPress.toFixed(1) + ' atm';
+    });
+}
 
 document.getElementById('clearBtn').addEventListener('click', () => {
     particles = [];
@@ -1472,13 +1401,13 @@ document.getElementById('clearBtn').addEventListener('click', () => {
     
     const tempEl = document.getElementById('tempValue');
     const tempSl = document.getElementById('tempSlider');
-    if (tempEl) tempEl.textContent = '25.0';
-    if (tempSl) tempSl.value = '25';
+    if (tempEl) tempEl.textContent = '25.0 °C';
+    if (tempSl) tempSl.value = String(Math.round(tInv(25.0)));
     
     const pressEl = document.getElementById('pressValue');
     const pressSl = document.getElementById('pressSlider');
-    if (pressEl) pressEl.textContent = '1.0';
-    if (pressSl) pressSl.value = '1';
+    if (pressEl) pressEl.textContent = '1.0 atm';
+    if (pressSl) pressSl.value = String(Math.round(pInv(1.0)));
     
     currentPH = 7.0;
     updatePHIndicator();
@@ -1486,6 +1415,56 @@ document.getElementById('clearBtn').addEventListener('click', () => {
     if (window.QuestEngine) window.QuestEngine.saveProgress();
     showToast("Meja lab dikosongkan. Suhu disetel ke 25 °C, Tekanan 1.0 atm.");
 });
+
+// Konfirmasi 2-Langkah untuk "Mulai dari Nol"
+let resetArmed = 0;
+const resetBtn = document.getElementById('resetProgressBtn');
+if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+        if (!resetArmed) {
+            resetArmed = 1;
+            resetBtn.textContent = "YAKIN? KLIK LAGI";
+            setTimeout(() => {
+                resetArmed = 0;
+                resetBtn.textContent = "MULAI DARI NOL";
+            }, 3000);
+        } else {
+            resetArmed = 0;
+            resetBtn.textContent = "MULAI DARI NOL";
+            if (window.QuestEngine) {
+                window.QuestEngine.resetProgress();
+            }
+            document.getElementById('clearBtn').click();
+        }
+    });
+}
+
+// Inisialisasi Segmen Pita pH (15 segmen)
+const phStrip = document.getElementById("phStrip");
+if (phStrip) {
+    phStrip.innerHTML = PHC.map(c => `<i style="background:${c}"></i>`).join("");
+}
+
+// Tab Misi / Ensiklopedia Switcher
+document.querySelectorAll(".px-tab").forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll(".px-tab").forEach(x => x.setAttribute("aria-selected", x === btn));
+        const p0 = document.getElementById("pane0");
+        const p1 = document.getElementById("pane1");
+        if (p0) p0.hidden = btn.dataset.i !== "0";
+        if (p1) p1.hidden = btn.dataset.i !== "1";
+    });
+});
+
+// Tekan Enter di Input Atom
+const atomInputEl = document.getElementById('atomInput');
+if (atomInputEl) {
+    atomInputEl.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            document.getElementById('addAtomBtn').click();
+        }
+    });
+}
 
 document.getElementById('addAtomBtn').addEventListener('click', () => {
     let inputOriginal = document.getElementById('atomInput').value.trim();
@@ -1826,35 +1805,31 @@ initDB().then(() => {
 window.shootConfetti = function() {
     if (!window.anime) return;
     
-    const colors = ['#fbbf24', '#4ade80', '#60a5fa', '#f472b6', '#a78bfa'];
-    const fragments = 80; // Jumlah partikel confetti
+    const colors = ['#ffcd75', '#a7f070', '#38b764', '#41a6f6', '#73eff7', '#ef7d57'];
+    const fragments = 60;
     
     for (let i = 0; i < fragments; i++) {
         const el = document.createElement('div');
         el.style.position = 'fixed';
-        // Mulai dari tengah layar
         el.style.left = '50%';
         el.style.top = '40%';
-        el.style.width = (Math.random() * 8 + 4) + 'px';
-        el.style.height = (Math.random() * 8 + 4) + 'px';
+        el.style.width = '6px';
+        el.style.height = '6px';
         el.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        // Bentuk acak (lingkaran atau persegi panjang)
-        el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        el.style.borderRadius = '0';
+        el.style.boxShadow = '1px 1px 0 #0d0f1c';
         el.style.zIndex = '999999';
         el.style.pointerEvents = 'none';
         document.body.appendChild(el);
         
-        // Animasi sebaran ledakan (burst)
         anime({
             targets: el,
-            translateX: () => anime.random(-300, 300),
-            translateY: () => anime.random(-200, 400),
-            scale: [0, 1.5, 0],
-            rotate: () => anime.random(-360, 360),
+            translateX: () => Math.round(anime.random(-250, 250) / 4) * 4,
+            translateY: () => Math.round(anime.random(-150, 350) / 4) * 4,
             opacity: [1, 0],
-            duration: () => anime.random(1000, 2500),
-            easing: 'easeOutExpo',
-            complete: () => el.remove() // Mencegah memory leak! Hapus setelah selesai
+            duration: () => anime.random(800, 1800),
+            easing: 'steps(8)',
+            complete: () => el.remove()
         });
     }
 };

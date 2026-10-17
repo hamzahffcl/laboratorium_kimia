@@ -335,10 +335,10 @@ window.QuestEngine = {
                 if (imgsHTML) {
                     iconHTML = '<div class="mol-cluster">' + imgsHTML + '</div>';
                 } else {
-                    iconHTML = '<div class="mol-icon-fallback">🧪</div>';
+                    iconHTML = '<div class="mol-icon-fallback"><svg viewBox="0 0 16 16" width="24" height="24" shape-rendering="crispEdges"><rect x="6" y="1" width="4" height="1" fill="#f4f4f4"/><rect x="7" y="2" width="2" height="4" fill="#94b0c2"/><rect x="5" y="6" width="6" height="2" fill="#94b0c2"/><rect x="3" y="8" width="10" height="2" fill="#94b0c2"/><rect x="2" y="10" width="12" height="4" fill="#94b0c2"/><rect x="3" y="11" width="10" height="3" fill="#73eff7"/></svg></div>';
                 }
             } else {
-                iconHTML = '<div class="mol-icon-fallback">🔒</div>';
+                iconHTML = '<div class="mol-icon-fallback"><svg viewBox="0 0 16 16" width="24" height="24" shape-rendering="crispEdges"><rect x="5" y="3" width="6" height="5" fill="#94b0c2"/><rect x="7" y="5" width="2" height="3" fill="#1a1c2c"/><rect x="4" y="8" width="8" height="7" fill="#ffcd75"/><rect x="7" y="10" width="2" height="3" fill="#1a1c2c"/></svg></div>';
             }
 
             badge.innerHTML = iconHTML + '<div class="mol-name">' + (isDiscovered ? molLabel : '???') + '</div>';
@@ -350,15 +350,21 @@ window.QuestEngine = {
             progressEl.innerText = `${discoveredCount} / ${allMolecules.length}`;
         }
 
-        // Animasi Staggering saat Modal Koleksi dirender
+        // Perbarui juga tab Ensiklopedia di sidebar samping
+        const sideCollCount = document.getElementById('sidebarCollCount');
+        const sideCollBar = document.getElementById('sidebarCollBar');
+        if (sideCollCount) sideCollCount.textContent = `${discoveredCount}/${allMolecules.length}`;
+        if (sideCollBar) sideCollBar.style.width = `${Math.round((discoveredCount / Math.max(1, allMolecules.length)) * 100)}%`;
+
+        // Animasi Staggering bertahap (stepped 8-bit)
         if (window.anime) {
             anime({
                 targets: '#collectionContainer .collection-badge',
-                scale: [0.8, 1],
+                scale: [0.9, 1],
                 opacity: [0, 1],
-                delay: anime.stagger(50, { start: 100 }), // berjatuhan satu per satu
-                easing: 'spring(1, 80, 10, 0)',
-                duration: 600
+                delay: anime.stagger(25, { start: 50 }),
+                easing: 'steps(4)',
+                duration: 200
             });
         }
     },
@@ -468,22 +474,22 @@ window.QuestEngine = {
             window.shootConfetti();
         }
 
-        // Animasi MASUK dari atas dengan spring yang sangat ekspresif
+        // Animasi MASUK bertahap (stepped 8-bit)
         anime({
             targets: toast,
-            top: ['-100px', '30px'],
+            top: ['-60px', '20px'],
             opacity: [0, 1],
-            duration: 700,
-            easing: 'spring(1, 60, 8, 0)',
+            duration: 200,
+            easing: 'steps(4)',
             complete: () => {
-                // Animasi KELUAR setelah 5 detik
+                // Animasi KELUAR setelah 4 detik
                 anime({
                     targets: toast,
-                    top: [30, -100],
+                    top: [20, -60],
                     opacity: [1, 0],
-                    duration: 500,
-                    delay: 5000,
-                    easing: 'easeInBack',
+                    duration: 200,
+                    delay: 4000,
+                    easing: 'steps(4)',
                     complete: () => toast.remove()
                 });
             }
@@ -502,27 +508,30 @@ window.QuestEngine = {
 
         let activeQuestFound = false;
 
+        let activeQuestObj = null;
+
         this.quests.forEach(quest => {
             const isCompleted = this.state.completedQuests.includes(quest.id);
 
             // Tampilkan misi pertama yang belum selesai (Misi Aktif)
             if (!isCompleted && !activeQuestFound) {
                 activeQuestFound = true;
+                activeQuestObj = quest;
 
                 let progressText = "";
                 if (quest.type === "discovery") {
                     let currentCount = this.state.discoveredMolecules.length;
-                    progressText = `<div style="margin-top: 10px; font-weight: bold; color: #fbbf24; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px;">📈 Observasi Aktual: ${currentCount} / ${quest.targetAmount} Tercatat</div>`;
+                    progressText = `<div style="margin-top: 8px; font-weight: bold; color: var(--yellow); border-top: 2px solid var(--line); padding-top: 6px;">Observasi: ${currentCount} / ${quest.targetAmount} Molekul</div>`;
                 }
 
                 questActiveContainer.innerHTML += `
-                    <div class="quest-card active" style="margin-bottom: 12px; background: rgba(15, 23, 42, 0.6); box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
-                        <div class="quest-status" style="color: #60a5fa;">🔵 Misi Prioritas</div>
-                        <h4 style="color: #f8fafc; font-size: 1.1rem; border-bottom: 1px solid #334155; padding-bottom: 5px;">[${quest.id}] ${quest.title}</h4>
-                        <p style="color: #94a3b8; font-family: monospace; font-size: 0.85rem; line-height: 1.5; margin-top: 8px;">"${quest.description}"</p>
+                    <div class="quest-card active px-box" style="margin-bottom: 12px; padding: 10px;">
+                        <div class="quest-status" style="color: var(--sky); font-family: var(--fh); font-size: 9px;">[MISI AKTIF]</div>
+                        <h4 style="color: var(--white); font-family: var(--fh); font-size: 11px; margin-top: 4px; border-bottom: 2px solid var(--line); padding-bottom: 4px;">${quest.title}</h4>
+                        <p style="color: var(--gray); font-family: var(--fb); font-size: 20px; line-height: 1.25; margin-top: 6px;">"${quest.description}"</p>
                         ${progressText}
-                        <div class="quest-reward" style="margin-top: 10px; border-left: 3px solid #fbbf24; padding-left: 8px;"><strong>Reward:</strong> <span style="color:#e2e8f0">${quest.rewardText}</span></div>
-                        <div id="hintBtnContainer-${quest.id}" style="margin-top: 10px; text-align: center;"></div>
+                        <div class="quest-reward" style="margin-top: 8px; border-left: 3px solid var(--yellow); padding-left: 8px; font-family: var(--fb); font-size: 19px;"><strong>Hadiah:</strong> <span style="color: var(--white)">${quest.rewardText}</span></div>
+                        <div id="hintBtnContainer-${quest.id}" style="margin-top: 8px; text-align: center;"></div>
                     </div>
                 `;
 
@@ -530,9 +539,9 @@ window.QuestEngine = {
                 setTimeout(() => {
                     const hintContainer = document.getElementById(`hintBtnContainer-${quest.id}`);
                     if (hintContainer && hintContainer.innerHTML === '') {
-                        hintContainer.innerHTML = `<button onclick="QuestEngine.showHintModal('${quest.id}')" style="background: rgba(251, 191, 36, 0.2); border: 1px dashed #fbbf24; border-radius: 6px; color: #fbbf24; font-weight: bold; padding: 5px 15px; cursor: pointer; transition: all 0.3s; width: 100%;">💡 Tampilkan Petunjuk</button>`;
+                        hintContainer.innerHTML = `<button onclick="QuestEngine.showHintModal('${quest.id}')" class="px-btn" style="--c: var(--panel); width: 100%; font-size: 9px; padding: 6px;">PETUNJUK LAB</button>`;
                         if (window.anime) {
-                            anime({ targets: hintContainer.children[0], scale: [0.8, 1], opacity: [0, 1], duration: 500, easing: 'spring(1, 80, 10, 0)' });
+                            anime({ targets: hintContainer.children[0], scale: [0.9, 1], opacity: [0, 1], duration: 150, easing: 'steps(3)' });
                         }
                     }
                 }, 15000);
@@ -540,12 +549,12 @@ window.QuestEngine = {
             // Tampilkan misi yang sudah selesai
             else if (isCompleted) {
                 questCompletedContainer.innerHTML += `
-                    <div class="quest-card completed" style="margin-bottom: 10px; background: rgba(34, 197, 94, 0.05); border: 1px solid rgba(34, 197, 94, 0.2);">
+                    <div class="quest-card completed px-box" style="margin-bottom: 8px; padding: 8px;">
                         <div class="quest-status" style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="color: #4ade80;">✅ Tereksekusi</span>
-                            <button onclick="QuestEngine.showEducationalModalById('${quest.id}')" style="background:none; border:none; color:#fbbf24; cursor:pointer; font-size:0.8rem; text-decoration:underline; font-weight:bold;">🔍 Tinjau Log</button>
+                            <span style="color: var(--lime); font-family: var(--fh); font-size: 8px;">[SELESAI]</span>
+                            <button onclick="QuestEngine.showEducationalModalById('${quest.id}')" class="px-btn" style="padding: 2px 6px; font-size: 8px; margin: 0; --c: var(--panel);">CATATAN</button>
                         </div>
-                        <h4 style="margin-top: 5px; color: #cbd5e1;"><del>[${quest.id}] ${quest.title}</del></h4>
+                        <h4 style="margin-top: 4px; color: var(--muted); font-family: var(--fh); font-size: 10px;"><del>${quest.title}</del></h4>
                     </div>
                 `;
             }
@@ -553,11 +562,22 @@ window.QuestEngine = {
 
         if (!activeQuestFound) {
             questActiveContainer.innerHTML += `
-                <div class="quest-card active" style="text-align: center; border-color: gold; padding: 20px;">
-                    <h4 style="color: gold; font-size: 1.2rem;">🏆 Protokol Lab Terselesaikan</h4>
-                    <p style="color: #94a3b8; font-family: monospace; margin-top: 10px;">Semua log reaktor telah penuh. Database kimia berada dalam otoritas penuh Anda. Mode Sandbox Tidak Terbatas diaktifkan.</p>
+                <div class="quest-card active px-box" style="text-align: center; padding: 16px;">
+                    <h4 style="color: var(--yellow); font-family: var(--fh); font-size: 12px;">PROTOKOL LAB TUNTAS</h4>
+                    <p style="color: var(--gray); font-family: var(--fb); font-size: 20px; margin-top: 8px;">Seluruh observasi telah lengkap. Laboratorium kini berada di kendali bebas Anda.</p>
                 </div>
             `;
+        }
+
+        // Perbarui ringkasan Misi di panel samping (Sidebar)
+        const sideCount = document.getElementById('sidebarQuestCount');
+        const sideBar = document.getElementById('sidebarQuestBar');
+        const sideDesc = document.getElementById('sidebarQuestDesc');
+        const completedCount = this.state.completedQuests.length;
+        if (sideCount) sideCount.textContent = `${completedCount < this.quests.length ? completedCount + 1 : this.quests.length}/${this.quests.length}`;
+        if (sideBar) sideBar.style.width = `${Math.round((completedCount / this.quests.length) * 100)}%`;
+        if (sideDesc) {
+            sideDesc.textContent = activeQuestObj ? `${activeQuestObj.title}: ${activeQuestObj.description}` : 'Seluruh protokol lab telah tuntas!';
         }
 
         // Render koleksi molekul juga
@@ -570,14 +590,13 @@ window.QuestEngine = {
         const modalContent = document.getElementById('eduModalContent');
 
         if (modalTitle && modalContent) {
-            modalTitle.innerHTML = `🌟 ${quest.title} Selesai!`;
+            modalTitle.textContent = `${quest.title.toUpperCase()} SELESAI!`;
             let contentHTML = `<p>${quest.educationalText}</p>`;
             if (quest.rewardText) {
-                contentHTML += `<div style="margin-top:15px; padding:10px; background:rgba(251, 191, 36, 0.2); border: 1px dashed #fbbf24; border-radius:6px; color:#fbbf24; font-weight:bold;">🎁 Reward: ${quest.rewardText}</div>`;
+                contentHTML += `<div class="px-box" style="margin-top:10px; padding:8px; border-left: 3px solid var(--yellow); font-family: var(--fb); font-size: 20px;"><strong>HADIAH:</strong> <span style="color: var(--white);">${quest.rewardText}</span></div>`;
             }
             modalContent.innerHTML = contentHTML;
 
-            // Gunakan openModal() global agar konsisten dengan modal lain
             if (typeof openModal === 'function') {
                 openModal('eduModalOverlay');
             }
@@ -600,8 +619,8 @@ window.QuestEngine = {
             const modalContent = document.getElementById('eduModalContent');
 
             if (modalTitle && modalContent) {
-                modalTitle.innerHTML = `💡 Petunjuk Misi`;
-                modalContent.innerHTML = `<p style="color: #cbd5e1; font-size: 1.05rem; line-height: 1.6;">${quest.hint}</p>`;
+                modalTitle.textContent = `PETUNJUK: ${quest.title.toUpperCase()}`;
+                modalContent.innerHTML = `<p style="font-size: 22px; line-height: 1.3;">${quest.hint}</p>`;
                 if (typeof openModal === 'function') {
                     openModal('eduModalOverlay');
                 }
