@@ -9196,6 +9196,27 @@
       "charge": 0,
       "complexity": 0.0,
       "isomeric_smiles": "[Zn]"
+    },
+    {
+      "label": "CH3OOH (Metil Hidroperoksida)",
+      "atoms_csv": "C,H,H,H,H,O,O",
+      "mp": -10.0,
+      "bp": 89.0,
+      "acid_base_type": "Netral",
+      "acid_base_strength": "Tidak Ada",
+      "ionization_factor": 0.0,
+      "bond_type": "Kovalen",
+      "molar_mass": 48.04,
+      "density": 1.0,
+      "heat_capacity": null,
+      "enthalpy_formation": -131.0,
+      "pubchem_cid": null,
+      "iupac_name": "methyl hydroperoxide",
+      "molecular_weight": 48.04,
+      "exact_mass": 48.0211,
+      "charge": 0,
+      "complexity": 10.0,
+      "isomeric_smiles": "COO"
     }
   ],
   "reactions": [
@@ -20765,8 +20786,8 @@
       "r1": "N2H4 (Hidrazina)",
       "r2": "H2 (Gas Hidrogen)",
       "products": [
-        "NH3 (Amonia)",
-        "NH3 (Amonia)"
+        "NH3 (Gas Amonia)",
+        "NH3 (Gas Amonia)"
       ],
       "min_temp": 450,
       "catalyst": "Fe",
@@ -20778,7 +20799,7 @@
       "r1": "S (Belerang)",
       "r2": "O2 (Gas Oksigen)",
       "products": [
-        "SO2 (Belerang Dioksida)"
+        "SO2 (Sulfur Dioksida)"
       ],
       "min_temp": 300,
       "catalyst": null,
@@ -20787,7 +20808,7 @@
       "delta_H_kJ": -50
     },
     {
-      "r1": "SO2 (Belerang Dioksida)",
+      "r1": "SO2 (Sulfur Dioksida)",
       "r2": "O2 (Gas Oksigen)",
       "products": [
         "SO4 (Peroksosulfat)"
@@ -20800,10 +20821,10 @@
     },
     {
       "r1": "SO4 (Peroksosulfat)",
-      "r2": "SO2 (Belerang Dioksida)",
+      "r2": "SO2 (Sulfur Dioksida)",
       "products": [
-        "SO3 (Belerang Trioksida)",
-        "SO3 (Belerang Trioksida)"
+        "SO3 (Sulfur Trioksida)",
+        "SO3 (Sulfur Trioksida)"
       ],
       "min_temp": 450,
       "catalyst": null,
@@ -20812,7 +20833,7 @@
       "delta_H_kJ": -50
     },
     {
-      "r1": "SO3 (Belerang Trioksida)",
+      "r1": "SO3 (Sulfur Trioksida)",
       "r2": "H2O (Air)",
       "products": [
         "H2SO4 (Asam Sulfat)"
@@ -20877,8 +20898,8 @@
       "r1": "O4 (Tetraoksigen)",
       "r2": "O2 (Gas Oksigen)",
       "products": [
-        "O3 (Ozon)",
-        "O3 (Ozon)"
+        "O3 (Gas Ozon)",
+        "O3 (Gas Ozon)"
       ],
       "min_temp": 500,
       "catalyst": null,
