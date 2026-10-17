@@ -1,4 +1,4 @@
-window.ATOM_MAPPING = {"H": "001_H.png", "He": "002_He.png", "Li": "003_Li.png", "Be": "004_Be.png", "B": "005_B.png", "C": "006_C.png", "N": "007_N.png", "O": "008_O.png", "F": "009_F.png", "Ne": "010_Ne.png", "Na": "011_Na.png", "Mg": "012_Mg.png", "Al": "013_Al.png", "Si": "014_Si.png", "P": "015_P.png", "S": "016_S.png", "Cl": "017_Cl.png", "Ar": "018_Ar.png", "K": "019_K.png", "Ca": "020_Ca.png", "Sc": "021_Sc.png", "Ti": "022_Ti.png", "V": "023_V.png", "Cr": "024_Cr.png", "Mn": "025_Mn.png", "Fe": "026_Fe.png", "Co": "027_Co.png", "Ni": "028_Ni.png", "Cu": "029_Cu.png", "Zn": "030_Zn.png", "Ga": "031_Ga.png", "Ge": "032_Ge.png", "As": "033_As.png", "Se": "034_Se.png", "Br": "035_Br.png", "Kr": "036_Kr.png", "Rb": "037_Rb.png", "Sr": "038_Sr.png", "Y": "039_Y.png", "Zr": "040_Zr.png", "Nb": "041_Nb.png", "Mo": "042_Mo.png", "Tc": "043_Tc.png", "Ru": "044_Ru.png", "Rh": "045_Rh.png", "Pd": "046_Pd.png", "Ag": "047_Ag.png", "Cd": "048_Cd.png", "In": "049_In.png", "Sn": "050_Sn.png", "Sb": "051_Sb.png", "Te": "052_Te.png", "I": "053_I.png", "Xe": "054_Xe.png", "Cs": "055_Cs.png", "Ba": "056_Ba.png", "La": "057_La.png", "Ce": "058_Ce.png", "Pr": "059_Pr.png", "Nd": "060_Nd.png", "Pm": "061_Pm.png", "Sm": "062_Sm.png", "Eu": "063_Eu.png", "Gd": "064_Gd.png", "Tb": "065_Tb.png", "Dy": "066_Dy.png", "Ho": "067_Ho.png", "Er": "068_Er.png", "Tm": "069_Tm.png", "Yb": "070_Yb.png", "Lu": "071_Lu.png", "Hf": "072_Hf.png", "Ta": "073_Ta.png", "W": "074_W.png", "Re": "075_Re.png", "Os": "076_Os.png", "Ir": "077_Ir.png", "Pt": "078_Pt.png", "Au": "079_Au.png", "Hg": "080_Hg.png", "Tl": "081_Tl.png", "Pb": "082_Pb.png", "Bi": "083_Bi.png", "Po": "084_Po.png", "At": "085_At.png", "Rn": "086_Rn.png", "Fr": "087_Fr.png", "Ra": "088_Ra.png", "Ac": "089_Ac.png", "Th": "090_Th.png", "Pa": "091_Pa.png", "U": "092_U.png", "Np": "093_Np.png", "Pu": "094_Pu.png", "Am": "095_Am.png", "Cm": "096_Cm.png", "Bk": "097_Bk.png", "Cf": "098_Cf.png", "Es": "099_Es.png", "Fm": "100_Fm.png", "Md": "101_Md.png", "No": "102_No.png", "Lr": "103_Lr.png", "Rf": "104_Rf.png", "Db": "105_Db.png", "Sg": "106_Sg.png", "Bh": "107_Bh.png", "Hs": "108_Hs.png", "Mt": "109_Mt.png", "Ds": "110_Ds.png", "Rg": "111_Rg.png", "Cn": "112_Cn.png", "Nh": "113_Nh.png", "Fl": "114_Fl.png", "Mc": "115_Mc.png", "Lv": "116_Lv.png", "Ts": "117_Ts.png", "Og": "118_Og.png"};
+window.ATOM_MAPPING = { "H": "001_H.png", "He": "002_He.png", "Li": "003_Li.png", "Be": "004_Be.png", "B": "005_B.png", "C": "006_C.png", "N": "007_N.png", "O": "008_O.png", "F": "009_F.png", "Ne": "010_Ne.png", "Na": "011_Na.png", "Mg": "012_Mg.png", "Al": "013_Al.png", "Si": "014_Si.png", "P": "015_P.png", "S": "016_S.png", "Cl": "017_Cl.png", "Ar": "018_Ar.png", "K": "019_K.png", "Ca": "020_Ca.png", "Sc": "021_Sc.png", "Ti": "022_Ti.png", "V": "023_V.png", "Cr": "024_Cr.png", "Mn": "025_Mn.png", "Fe": "026_Fe.png", "Co": "027_Co.png", "Ni": "028_Ni.png", "Cu": "029_Cu.png", "Zn": "030_Zn.png", "Ga": "031_Ga.png", "Ge": "032_Ge.png", "As": "033_As.png", "Se": "034_Se.png", "Br": "035_Br.png", "Kr": "036_Kr.png", "Rb": "037_Rb.png", "Sr": "038_Sr.png", "Y": "039_Y.png", "Zr": "040_Zr.png", "Nb": "041_Nb.png", "Mo": "042_Mo.png", "Tc": "043_Tc.png", "Ru": "044_Ru.png", "Rh": "045_Rh.png", "Pd": "046_Pd.png", "Ag": "047_Ag.png", "Cd": "048_Cd.png", "In": "049_In.png", "Sn": "050_Sn.png", "Sb": "051_Sb.png", "Te": "052_Te.png", "I": "053_I.png", "Xe": "054_Xe.png", "Cs": "055_Cs.png", "Ba": "056_Ba.png", "La": "057_La.png", "Ce": "058_Ce.png", "Pr": "059_Pr.png", "Nd": "060_Nd.png", "Pm": "061_Pm.png", "Sm": "062_Sm.png", "Eu": "063_Eu.png", "Gd": "064_Gd.png", "Tb": "065_Tb.png", "Dy": "066_Dy.png", "Ho": "067_Ho.png", "Er": "068_Er.png", "Tm": "069_Tm.png", "Yb": "070_Yb.png", "Lu": "071_Lu.png", "Hf": "072_Hf.png", "Ta": "073_Ta.png", "W": "074_W.png", "Re": "075_Re.png", "Os": "076_Os.png", "Ir": "077_Ir.png", "Pt": "078_Pt.png", "Au": "079_Au.png", "Hg": "080_Hg.png", "Tl": "081_Tl.png", "Pb": "082_Pb.png", "Bi": "083_Bi.png", "Po": "084_Po.png", "At": "085_At.png", "Rn": "086_Rn.png", "Fr": "087_Fr.png", "Ra": "088_Ra.png", "Ac": "089_Ac.png", "Th": "090_Th.png", "Pa": "091_Pa.png", "U": "092_U.png", "Np": "093_Np.png", "Pu": "094_Pu.png", "Am": "095_Am.png", "Cm": "096_Cm.png", "Bk": "097_Bk.png", "Cf": "098_Cf.png", "Es": "099_Es.png", "Fm": "100_Fm.png", "Md": "101_Md.png", "No": "102_No.png", "Lr": "103_Lr.png", "Rf": "104_Rf.png", "Db": "105_Db.png", "Sg": "106_Sg.png", "Bh": "107_Bh.png", "Hs": "108_Hs.png", "Mt": "109_Mt.png", "Ds": "110_Ds.png", "Rg": "111_Rg.png", "Cn": "112_Cn.png", "Nh": "113_Nh.png", "Fl": "114_Fl.png", "Mc": "115_Mc.png", "Lv": "116_Lv.png", "Ts": "117_Ts.png", "Og": "118_Og.png" };
 
 // === QUEST & PROGRESSION ENGINE === //
 
@@ -116,7 +116,7 @@ window.QuestEngine = {
             educationalText: "Perak Klorida (AgCl) adalah contoh garam yang sulit larut dalam air. Di zaman dulu, senyawa ini sangat penting untuk teknologi cuci cetak lembaran foto analog.",
             hint: "Perak (Ag) dan Klorin (Cl) akan langsung bereaksi saat bersentuhan, membentuk endapan garam perak putih."
         },
-        
+
         {
             id: "Q12",
             title: "Gas Pernapasan",
@@ -267,7 +267,7 @@ window.QuestEngine = {
         if (window.updateAtomDatalist) {
             window.updateAtomDatalist();
         }
-        
+
         // Cek jika ada misi yang bisa langsung diselesaikan dari riwayat
         setTimeout(() => this.checkQuests(null), 500);
     },
@@ -278,8 +278,8 @@ window.QuestEngine = {
     renderCollection() {
         const container = document.getElementById('collectionContainer');
         if (!container || !window.DB || !window.DB.moleculeAtoms) return;
-        
-        container.innerHTML = ''; 
+
+        container.innerHTML = '';
         // Urutkan item yang sudah terbuka ke atas agar langsung terlihat megah
         const allMolecules = Object.keys(window.DB.moleculeAtoms).sort((a, b) => {
             const aUnlocked = this.state.discoveredMolecules.includes(a) || this.state.unlockedAtoms.includes(a);
@@ -297,12 +297,12 @@ window.QuestEngine = {
 
             const badge = document.createElement('div');
             badge.className = 'collection-badge ' + (isDiscovered ? 'unlocked' : 'locked');
-            
+
             // Tentukan gambar GIF untuk koleksi
             let iconHTML = '';
             if (isDiscovered) {
                 const atoms = (window.DB && window.DB.moleculeAtoms && window.DB.moleculeAtoms[molLabel]) ? window.DB.moleculeAtoms[molLabel] : [molLabel];
-                
+
                 // Tampilkan atom-atom pembentuk molekul
                 // Untuk molekul panjang (>4 atom seperti H2SO4), prioritaskan unsur-unsur uniknya agar atom penting (seperti S pada H2SO4) terlihat
                 let displayAtoms = [];
@@ -318,7 +318,7 @@ window.QuestEngine = {
                 if (count === 2) sizeClass = 'size-double';
                 else if (count === 3) sizeClass = 'size-triple';
                 else if (count >= 4) sizeClass = 'size-multi';
-                
+
                 let imgsHTML = '';
                 displayAtoms.forEach(sym => {
                     const png = mapping[sym];
@@ -327,11 +327,11 @@ window.QuestEngine = {
                         imgsHTML += '<img class="mol-gif ' + sizeClass + '" src="./static/atoms_gif/' + gif + '" alt="' + sym + '" title="' + sym + '" loading="lazy">';
                     }
                 });
-                
+
                 if (atoms.length > 4) {
                     imgsHTML += '<span class="mol-extra">+' + (atoms.length - 4) + '</span>';
                 }
-                
+
                 if (imgsHTML) {
                     iconHTML = '<div class="mol-cluster">' + imgsHTML + '</div>';
                 } else {
@@ -340,7 +340,7 @@ window.QuestEngine = {
             } else {
                 iconHTML = '<div class="mol-icon-fallback">🔒</div>';
             }
-            
+
             badge.innerHTML = iconHTML + '<div class="mol-name">' + (isDiscovered ? molLabel : '???') + '</div>';
             container.appendChild(badge);
         });
@@ -349,14 +349,14 @@ window.QuestEngine = {
         if (progressEl) {
             progressEl.innerText = `${discoveredCount} / ${allMolecules.length}`;
         }
-        
+
         // Animasi Staggering saat Modal Koleksi dirender
         if (window.anime) {
             anime({
                 targets: '#collectionContainer .collection-badge',
                 scale: [0.8, 1],
                 opacity: [0, 1],
-                delay: anime.stagger(50, {start: 100}), // berjatuhan satu per satu
+                delay: anime.stagger(50, { start: 100 }), // berjatuhan satu per satu
                 easing: 'spring(1, 80, 10, 0)',
                 duration: 600
             });
@@ -366,7 +366,7 @@ window.QuestEngine = {
     // Pengecekan Penemuan Baru
     checkDiscovery(moleculeLabel) {
         // Jangan catat radikal bebas (bintang di akhir)
-        if (moleculeLabel.includes('*')) return; 
+        if (moleculeLabel.includes('*')) return;
 
         if (!this.state.discoveredMolecules.includes(moleculeLabel)) {
             this.state.discoveredMolecules.push(moleculeLabel);
@@ -376,7 +376,7 @@ window.QuestEngine = {
             this.saveProgress();
             this.renderCollection();
         }
-        
+
         // Cek misi setiap kali molekul tercipta (meski sudah pernah ditemukan)
         this.checkQuests(moleculeLabel);
     },
@@ -390,13 +390,13 @@ window.QuestEngine = {
         if (!activeQuest) return;
 
         let isTargetMet = false;
-        
+
         // Logika untuk Tipe Discovery
         if (activeQuest.type === "discovery") {
             if (this.state.discoveredMolecules.length >= activeQuest.targetAmount) {
                 isTargetMet = true;
             }
-        } 
+        }
         // Logika untuk Tipe Sintesis (Default)
         else {
             if (Array.isArray(activeQuest.target)) {
@@ -410,59 +410,59 @@ window.QuestEngine = {
         if (isTargetMet) {
             this.state.completedQuests.push(activeQuest.id);
             questCompleted = true;
-                
-                // Berikan Reward Atom Baru
-                if (activeQuest.rewardAtoms.includes("ALL")) {
-                    // Buka SEMUA 118 Atom dari database
-                    if (window.CHEM_DATA && window.CHEM_DATA.periodic_table) {
-                        window.CHEM_DATA.periodic_table.forEach(at => {
-                            if (!this.state.unlockedAtoms.includes(at.symbol)) {
-                                this.state.unlockedAtoms.push(at.symbol);
-                            }
-                        });
-                    }
-                } else {
-                    activeQuest.rewardAtoms.forEach(atom => {
-                        if (!this.state.unlockedAtoms.includes(atom)) {
-                            this.state.unlockedAtoms.push(atom);
+
+            // Berikan Reward Atom Baru
+            if (activeQuest.rewardAtoms.includes("ALL")) {
+                // Buka SEMUA 118 Atom dari database
+                if (window.CHEM_DATA && window.CHEM_DATA.periodic_table) {
+                    window.CHEM_DATA.periodic_table.forEach(at => {
+                        if (!this.state.unlockedAtoms.includes(at.symbol)) {
+                            this.state.unlockedAtoms.push(at.symbol);
                         }
                     });
                 }
-                
-                // Panggil Modal Edukasi
-                this.showEducationalModal(activeQuest);
-                
-                // Pemicu Ledakan Confetti saat Misi Selesai!
-                if (window.shootConfetti) {
-                    window.shootConfetti();
-                }
-                
-                // Pengecoh: Reset suhu dan tekanan ke default
-                if (typeof currentTemp !== 'undefined') {
-                    currentTemp = 25;
-                    const tempEl = document.getElementById('tempValue');
-                    const tempSl = document.getElementById('tempSlider');
-                    if (tempEl) tempEl.textContent = currentTemp.toFixed(1);
-                    if (tempSl) tempSl.value = currentTemp;
-                }
-                if (typeof currentPress !== 'undefined') {
-                    currentPress = 1.0;
-                    const pressEl = document.getElementById('pressValue');
-                    const pressSl = document.getElementById('pressSlider');
-                    if (pressEl) pressEl.textContent = currentPress.toFixed(1);
-                    if (pressSl) pressSl.value = currentPress;
-                }
+            } else {
+                activeQuest.rewardAtoms.forEach(atom => {
+                    if (!this.state.unlockedAtoms.includes(atom)) {
+                        this.state.unlockedAtoms.push(atom);
+                    }
+                });
             }
+
+            // Panggil Modal Edukasi
+            this.showEducationalModal(activeQuest);
+
+            // Pemicu Ledakan Confetti saat Misi Selesai!
+            if (window.shootConfetti) {
+                window.shootConfetti();
+            }
+
+            // Pengecoh: Reset suhu dan tekanan ke default
+            if (typeof currentTemp !== 'undefined') {
+                currentTemp = 25;
+                const tempEl = document.getElementById('tempValue');
+                const tempSl = document.getElementById('tempSlider');
+                if (tempEl) tempEl.textContent = currentTemp.toFixed(1);
+                if (tempSl) tempSl.value = currentTemp;
+            }
+            if (typeof currentPress !== 'undefined') {
+                currentPress = 1.0;
+                const pressEl = document.getElementById('pressValue');
+                const pressSl = document.getElementById('pressSlider');
+                if (pressEl) pressEl.textContent = currentPress.toFixed(1);
+                if (pressSl) pressSl.value = currentPress;
+            }
+        }
 
         if (questCompleted) {
             this.saveProgress();
             this.renderQuestUI();
-            
+
             // Beritahu UI utama untuk update Datalist
             if (window.updateAtomDatalist) {
                 window.updateAtomDatalist();
             }
-            
+
             // Cek berantai: Jika misi selanjutnya sudah memenuhi syarat (sudah ditemukan sebelumnya), selesaikan juga
             setTimeout(() => {
                 this.checkQuests(null);
@@ -508,27 +508,27 @@ window.QuestEngine = {
     renderQuestUI() {
         const questActiveContainer = document.getElementById('questActiveContainer');
         const questCompletedContainer = document.getElementById('questCompletedContainer');
-        
+
         if (!questActiveContainer || !questCompletedContainer) return;
 
         questActiveContainer.innerHTML = '';
         questCompletedContainer.innerHTML = '';
-        
+
         let activeQuestFound = false;
 
         this.quests.forEach(quest => {
             const isCompleted = this.state.completedQuests.includes(quest.id);
-            
+
             // Tampilkan misi pertama yang belum selesai (Misi Aktif)
             if (!isCompleted && !activeQuestFound) {
                 activeQuestFound = true;
-                
+
                 let progressText = "";
                 if (quest.type === "discovery") {
                     let currentCount = this.state.discoveredMolecules.length;
                     progressText = `<div style="margin-top: 10px; font-weight: bold; color: #fbbf24; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px;">📈 Observasi Aktual: ${currentCount} / ${quest.targetAmount} Tercatat</div>`;
                 }
-                
+
                 questActiveContainer.innerHTML += `
                     <div class="quest-card active" style="margin-bottom: 12px; background: rgba(15, 23, 42, 0.6); box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
                         <div class="quest-status" style="color: #60a5fa;">🔵 Misi Prioritas</div>
@@ -550,7 +550,7 @@ window.QuestEngine = {
                         }
                     }
                 }, 15000);
-            } 
+            }
             // Tampilkan misi yang sudah selesai
             else if (isCompleted) {
                 questCompletedContainer.innerHTML += `
@@ -573,7 +573,7 @@ window.QuestEngine = {
                 </div>
             `;
         }
-        
+
         // Render koleksi molekul juga
         this.renderCollection();
     },
@@ -582,7 +582,7 @@ window.QuestEngine = {
     showEducationalModal(quest) {
         const modalTitle = document.getElementById('eduModalTitle');
         const modalContent = document.getElementById('eduModalContent');
-        
+
         if (modalTitle && modalContent) {
             modalTitle.innerHTML = `🌟 ${quest.title} Selesai!`;
             let contentHTML = `<p>${quest.educationalText}</p>`;
@@ -612,7 +612,7 @@ window.QuestEngine = {
         if (quest && quest.hint) {
             const modalTitle = document.getElementById('eduModalTitle');
             const modalContent = document.getElementById('eduModalContent');
-            
+
             if (modalTitle && modalContent) {
                 modalTitle.innerHTML = `💡 Petunjuk Misi`;
                 modalContent.innerHTML = `<p style="color: #cbd5e1; font-size: 1.05rem; line-height: 1.6;">${quest.hint}</p>`;
@@ -630,19 +630,19 @@ window.QuestEngine = {
             this.state.canvas = window.getCanvasState();
         }
         localStorage.setItem('labSimulatorProgress', JSON.stringify(this.state));
-        
+
         // Hindari menumpuk toast
         if (document.querySelector('.auto-save-toast')) {
             const existing = document.querySelector('.auto-save-toast');
             anime.remove(existing);
             existing.remove();
         }
-        
+
         const toast = document.createElement('div');
         toast.className = 'auto-save-toast';
         toast.innerHTML = '💾 Auto-Saved';
         document.body.appendChild(toast);
-        
+
         // Animasi masuk smooth
         anime({
             targets: toast,
@@ -672,7 +672,7 @@ window.QuestEngine = {
                 const parsed = JSON.parse(saved);
                 // Merge state to handle structural updates in the future
                 this.state = { ...this.state, ...parsed };
-                
+
                 if (this.state.canvas && window.restoreCanvasState) {
                     window.restoreCanvasState(this.state.canvas);
                 }
@@ -681,6 +681,7 @@ window.QuestEngine = {
             }
         }
     },
+
 
     resetProgress() {
         if (confirm("Yakin mau menghapus semua catatan eksperimenmu dan mengulang dari nol? (Pencapaian yang dihapus tidak bisa dikembalikan lho!)")) {
@@ -691,12 +692,12 @@ window.QuestEngine = {
 
     exportProgress() {
         const now = new Date();
-        const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-        
+        const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
         if (window.getCanvasState) {
             this.state.canvas = window.getCanvasState();
         }
-        
+
         const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.state, null, 2));
         const downloadAnchorNode = document.createElement('a');
         downloadAnchorNode.setAttribute("href", dataStr);
