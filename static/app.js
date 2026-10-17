@@ -575,72 +575,127 @@ class Particle {
             targetCtx = ctx;
         }
 
-        // --- DRAW MOLECULE STRUCTURE (ZOOM IN) ---
-        if (this.moleculeName && this.atomData.length > 1 && window.camera.zoom >= 1.5) {
-            // Cari atom pusat (valensi tertinggi)
-            let sortedAtoms = [...this.atomData].sort((a, b) => getValence(b.symbol) - getValence(a.symbol));
-            let centerAtom = sortedAtoms[0];
-            let branches = sortedAtoms.slice(1);
-            
-            targetCtx.save();
-            targetCtx.translate(this.x, this.y);
-            targetCtx.rotate((Date.now() * 0.0005) + this.id);
-            
-            let angleStep = (Math.PI * 2) / branches.length;
-            // Jika cabang ada 2 (seperti H2O), buat agak bengkok sedikit agar tidak lurus 180 derajat
-            if (branches.length === 2) angleStep = Math.PI * 0.75; 
-            
-            let bondLength = this.radius * 1.4;
-            
-            // Tangan molekul
-            targetCtx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
-            targetCtx.lineWidth = Math.max(2, this.radius * 0.1);
-            for (let i = 0; i < branches.length; i++) {
-                let angle = i * angleStep;
-                let bx = Math.cos(angle) * bondLength;
-                let by = Math.sin(angle) * bondLength;
-                
-                targetCtx.beginPath();
-                targetCtx.moveTo(0, 0);
-                targetCtx.lineTo(bx, by);
-                targetCtx.stroke();
+        // --- DRAW EXPERIMENTAL COMPOSITE MOLECULE STRUCTURE ---
+        const EXPERIMENTAL_SPRITE_MOLECULES = ['H2O', 'CO2', 'HCl', 'NH3', 'CH4', 'NaCl', 'H2', 'Cl2', 'O2'];
+        let cleanMolFormula = this.moleculeName ? this.moleculeName.split(' ')[0].trim() : '';
+
+        if (this.moleculeName && this.atomData.length > 1 && EXPERIMENTAL_SPRITE_MOLECULES.includes(cleanMolFormula)) {
+            try {
+                // Cari atom pusat (valensi tertinggi, atau atom pertama jika sama)
+                let sortedAtoms = [...this.atomData].sort((a, b) => getValence(b.symbol) - getValence(a.symbol));
+                let centerAtom = sortedAtoms[0];
+                let branches = sortedAtoms.slice(1);
+
+                // Ukuran radius visual atom penyusun di dalam molekul
+                const getSubRadius = (sym, mass) => {
+                    let m = mass || 1;
+                    if (m <= 10) return 10;
+                    if (m <= 30) return 13;
+                    if (m <= 50) return 15;
+                    return 17;
+                };
+
+                let centerR = getSubRadius(centerAtom.symbol, centerAtom.mass);
+
+                // Tentukan sudut geometri alami
+                let angles = [];
+                if (branches.length === 1) {
+                    angles = [0];
+                } else if (branches.length === 2) {
+                    if (cleanMolFormula === 'CO2') {
+                        angles = [0, Math.PI]; // Linear 180°
+                    } else {
+                        // H2O: Bent ~104.5°
+                        let halfAngle = (104.5 * Math.PI) / 360;
+                        angles = [-halfAngle, halfAngle];
+                    }
+                } else if (branches.length === 3) {
+                    // NH3: Trigonal
+                    angles = [-Math.PI * 0.45, Math.PI * 0.45, Math.PI];
+                } else if (branches.length === 4) {
+                    // CH4: Tetrahedral projection
+                    angles = [-Math.PI * 0.35, Math.PI * 0.35, Math.PI * 0.75, -Math.PI * 0.75];
+                } else {
+                    let step = (Math.PI * 2) / branches.length;
+                    for (let i = 0; i < branches.length; i++) angles.push(i * step);
+                }
+
+                targetCtx.save();
+                targetCtx.translate(this.x, this.y);
+                targetCtx.rotate((Date.now() * 0.0004) + (this.id * 1.2)); // Rotasi lambat dan estetik
+
+                // 1. Gambar Tangan-Tangan Ikatan (Bond Arms)
+                targetCtx.strokeStyle = 'rgba(255, 255, 255, 0.75)';
+                targetCtx.lineWidth = Math.max(2.5, this.radius * 0.12);
+                targetCtx.lineCap = 'round';
+
+                let branchPositions = [];
+                for (let i = 0; i < branches.length; i++) {
+                    let bAtom = branches[i];
+                    let branchR = getSubRadius(bAtom.symbol, bAtom.mass);
+                    let bondDist = centerR + branchR + 2; // Menempel rapat dan menyatu
+                    let ang = angles[i] !== undefined ? angles[i] : (i * (Math.PI * 2 / branches.length));
+                    let bx = Math.cos(ang) * bondDist;
+                    let by = Math.sin(ang) * bondDist;
+                    branchPositions.push({ bAtom, bx, by, branchR });
+
+                    targetCtx.beginPath();
+                    targetCtx.moveTo(0, 0);
+                    targetCtx.lineTo(bx, by);
+                    targetCtx.stroke();
+                }
+
+                // 2. Gambar Atom Pusat (Sprite atau Fallback Lingkaran)
+                let drawnCenter = false;
+                if (window.AtomSpriteSystem && window.AtomSpriteSystem.enabled) {
+                    drawnCenter = window.AtomSpriteSystem.drawAtom(targetCtx, centerAtom.symbol, 0, 0, centerR, this.id);
+                }
+                if (!drawnCenter) {
+                    targetCtx.beginPath();
+                    targetCtx.arc(0, 0, centerR, 0, Math.PI * 2);
+                    targetCtx.fillStyle = centerAtom.color || '#3b82f6';
+                    targetCtx.fill();
+                    targetCtx.strokeStyle = 'rgba(255,255,255,0.4)';
+                    targetCtx.stroke();
+                }
+
+                // 3. Gambar Atom Cabang (Sprite atau Fallback Lingkaran)
+                for (let i = 0; i < branchPositions.length; i++) {
+                    let bp = branchPositions[i];
+                    let drawnBranch = false;
+                    if (window.AtomSpriteSystem && window.AtomSpriteSystem.enabled) {
+                        drawnBranch = window.AtomSpriteSystem.drawAtom(targetCtx, bp.bAtom.symbol, bp.bx, bp.by, bp.branchR, this.id + i + 1);
+                    }
+                    if (!drawnBranch) {
+                        targetCtx.beginPath();
+                        targetCtx.arc(bp.bx, bp.by, bp.branchR, 0, Math.PI * 2);
+                        targetCtx.fillStyle = bp.bAtom.color || '#94a3b8';
+                        targetCtx.fill();
+                        targetCtx.strokeStyle = 'rgba(255,255,255,0.4)';
+                        targetCtx.stroke();
+                    }
+                }
+
+                targetCtx.restore();
+
+                // 4. Label Nama Molekul di atas partikel
+                ctx.save();
+                ctx.translate(this.x, this.y - this.radius * 1.3);
+                ctx.scale(1 / window.camera.zoom, 1 / window.camera.zoom);
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 10px Inter';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.shadowColor = 'rgba(0,0,0,0.8)';
+                ctx.shadowBlur = 3;
+                ctx.fillText(cleanMolFormula, 0, 0);
+                ctx.restore();
+
+                return; // Berhasil render molekul uji coba!
+            } catch (err) {
+                console.warn("Fallback rendering molekul karena:", err);
+                // Jika ada kendala, otomatis lanjut ke rendering default di bawah tanpa crash!
             }
-            
-            // Atom Pusat
-            targetCtx.beginPath();
-            targetCtx.arc(0, 0, this.radius * 0.5, 0, Math.PI * 2);
-            targetCtx.fillStyle = centerAtom.color;
-            targetCtx.fill();
-            targetCtx.strokeStyle = 'rgba(255,255,255,0.4)';
-            targetCtx.stroke();
-            
-            // Atom Cabang
-            for (let i = 0; i < branches.length; i++) {
-                let angle = i * angleStep;
-                let bx = Math.cos(angle) * bondLength;
-                let by = Math.sin(angle) * bondLength;
-                let bAtom = branches[i];
-                
-                targetCtx.beginPath();
-                targetCtx.arc(bx, by, this.radius * 0.4, 0, Math.PI * 2);
-                targetCtx.fillStyle = bAtom.color;
-                targetCtx.fill();
-                targetCtx.stroke();
-            }
-            targetCtx.restore();
-            
-            ctx.save();
-            ctx.translate(this.x, this.y - this.radius * 1.2);
-            ctx.scale(1 / window.camera.zoom, 1 / window.camera.zoom);
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 10px Inter';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            let displayLabel = this.moleculeName.split(' ')[0];
-            ctx.fillText(displayLabel, 0, 0);
-            ctx.restore();
-            
-            return; // Selesai rendering molekul
         }
 
         // --- DRAW VALENCE BONDS (TANGAN ATOM) ---
