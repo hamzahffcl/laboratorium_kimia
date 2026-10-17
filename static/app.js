@@ -459,22 +459,6 @@ window.AtomSpriteSystem = {
     }
 };
 
-window.toggleAtomStyle = function() {
-    if (!window.AtomSpriteSystem) return;
-    window.AtomSpriteSystem.enabled = !window.AtomSpriteSystem.enabled;
-    const btn = document.getElementById('toggleSpriteBtn');
-    if (btn) {
-        if (window.AtomSpriteSystem.enabled) {
-            btn.textContent = '🎨 Gaya Bola: Pixel Art (Aktif)';
-            btn.style.background = 'linear-gradient(135deg, #3b82f6, #8b5cf6)';
-        } else {
-            btn.textContent = '🔮 Gaya Bola: Klasik 3D (Aktif)';
-            btn.style.background = '#475569';
-        }
-    }
-    showToast(`Mode Tampilan Atom: ${window.AtomSpriteSystem.enabled ? 'Pixel Art' : 'Klasik 3D'}`);
-};
-
 class Particle {
     constructor(atomSymbols, x, y, moleculeName = null) {
         this.id = particleCounter++;
