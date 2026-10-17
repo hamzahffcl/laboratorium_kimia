@@ -424,14 +424,28 @@ class Particle {
         
         this.mass = this.atomData.reduce((sum, a) => sum + a.mass, 0);
         
-        let rad = 0;
+        // Hitung radius partikel berdasarkan kelompok Ar / Mr
+        let m = this.mass;
         if (moleculeName) {
-            rad = 10 + Math.min(this.mass, 25);
+            // Molekul menggunakan massa total (Mr) dengan sedikit penyesuaian
+            if (m <= 10) this.radius = 16;
+            else if (m <= 30) this.radius = 22;
+            else if (m <= 50) this.radius = 26;
+            else if (m <= 80) this.radius = 29;
+            else this.radius = 32;
         } else {
-            // Rumus ukuran atom: jika Ar = 1 (H) -> 10px, Ar = 2 -> 11px, dst.
-            rad = 9 + this.mass;
+            // Skala Ar atom tunggal sesuai permintaan:
+            // Ar 1 - 10  : 15 px
+            // Ar 11 - 30 : 20 px
+            // Ar 31 - 50 : 25 px
+            // Ar 51 - 80 : 28 px
+            // Ar > 80    : 30 px
+            if (m <= 10) this.radius = 15;
+            else if (m <= 30) this.radius = 20;
+            else if (m <= 50) this.radius = 25;
+            else if (m <= 80) this.radius = 28;
+            else this.radius = 30;
         }
-        this.radius = Math.max(10, Math.min(rad, 45)); // Batas maksimal 45px
         
         this.x = x || Math.random() * (canvas.width - 100) + 50;
         this.y = y || Math.random() * (canvas.height - 100) + 50;
