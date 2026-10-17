@@ -1,3 +1,5 @@
+window.ATOM_MAPPING = {"H": "001_H.png", "He": "002_He.png", "Li": "003_Li.png", "Be": "004_Be.png", "B": "005_B.png", "C": "006_C.png", "N": "007_N.png", "O": "008_O.png", "F": "009_F.png", "Ne": "010_Ne.png", "Na": "011_Na.png", "Mg": "012_Mg.png", "Al": "013_Al.png", "Si": "014_Si.png", "P": "015_P.png", "S": "016_S.png", "Cl": "017_Cl.png", "Ar": "018_Ar.png", "K": "019_K.png", "Ca": "020_Ca.png", "Sc": "021_Sc.png", "Ti": "022_Ti.png", "V": "023_V.png", "Cr": "024_Cr.png", "Mn": "025_Mn.png", "Fe": "026_Fe.png", "Co": "027_Co.png", "Ni": "028_Ni.png", "Cu": "029_Cu.png", "Zn": "030_Zn.png", "Ga": "031_Ga.png", "Ge": "032_Ge.png", "As": "033_As.png", "Se": "034_Se.png", "Br": "035_Br.png", "Kr": "036_Kr.png", "Rb": "037_Rb.png", "Sr": "038_Sr.png", "Y": "039_Y.png", "Zr": "040_Zr.png", "Nb": "041_Nb.png", "Mo": "042_Mo.png", "Tc": "043_Tc.png", "Ru": "044_Ru.png", "Rh": "045_Rh.png", "Pd": "046_Pd.png", "Ag": "047_Ag.png", "Cd": "048_Cd.png", "In": "049_In.png", "Sn": "050_Sn.png", "Sb": "051_Sb.png", "Te": "052_Te.png", "I": "053_I.png", "Xe": "054_Xe.png", "Cs": "055_Cs.png", "Ba": "056_Ba.png", "La": "057_La.png", "Ce": "058_Ce.png", "Pr": "059_Pr.png", "Nd": "060_Nd.png", "Pm": "061_Pm.png", "Sm": "062_Sm.png", "Eu": "063_Eu.png", "Gd": "064_Gd.png", "Tb": "065_Tb.png", "Dy": "066_Dy.png", "Ho": "067_Ho.png", "Er": "068_Er.png", "Tm": "069_Tm.png", "Yb": "070_Yb.png", "Lu": "071_Lu.png", "Hf": "072_Hf.png", "Ta": "073_Ta.png", "W": "074_W.png", "Re": "075_Re.png", "Os": "076_Os.png", "Ir": "077_Ir.png", "Pt": "078_Pt.png", "Au": "079_Au.png", "Hg": "080_Hg.png", "Tl": "081_Tl.png", "Pb": "082_Pb.png", "Bi": "083_Bi.png", "Po": "084_Po.png", "At": "085_At.png", "Rn": "086_Rn.png", "Fr": "087_Fr.png", "Ra": "088_Ra.png", "Ac": "089_Ac.png", "Th": "090_Th.png", "Pa": "091_Pa.png", "U": "092_U.png", "Np": "093_Np.png", "Pu": "094_Pu.png", "Am": "095_Am.png", "Cm": "096_Cm.png", "Bk": "097_Bk.png", "Cf": "098_Cf.png", "Es": "099_Es.png", "Fm": "100_Fm.png", "Md": "101_Md.png", "No": "102_No.png", "Lr": "103_Lr.png", "Rf": "104_Rf.png", "Db": "105_Db.png", "Sg": "106_Sg.png", "Bh": "107_Bh.png", "Hs": "108_Hs.png", "Mt": "109_Mt.png", "Ds": "110_Ds.png", "Rg": "111_Rg.png", "Cn": "112_Cn.png", "Nh": "113_Nh.png", "Fl": "114_Fl.png", "Mc": "115_Mc.png", "Lv": "116_Lv.png", "Ts": "117_Ts.png", "Og": "118_Og.png"};
+
 // === QUEST & PROGRESSION ENGINE === //
 
 window.QuestEngine = {
@@ -287,6 +289,7 @@ window.QuestEngine = {
             return 0;
         });
         let discoveredCount = 0;
+        const mapping = window.ATOM_MAPPING || (window.AtomSpriteSystem ? window.AtomSpriteSystem.mapping : {});
 
         allMolecules.forEach(molLabel => {
             const isDiscovered = this.state.discoveredMolecules.includes(molLabel) || this.state.unlockedAtoms.includes(molLabel);
@@ -298,13 +301,31 @@ window.QuestEngine = {
             // Tentukan gambar GIF untuk koleksi
             let iconHTML = '';
             if (isDiscovered) {
-                const atoms = window.DB.moleculeAtoms[molLabel];
-                const primarySymbol = atoms ? atoms[0] : molLabel;
-                const spriteMapping = window.AtomSpriteSystem ? window.AtomSpriteSystem.mapping : {};
-                const pngFile = spriteMapping[primarySymbol];
-                if (pngFile) {
-                    const gifFile = pngFile.replace('.png', '.gif');
-                    iconHTML = '<img class="mol-gif" src="./static/atoms_gif/' + gifFile + '" alt="' + molLabel + '" loading="lazy">';
+                const atoms = (window.DB && window.DB.moleculeAtoms && window.DB.moleculeAtoms[molLabel]) ? window.DB.moleculeAtoms[molLabel] : [molLabel];
+                
+                // Tampilkan atom-atom pembentuk molekul (maksimal 4 atom dalam kluster visual)
+                const displayAtoms = atoms.slice(0, 4);
+                const count = displayAtoms.length;
+                let sizeClass = 'size-single';
+                if (count === 2) sizeClass = 'size-double';
+                else if (count === 3) sizeClass = 'size-triple';
+                else if (count >= 4) sizeClass = 'size-multi';
+                
+                let imgsHTML = '';
+                displayAtoms.forEach(sym => {
+                    const png = mapping[sym];
+                    if (png) {
+                        const gif = png.replace('.png', '.gif');
+                        imgsHTML += '<img class="mol-gif ' + sizeClass + '" src="./static/atoms_gif/' + gif + '" alt="' + sym + '" title="' + sym + '" loading="lazy">';
+                    }
+                });
+                
+                if (atoms.length > 4) {
+                    imgsHTML += '<span class="mol-extra">+' + (atoms.length - 4) + '</span>';
+                }
+                
+                if (imgsHTML) {
+                    iconHTML = '<div class="mol-cluster">' + imgsHTML + '</div>';
                 } else {
                     iconHTML = '<div class="mol-icon-fallback">🧪</div>';
                 }
