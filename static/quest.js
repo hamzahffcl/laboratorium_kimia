@@ -278,22 +278,41 @@ window.QuestEngine = {
         if (!container || !window.DB || !window.DB.moleculeAtoms) return;
         
         container.innerHTML = ''; 
-        const allMolecules = Object.keys(window.DB.moleculeAtoms);
+        // Urutkan item yang sudah terbuka ke atas agar langsung terlihat megah
+        const allMolecules = Object.keys(window.DB.moleculeAtoms).sort((a, b) => {
+            const aUnlocked = this.state.discoveredMolecules.includes(a) || this.state.unlockedAtoms.includes(a);
+            const bUnlocked = this.state.discoveredMolecules.includes(b) || this.state.unlockedAtoms.includes(b);
+            if (aUnlocked && !bUnlocked) return -1;
+            if (!aUnlocked && bUnlocked) return 1;
+            return 0;
+        });
         let discoveredCount = 0;
 
         allMolecules.forEach(molLabel => {
-            // Sebuah item dianggap 'ditemukan' jika ia ada di discoveredMolecules (untuk molekul) 
-            // ATAU ada di unlockedAtoms (untuk atom-atom dasar).
             const isDiscovered = this.state.discoveredMolecules.includes(molLabel) || this.state.unlockedAtoms.includes(molLabel);
             if (isDiscovered) discoveredCount++;
 
             const badge = document.createElement('div');
             badge.className = 'collection-badge ' + (isDiscovered ? 'unlocked' : 'locked');
             
-            badge.innerHTML = `
-                <div class="mol-icon">${isDiscovered ? '🧪' : '🔒'}</div>
-                <div class="mol-name">${isDiscovered ? molLabel : '???'}</div>
-            `;
+            // Tentukan gambar GIF untuk koleksi
+            let iconHTML = '';
+            if (isDiscovered) {
+                const atoms = window.DB.moleculeAtoms[molLabel];
+                const primarySymbol = atoms ? atoms[0] : molLabel;
+                const spriteMapping = window.AtomSpriteSystem ? window.AtomSpriteSystem.mapping : {};
+                const pngFile = spriteMapping[primarySymbol];
+                if (pngFile) {
+                    const gifFile = pngFile.replace('.png', '.gif');
+                    iconHTML = '<img class="mol-gif" src="./static/atoms_gif/' + gifFile + '" alt="' + molLabel + '" loading="lazy">';
+                } else {
+                    iconHTML = '<div class="mol-icon-fallback">🧪</div>';
+                }
+            } else {
+                iconHTML = '<div class="mol-icon-fallback">🔒</div>';
+            }
+            
+            badge.innerHTML = iconHTML + '<div class="mol-name">' + (isDiscovered ? molLabel : '???') + '</div>';
             container.appendChild(badge);
         });
 
