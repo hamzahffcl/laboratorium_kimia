@@ -9217,6 +9217,69 @@ window.CHEM_DATA = {
       "charge": 0,
       "complexity": 10.0,
       "isomeric_smiles": "COO"
+    },
+    {
+      "label": "CN (Radikal Sianida)",
+      "atoms_csv": "C,N",
+      "mp": -20.0,
+      "bp": 10.0,
+      "acid_base_type": "Netral",
+      "acid_base_strength": "Tidak Ada",
+      "ionization_factor": 0.0,
+      "bond_type": "Radikal Bebas",
+      "molar_mass": 26.02,
+      "density": 1.2,
+      "heat_capacity": null,
+      "enthalpy_formation": 435.0,
+      "pubchem_cid": null,
+      "iupac_name": "cyanogen radical",
+      "molecular_weight": 26.02,
+      "exact_mass": 26.003,
+      "charge": 0,
+      "complexity": 10.0,
+      "isomeric_smiles": "[C]#N"
+    },
+    {
+      "label": "TiO (Titanium Monoksida)",
+      "atoms_csv": "O,Ti",
+      "mp": 1750.0,
+      "bp": 3000.0,
+      "acid_base_type": "Netral",
+      "acid_base_strength": "Tidak Ada",
+      "ionization_factor": 0.0,
+      "bond_type": "Kovalen",
+      "molar_mass": 63.87,
+      "density": 4.95,
+      "heat_capacity": null,
+      "enthalpy_formation": -542.0,
+      "pubchem_cid": null,
+      "iupac_name": "titanium monoxide",
+      "molecular_weight": 63.87,
+      "exact_mass": 63.939,
+      "charge": 0,
+      "complexity": 10.0,
+      "isomeric_smiles": "[Ti]=O"
+    },
+    {
+      "label": "PbI (Timbal Monoidida)",
+      "atoms_csv": "I,Pb",
+      "mp": 350.0,
+      "bp": 700.0,
+      "acid_base_type": "Netral",
+      "acid_base_strength": "Tidak Ada",
+      "ionization_factor": 0.0,
+      "bond_type": "Kovalen",
+      "molar_mass": 334.1,
+      "density": 6.1,
+      "heat_capacity": null,
+      "enthalpy_formation": -50.0,
+      "pubchem_cid": null,
+      "iupac_name": "lead monoiodide",
+      "molecular_weight": 334.1,
+      "exact_mass": 334.0,
+      "charge": 0,
+      "complexity": 10.0,
+      "isomeric_smiles": "[Pb]I"
     }
   ],
   "reactions": [
@@ -21167,18 +21230,6 @@ window.CHEM_DATA = {
     },
     {
       "r1": "N",
-      "r2": "H",
-      "products": [
-        "NH3 (Gas Amonia)"
-      ],
-      "min_temp": 25,
-      "catalyst": null,
-      "min_temp_catalyzed": null,
-      "is_exothermic": 1,
-      "delta_H_kJ": -46
-    },
-    {
-      "r1": "N",
       "r2": "H2 (Gas Hidrogen)",
       "products": [
         "NH3 (Gas Amonia)"
@@ -21188,18 +21239,6 @@ window.CHEM_DATA = {
       "min_temp_catalyzed": null,
       "is_exothermic": 1,
       "delta_H_kJ": -46
-    },
-    {
-      "r1": "Pb",
-      "r2": "I",
-      "products": [
-        "PbI2 (Endapan Kuning Timbal Iodida)"
-      ],
-      "min_temp": 25,
-      "catalyst": null,
-      "min_temp_catalyzed": null,
-      "is_exothermic": 1,
-      "delta_H_kJ": -175
     },
     {
       "r1": "Pb",
@@ -21213,18 +21252,6 @@ window.CHEM_DATA = {
       "min_temp_catalyzed": null,
       "is_exothermic": 1,
       "delta_H_kJ": -100
-    },
-    {
-      "r1": "C",
-      "r2": "H",
-      "products": [
-        "CH4 (Gas Metana)"
-      ],
-      "min_temp": 25,
-      "catalyst": null,
-      "min_temp_catalyzed": null,
-      "is_exothermic": 1,
-      "delta_H_kJ": -75
     },
     {
       "r1": "C",
@@ -21299,30 +21326,6 @@ window.CHEM_DATA = {
       "delta_H_kJ": -944
     },
     {
-      "r1": "Ti",
-      "r2": "O",
-      "products": [
-        "TiO2 (Titanium Dioksida)"
-      ],
-      "min_temp": 25,
-      "catalyst": null,
-      "min_temp_catalyzed": null,
-      "is_exothermic": 1,
-      "delta_H_kJ": -500
-    },
-    {
-      "r1": "S",
-      "r2": "F",
-      "products": [
-        "SF6 (Sulfur Heksafluorida)"
-      ],
-      "min_temp": 25,
-      "catalyst": null,
-      "min_temp_catalyzed": null,
-      "is_exothermic": 1,
-      "delta_H_kJ": -1220
-    },
-    {
       "r1": "S",
       "r2": "F2 (Gas Fluorin)",
       "products": [
@@ -21335,16 +21338,258 @@ window.CHEM_DATA = {
       "delta_H_kJ": -1220
     },
     {
-      "r1": "S (Belerang)",
-      "r2": "F",
+      "r1": "N",
+      "r2": "H",
       "products": [
-        "SF6 (Sulfur Heksafluorida)"
+        "NH (Radikal Imidogen)"
       ],
       "min_temp": 25,
       "catalyst": null,
       "min_temp_catalyzed": null,
       "is_exothermic": 1,
-      "delta_H_kJ": -1220
+      "delta_H_kJ": -150
+    },
+    {
+      "r1": "NH (Radikal Imidogen)",
+      "r2": "H",
+      "products": [
+        "NH2 (Radikal Amino)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -180
+    },
+    {
+      "r1": "NH2 (Radikal Amino)",
+      "r2": "H",
+      "products": [
+        "NH3 (Gas Amonia)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -210
+    },
+    {
+      "r1": "NH (Radikal Imidogen)",
+      "r2": "H2 (Gas Hidrogen)",
+      "products": [
+        "NH3 (Gas Amonia)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -160
+    },
+    {
+      "r1": "C",
+      "r2": "H",
+      "products": [
+        "CH (Radikal Metilidin)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -150
+    },
+    {
+      "r1": "CH (Radikal Metilidin)",
+      "r2": "H",
+      "products": [
+        "CH2 (Metilena)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -180
+    },
+    {
+      "r1": "CH2 (Metilena)",
+      "r2": "H",
+      "products": [
+        "CH3 (Radikal Metil)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -200
+    },
+    {
+      "r1": "CH3 (Radikal Metil)",
+      "r2": "H",
+      "products": [
+        "CH4 (Gas Metana)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -220
+    },
+    {
+      "r1": "CH2 (Metilena)",
+      "r2": "H2 (Gas Hidrogen)",
+      "products": [
+        "CH4 (Gas Metana)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -180
+    },
+    {
+      "r1": "C",
+      "r2": "N",
+      "products": [
+        "CN (Radikal Sianida)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -200
+    },
+    {
+      "r1": "CN (Radikal Sianida)",
+      "r2": "H",
+      "products": [
+        "HCN (Asam Sianida)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -350
+    },
+    {
+      "r1": "CH (Radikal Metilidin)",
+      "r2": "N",
+      "products": [
+        "HCN (Asam Sianida)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -350
+    },
+    {
+      "r1": "NH (Radikal Imidogen)",
+      "r2": "C",
+      "products": [
+        "HCN (Asam Sianida)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -350
+    },
+    {
+      "r1": "C",
+      "r2": "NH3 (Gas Amonia)",
+      "products": [
+        "HCN (Asam Sianida)",
+        "H2 (Gas Hidrogen)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -100
+    },
+    {
+      "r1": "CH4 (Gas Metana)",
+      "r2": "NH3 (Gas Amonia)",
+      "products": [
+        "HCN (Asam Sianida)",
+        "H2 (Gas Hidrogen)"
+      ],
+      "min_temp": 25,
+      "catalyst": "Pt",
+      "min_temp_catalyzed": 25,
+      "is_exothermic": 1,
+      "delta_H_kJ": -150
+    },
+    {
+      "r1": "Ti",
+      "r2": "O",
+      "products": [
+        "TiO (Titanium Monoksida)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -250
+    },
+    {
+      "r1": "TiO (Titanium Monoksida)",
+      "r2": "O",
+      "products": [
+        "TiO2 (Titanium Dioksida)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -350
+    },
+    {
+      "r1": "I",
+      "r2": "I",
+      "products": [
+        "I2 (Gas Iodida)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -150
+    },
+    {
+      "r1": "Pb",
+      "r2": "I",
+      "products": [
+        "PbI (Timbal Monoidida)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -80
+    },
+    {
+      "r1": "PbI (Timbal Monoidida)",
+      "r2": "I",
+      "products": [
+        "PbI2 (Endapan Kuning Timbal Iodida)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -120
+    },
+    {
+      "r1": "Pb",
+      "r2": "I2 (Gas Iodida)",
+      "products": [
+        "PbI2 (Endapan Kuning Timbal Iodida)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -175
     }
   ],
   "periodic_table": [
