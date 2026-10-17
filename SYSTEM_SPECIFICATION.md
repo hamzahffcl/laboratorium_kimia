@@ -162,11 +162,11 @@ $$|\vec{v}_i| \le v_{\text{max}} = \frac{10}{1.5} \approx 6.67 \text{ px/frame}$
 ### 4.2 Skala Radius Massa Relatif ($A_r$ / $M_r$)
 Radius visual partikel dihitung berdasarkan massa molar ($M$):
 $$\text{Radius}(M) = \begin{cases} 
-15 \text{ px} & M \le 10 \\
-20 \text{ px} & 10 < M \le 30 \\
-25 \text{ px} & 30 < M \le 50 \\
-28 \text{ px} & 50 < M \le 80 \\
-30 \text{ px} & M > 80 
+15 \text{ px}, & M \le 10 \\\\
+20 \text{ px}, & 10 < M \le 30 \\\\
+25 \text{ px}, & 30 < M \le 50 \\\\
+28 \text{ px}, & 50 < M \le 80 \\\\
+30 \text{ px}, & M > 80 
 \end{cases}$$
 *(Molekul majemuk menggunakan sedikit penyesuaian hingga maksimum 32 px).*
 
@@ -206,30 +206,37 @@ Laju pemanasan dibatasi maksimum $+2.5^\circ\text{C/frame}$ dan laju pendinginan
 ### 5.2 Titik Didih Dinamis Berdasarkan Tekanan (Persamaan Clausius-Clapeyron)
 Titik didih partikel berubah secara dinamis terhadap tekanan wadah ($P$):
 
-$$\frac{1}{T_{\text{bp, dynamic}}} = \frac{1}{T_{\text{bp, ref}}} - \frac{R}{\Delta H_{\text{vap}}} \ln\left(\frac{P}{P_{\text{ref}}}\right)$$
-*di mana $P_{\text{ref}} = 1.0 \text{ atm}, R = 8.314 \text{ J/mol}\cdot\text{K}, \Delta H_{\text{vap}} = 30\,000 \text{ J/mol}$.*
+$$\frac{1}{T_{\text{bp, dynamic}}} = \frac{1}{T_{\text{bp, ref}}} - \frac{R}{\Delta H_{\text{vap}}} \ln(P)$$
+*di mana $T$ dalam Kelvin ($T_{\text{bp}} + 273.15$), $R = 8.314 \text{ J/mol}\cdot\text{K}$, dan $\Delta H_{\text{vap}}$ diambil dari data zat riil (misal $\text{H}_2\text{O} = 40.7 \text{ kJ/mol}$, atau aturan Trouton $\Delta H_{\text{vap}} \approx 88 \cdot T_{\text{ref}}$ J/mol jika tidak tercatat).*
 
 ### 5.3 Probabilitas Reaksi Berdasarkan Persamaan Arrhenius
-Tumbukan antara dua partikel pereaksi tidak serta-merta selalu bereaksi jika energi kinetik termalnya belum melampaui Energi Aktivasi ($E_a$):
+Tumbukan antara dua partikel pereaksi dimodelkan mengikuti kinetika kimia nyata:
 
-$$P_{\text{rxn}} = \begin{cases}
-P_{\text{base}} & T \ge E_a \\
-P_{\text{base}} \cdot \exp\left(-\frac{E_a - T}{50.0}\right) & T < E_a
+$$P_{\text{rxn}} = \min\left(1.0, \, P_{\text{base}} \cdot \exp\left[\frac{E_a \cdot 1000}{R} \cdot \left(\frac{1}{T_r} - \frac{1}{T}\right)\right]\right)$$
+*di mana $T$ adalah suhu wadah saat ini, $T_r$ adalah suhu ambang batas reaksi ($T_{\text{min}}$ atau $T_{\text{min, catalyzed}}$ jika katalis hadir dalam radius 60 px), dan $P_{\text{base}}$ adalah faktor sterik (1.0 untuk ionik/radikal, 0.20 untuk ikatan kovalen).*
+
+### 5.4 Umpan Balik Entalpi Reaksi ($\Delta H$) & Kapasitas Panas
+Perubahan suhu wadah akibat kalor reaksi dihitung berdasarkan kapasitas panas total partikel yang ada di wadah:
+
+$$\Delta T = -\frac{\Delta H \cdot 1000 \cdot N_0 \cdot n_{\text{rxn}}}{\sum_{i} n_i \cdot C_{p,i}}$$
+*di mana $N_0 = 0.01 \text{ mol/partikel}$, $C_{p,i}$ adalah kapasitas kalor spesifik zat (J/mol·K). Reaksi yang sama pada wadah berisi 10 partikel menghasilkan lonjakan suhu lebih besar daripada di wadah berisi 100 partikel.*
+
+### 5.5 Indikator Skala Universal pH (Kesetimbangan Air $K_w$)
+Tingkat keasaman dihitung dari konsentrasi ion $[\text{H}^+]$ dan $[\text{OH}^-]$ dengan memperhitungkan ionisasi swa-disosiasi air ($K_w = 10^{-14}$):
+
+$$\text{net} = \frac{n_{\text{H}^+} - n_{\text{OH}^-}}{V}, \quad s = \sqrt{\text{net}^2 + 4 K_w}$$
+
+$$[\text{H}^+] = \begin{cases} 
+\frac{\text{net} + s}{2}, & \text{net} \ge 0 \\\\
+\frac{K_w}{(-\text{net} + s)/2}, & \text{net} < 0 
 \end{cases}$$
 
-### 5.4 Umpan Balik Entalpi Reaksi ($\Delta H$)
-- **Eksotermik ($\Delta H < 0$):** Menghasilkan pelepasan kalor ke wadah ($\Delta T > 0$), memicu kilatan cahaya kuning emas (`#FFD700`), efek suara dentuman, serta getaran wadah (*bump effect*).
-- **Endotermik ($\Delta H > 0$):** Menyerap kalor dari wadah ($\Delta T < 0$), memicu partikel kristal es biru (`#87CEEB`).
+$$\text{pH} = -\log_{10}([\text{H}^+])$$
 
-### 5.5 Indikator Skala Universal pH
-Tingkat keasaman dihitung dari kontribusi seluruh partikel di wadah dengan derajat disosiasi/ionisasi ($f$):
-
-$$\text{Score} = \sum [H^+]_{\text{asam}} \cdot f - \sum [OH^-]_{\text{basa}} \cdot f$$
-
-Warna latar belakang wadah bertransisi mulus mengikuti warna trayek pH universal:
+Warna latar belakang wadah dan badge numerik bertransisi mulus mengikuti trayek indikator universal (pH 0–14):
 - Merah pekat ($\text{pH } 0-2$)
 - Oranye/Kuning ($\text{pH } 3-6$)
-- Biru gelap keabu-abuan netral ($\text{pH } 7$)
+- Putih keabu-abuan netral ($\text{pH } 7.00$)
 - Hijau/Tosca ($\text{pH } 8-10$)
 - Ungu pekat ($\text{pH } 11-14$)
 

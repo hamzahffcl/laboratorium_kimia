@@ -47,52 +47,76 @@ bgmAudio.loop = true;
 bgmAudio.volume = 0.2; // Sangat pelan agar cozy
 let hasStartedAudio = false;
 
+let activeOscillators = 0;
+const MAX_OSCILLATORS = 8;
+let isMuted = false;
+
 // Fungsi untuk memulai Audio
 function initAudio() {
-    if (hasStartedAudio) return;
-    hasStartedAudio = true;
-    bgmAudio.play().catch(e => console.log("BGM autoplay blocked until further interaction."));
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+    if (!hasStartedAudio && !isMuted) {
+        hasStartedAudio = true;
+        bgmAudio.play().catch(e => console.log("BGM autoplay blocked until further interaction."));
+    }
 }
 
-document.body.addEventListener('click', initAudio, { once: true });
-document.body.addEventListener('touchstart', initAudio, { once: true });
+document.body.addEventListener('click', initAudio, { once: false });
+document.body.addEventListener('touchstart', initAudio, { once: false });
 
 function playPopSFX() {
-    if (!audioCtx) return;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.05);
-    
-    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-    
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.1);
+    if (!audioCtx || isMuted || activeOscillators >= MAX_OSCILLATORS) return;
+    try {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        activeOscillators++;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.05);
+        
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.1);
+        
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.1);
+        osc.onended = () => { activeOscillators = Math.max(0, activeOscillators - 1); };
+    } catch (_) {
+        activeOscillators = Math.max(0, activeOscillators - 1);
+    }
 }
 
 function playBoomSFX(energy) {
-    if (!audioCtx) return;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    
-    let isExo = energy > 0;
-    osc.type = isExo ? 'square' : 'triangle';
-    osc.frequency.setValueAtTime(isExo ? 100 : 300, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(isExo ? 40 : 100, audioCtx.currentTime + 0.3);
-    
-    gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-    
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.4);
+    if (!audioCtx || isMuted || activeOscillators >= MAX_OSCILLATORS) return;
+    try {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        activeOscillators++;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        let isExo = (energy === undefined || energy === null || energy <= 0);
+        osc.type = isExo ? 'square' : 'triangle';
+        osc.frequency.setValueAtTime(isExo ? 120 : 300, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(isExo ? 45 : 100, audioCtx.currentTime + 0.3);
+        
+        gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.4);
+        
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.4);
+        osc.onended = () => { activeOscillators = Math.max(0, activeOscillators - 1); };
+    } catch (_) {
+        activeOscillators = Math.max(0, activeOscillators - 1);
+    }
 }
 
 class VisualEffect {
@@ -318,6 +342,18 @@ function showToast(msg) {
     }
 }
 
+// P2.12: Pembatasan kilatan cahaya secara global (WCAG 2.3.1: maks 3 per detik)
+let flashTimestamps = [];
+function canTriggerFlash() {
+    const now = performance.now();
+    flashTimestamps = flashTimestamps.filter(t => now - t < 1000);
+    if (flashTimestamps.length < 3) {
+        flashTimestamps.push(now);
+        return true;
+    }
+    return false;
+}
+
 class ReactionFlash {
     constructor(x, y, isExothermic, deltaT) {
         this.x = x;
@@ -385,7 +421,7 @@ window.AtomSpriteSystem = {
         try {
             const totalFrames = 16;
             const frameW = 160;
-            const ballH = 142; // Pangkas baris bawah (y >= 143) untuk menghilangkan bayangan lantai (ground shadow)
+            const ballH = 150; // P2.16: Pangkas y >= 151 (atom besar berakhir di y ≈ 146-148, bayangan lantai di y >= 152)
             
             // Variasi fase agar tidak memantul kaku serempak
             const time = Date.now() / 1000;
@@ -496,17 +532,35 @@ class Particle {
     }
 
     updatePhysics() {
+        let molData = DB.molecules ? DB.molecules.find(m => m.label === this.label) : null;
+        
+        // Per P2 item 14: Radikal perantara dipaksa selalu fase gas
+        if (molData && molData.is_intermediate === 1) {
+            this.state = "GAS";
+            this.current_mp = null;
+            this.current_bp = null;
+            let speedMult = ((Math.max(1, currentTemp + 273.15)) / 298.15) / 1.5;
+            this.restitution = 1.0;
+            this.dy -= 0.05 * speedMult;
+            this.dx += (Math.random() - 0.5) * 0.2 * speedMult;
+            this.dy += (Math.random() - 0.5) * 0.2 * speedMult;
+            return;
+        }
+
         let thermo = DB.moleculeThermo[this.label];
-        let mp = -273.15, bp = -273.15;
+        let mp = null, bp = null;
         if (thermo && thermo.mp !== undefined) {
             mp = thermo.mp;
             bp = thermo.bp;
+        } else if (molData) {
+            mp = molData.mp;
+            bp = molData.bp;
         } else if (!this.moleculeName) {
             let atm = this.atomData[0];
             if (atm && atm.mp !== undefined && atm.bp !== undefined && atm.mp !== 0.0) {
                 mp = atm.mp;
                 bp = atm.bp;
-            } else {
+            } else if (atm) {
                 if (atm.symbol === 'C') {
                     mp = 3550; bp = 3825;
                 } else if (['Fe', 'Zn', 'Mg', 'Al', 'Ag', 'Pb', 'Pt', 'Na', 'K', 'Ca', 'P', 'S', 'I'].includes(atm.symbol)) {
@@ -517,32 +571,38 @@ class Particle {
             }
         }
         
-        let P_ref = 1.0;
-        let R = 8.314;
-        let dH_vap = 30000;
-        let bp_k = bp + 273.15;
-        let dynamic_bp_k = bp_k;
-        if (currentPress !== P_ref) {
-            dynamic_bp_k = 1.0 / ( (1.0/bp_k) - (R/dH_vap)*Math.log(currentPress/P_ref) );
+        // P0.3: Titik didih dinamis (Clausius-Clapeyron presisi)
+        const R = 8.314;
+        let dynamic_bp = Infinity;
+        if (bp !== null && bp !== undefined && bp > -273.15) {
+            let Tref = bp + 273.15; // Kelvin
+            // Gunakan hvap_kj_mol dari data v3 jika ada, fallback ke Trouton: 0.088 * Tref (J/mol)
+            let H = (molData && molData.hvap_kj_mol) ? (molData.hvap_kj_mol * 1000.0) : (88.0 * Tref);
+            let inv = (1.0 / Tref) - (R / H) * Math.log(Math.max(0.01, currentPress));
+            dynamic_bp = inv > 0 ? (1.0 / inv - 273.15) : Infinity;
         }
-        let dynamic_bp = dynamic_bp_k - 273.15;
         
         let dynamic_mp = mp;
-        if (this.label && this.label.includes("H2O")) {
-            dynamic_mp = mp - 0.0074 * (currentPress - 1);
-        } else {
-            dynamic_mp = mp + 0.02 * (currentPress - 1);
+        if (mp !== null && mp !== undefined) {
+            if (this.label && this.label.includes("H2O")) {
+                dynamic_mp = mp - 0.0074 * (currentPress - 1.0);
+            } else {
+                dynamic_mp = mp + 0.02 * (currentPress - 1.0);
+            }
         }
         
         this.current_mp = dynamic_mp;
         this.current_bp = dynamic_bp;
+        
+        // Sublimasi: jika titik didih <= titik leleh atau tidak ada fase cair normal, lewati fase cair
+        let isSublimating = (dynamic_mp === null || dynamic_mp === undefined || dynamic_bp <= dynamic_mp);
         
         if (currentTemp >= dynamic_bp) {
             if (this.state !== "GAS") {
                 this.state = "GAS";
                 this.dy -= 3 / 1.5;
             }
-        } else if (currentTemp >= dynamic_mp) {
+        } else if (!isSublimating && currentTemp >= dynamic_mp) {
             this.state = "CAIR";
         } else {
             this.state = "PADAT";
@@ -815,37 +875,34 @@ class Particle {
     }
 }
 
-function applyReactionHeat(deltaH_kJ, numReactions) {
+function applyReactionHeat(deltaH_kJ, numReactions = 1) {
     if (deltaH_kJ === null || deltaH_kJ === undefined) return 0;
     
-    // Total massa dari seluruh partikel yang ada saat ini sebagai Heat Capacity pseudo-realistis
-    let totalMass = particles.reduce((acc, p) => acc + p.mass, 1.0);
-    // Kapasitas panas semu (c) agar suhunya masuk akal di visual
-    let heatCapacity = totalMass * 0.15; 
+    // P1.7: Kalor reaksi nyata: ΔT = −(ΔH · 1000 · N0) / Σ(nᵢ · Cpᵢ)
+    const N0 = 0.01; // mol per partikel (konstanta simulasi)
     
-    // Perhitungan energi q = mcDT -> DT = q / mc
-    // Kita buat skala efisiensi energi 0.08 agar tidak terlalu ekstrim merusak layar
-    const energy = Math.abs(deltaH_kJ) * numReactions * 0.08; 
-    let deltaT = energy / heatCapacity;
+    let totalHeatCap = 0;
+    particles.forEach(p => {
+        let mol = DB.molecules ? DB.molecules.find(m => m.label === p.label) : null;
+        let cp = (mol && mol.heat_capacity) ? mol.heat_capacity : 75.3; // Default 75.3 J/(mol·K)
+        totalHeatCap += N0 * cp;
+    });
+    if (totalHeatCap < 1.0) totalHeatCap = 1.0; // Inersia termal minimum
+
+    // Eksotermik (deltaH < 0) menaikkan suhu (+); Endotermik (deltaH > 0) menurunkan suhu (-)
+    let deltaT = -(deltaH_kJ * 1000.0 * N0 * numReactions) / totalHeatCap;
     
-    // Eksotermik = memanaskan (+). Endotermik = mendinginkan (-)
-    if (deltaH_kJ > 0) deltaT = -deltaT; 
-    
-    // Dampening limit yang lebih realistis (max 100 derajat per ledakan agar bisa cascade tapi tak hancur)
-    const clampedDelta = Math.min(Math.max(deltaT, -50), 100);
+    // Batas perubahan yang nyaman (+2.5 °C / -5.0 °C per frame)
+    const clampedDelta = Math.min(Math.max(deltaT, -5.0), 2.5);
     currentTemp += clampedDelta;
     
-    // Mencegah suhu drop di bawah nol mutlak (-273.15 C)
+    // Batas bawah nol mutlak (-273.15 °C)
     if (currentTemp < -273.15) currentTemp = -273.15;
     
-    // Update visual thermometer DOM
     const tempEl = document.getElementById('tempValue');
     if (tempEl) tempEl.textContent = currentTemp.toFixed(1);
     
-    // (Slider kini merepresentasikan Suhu Pemanas / targetTemp, bukan currentTemp)
-    // Tidak ikut melonjak saat terjadi ledakan
-    
-    return clampedDelta; // Kembalikan besaran asli untuk ukuran flash
+    return clampedDelta;
 }
 
 function checkChemistry(p1, p2, spatialGrid) {
@@ -893,30 +950,24 @@ function checkChemistry(p1, p2, spatialGrid) {
             }
         }
         
-        // --- REALISTIC ARRHENIUS PROBABILITY ---
-        let T_k = currentTemp + 273.15;
-        let Ea_k = effectiveMinTemp + 273.15;
-        
-        // Deteksi Ikatan Ionik vs Kovalen untuk menentukan Steric Factor
+        // --- REALISTIC ARRHENIUS PROBABILITY (P0 Item 4) ---
         const NON_METALS = new Set(['H', 'C', 'N', 'O', 'P', 'S', 'F', 'Cl', 'Br', 'I', 'He', 'Ne', 'Ar']);
         let isP1Metal = p1.atomData.some(a => !NON_METALS.has(a.symbol));
         let isP2Metal = p2.atomData.some(a => !NON_METALS.has(a.symbol));
         let isAcidBaseReaction = (DB.moleculeAcidBase[p1.label] && DB.moleculeAcidBase[p2.label]);
-        
         let isIonic = isP1Metal || isP2Metal || isAcidBaseReaction;
         
-        let isP1Radical = DB.molecules.find(m => m.label === p1.label)?.bond_type === 'Radikal Bebas';
-        let isP2Radical = DB.molecules.find(m => m.label === p2.label)?.bond_type === 'Radikal Bebas';
+        let isP1Radical = DB.molecules.find(m => m.label === p1.label)?.is_intermediate === 1;
+        let isP2Radical = DB.molecules.find(m => m.label === p2.label)?.is_intermediate === 1;
         
-        // Steric factor: Ionik/Radikal = 1.0 (100% bebas sudut). Kovalen = 0.15 (15% - optimal dan seimbang)
-        let baseRate = (isIonic || isP1Radical || isP2Radical) ? 1.0 : 0.15; 
-        let prob = baseRate;
+        let baseRate = (isIonic || isP1Radical || isP2Radical) ? 1.0 : 0.20;
+        let ea_val = rReaction.ea_kj_mol || 50.0;
         
-        if (T_k < Ea_k) {
-            // Peluruhan eksponensial probabilitas (Persamaan Arrhenius)
-            // Jika suhu 50 K di bawah batas, probabilitas tersisa e^-1 (~36% dari base rate)
-            prob = baseRate * Math.exp(-(Ea_k - T_k) / 50.0);
-        }
+        // Arrhenius: tepat Pbase pada min_temp, naik di atasnya, dan turun halus di bawahnya
+        const T_curr = Math.max(1.0, currentTemp + 273.15);
+        const Tr_ref = Math.max(1.0, effectiveMinTemp + 273.15);
+        const R_const = 8.314;
+        let prob = Math.min(1.0, baseRate * Math.exp((ea_val * 1000.0 / R_const) * (1.0 / Tr_ref - 1.0 / T_curr)));
         
         if (Math.random() <= prob) {
             return { 
@@ -1058,7 +1109,10 @@ function resolveCollisions() {
                                 let mx = (p1.x + p2.x)/2;
                                 let my = (p1.y + p2.y)/2;
                                 
-                                flashes.push(new ReactionFlash(mx, my, reaction.is_exothermic, dTemp));
+                                // P2.12: Batasi kilatan cahaya maksimum 3 per detik (WCAG 2.3.1)
+                                if (canTriggerFlash()) {
+                                    flashes.push(new ReactionFlash(mx, my, reaction.is_exothermic, dTemp));
+                                }
                                 
                                 // Spawn visual effects
                                 let isAqueous = reaction.products.some(p => p.includes("Air") || p.includes("Asam") || p.includes("Hidroksida"));
@@ -1120,40 +1174,41 @@ function resolveCollisions() {
     }
 }
 
+const Kw = 1e-14;
+function calculatePH(nH, nOH, V = 1.0) {
+    // P0.5: Skala pH logaritmik nyata menggunakan Kw dan net konsentrasi H+/OH-
+    const net = (nH - nOH) / V;
+    const s = Math.sqrt(net * net + 4.0 * Kw);
+    const h = net >= 0 ? (net + s) / 2.0 : Kw / ((-net + s) / 2.0);
+    return Math.min(14.0, Math.max(0.0, -Math.log10(h)));
+}
+
 function updatePHIndicator() {
-    // 1. HITUNG SCORE H+ EFEKTIF
-    const score = particles.reduce((acc, p) => {
-        let label = p.label;
-        let type = DB.moleculeAcidBase[label];
-        let f = 0;
-        if (type) {
-             let factorInfo = DB.molecules.find(m => m.label === label);
-             if (factorInfo && factorInfo.ionization_factor !== null) {
-                 f = factorInfo.ionization_factor;
-             } else {
-                 f = 1.0; 
-             }
-        }
-        
-        if (type === 'ACID') return acc + f;
-        if (type === 'BASE') return acc - f;
-        return acc;
-    }, 0);
-
-    const volume_L = (canvas.width * canvas.height) / 10000.0;
-    const concentration = score / volume_L;
+    const N0 = 0.01; // mol per partikel (konstanta simulasi)
+    const V = 1.0;   // 1 Liter wadah simulasi
     
-    // Konstanta sensitivitas diseimbangkan (0.35) agar tidak instan merah/biru dengan 1 molekul
-    const k = 0.35;
-    const targetPH = 7.0 - Math.tanh(concentration / k) * 7.0;
+    let nH = 0;
+    let nOH = 0;
+    
+    particles.forEach(p => {
+        let mol = DB.molecules ? DB.molecules.find(m => m.label === p.label) : null;
+        let f = (mol && mol.ionization_factor !== null && mol.ionization_factor !== undefined) ? mol.ionization_factor : 1.0;
+        let h_count = mol ? (mol.h_count || 0) : 0;
+        let oh_count = mol ? (mol.oh_count || 0) : 0;
+        
+        if (h_count === 0 && DB.moleculeAcidBase[p.label] === 'ACID') h_count = 1;
+        if (oh_count === 0 && DB.moleculeAcidBase[p.label] === 'BASE') oh_count = 1;
+        
+        nH += h_count * f * N0;
+        nOH += oh_count * f * N0;
+    });
 
-    // Transisi diperlambat (0.015) agar perubahan warnanya berjalan mengalun pelan
-    currentPH += (targetPH - currentPH) * 0.015; 
+    const targetPH = calculatePH(nH, nOH, V);
+    currentPH += (targetPH - currentPH) * 0.03; 
     const pH = currentPH;
 
     let targetR = 255, targetG = 255, targetB = 255;
     
-    // Warna yang lebih cerah/kuat
     if (pH < 3) { targetR = 255; targetG = 20; targetB = 20; }      
     else if (pH < 5) { targetR = 255; targetG = 100; targetB = 100; } 
     else if (pH < 6.5) { targetR = 255; targetG = 180; targetB = 80; } 
@@ -1162,24 +1217,59 @@ function updatePHIndicator() {
     else if (pH <= 11) { targetR = 60; targetG = 80; targetB = 255; } 
     else { targetR = 80; targetG = 0; targetB = 200; }             
 
-    // Transisi pergantian warna RGB diperhalus
     currentBg.r += (targetR - currentBg.r) * 0.02;
     currentBg.g += (targetG - currentBg.g) * 0.02;
     currentBg.b += (targetB - currentBg.b) * 0.02;
 
     const wrapper = document.querySelector('.canvas-wrapper');
     if (wrapper) {
-        if (pH > 6.5 && pH < 7.5) {
+        if (pH > 6.8 && pH < 7.2) {
              wrapper.style.backgroundColor = `rgba(255, 255, 255, 0.05)`; 
         } else {
-             // Opacity diturunkan ke 0.25 agar kalem dan tidak mencolok
              wrapper.style.backgroundColor = `rgba(${Math.round(currentBg.r)}, ${Math.round(currentBg.g)}, ${Math.round(currentBg.b)}, 0.25)`;
         }
     }
+
+    // P2.13: Tampilkan angka pH visual
+    const phValEl = document.getElementById('phValue');
+    const phStatusEl = document.getElementById('phStatus');
+    if (phValEl) phValEl.textContent = pH.toFixed(2);
+    if (phStatusEl) {
+        if (pH < 6.8) phStatusEl.textContent = 'Asam';
+        else if (pH > 7.2) phStatusEl.textContent = 'Basa';
+        else phStatusEl.textContent = 'Netral';
+    }
 }
 
-function animate() {
+// P1.6: Fixed Timestep 60 Hz Physics Loop
+const FIXED_STEP = 1.0 / 60.0;
+let physicsAccumulator = 0;
+let lastFrameTimestamp = performance.now();
+
+function updatePhysicsStep() {
+    // Thermal Conductivity (Newton's Law of Cooling)
+    let diff = targetTemp - currentTemp;
+    let step = diff * 0.01;
+    if (step > 2.5) step = 2.5; 
+    if (step < -5.0) step = -5.0;
+    currentTemp += step;
+    
+    updatePHIndicator();
+    particles.forEach(p => p.updatePhysics());
+    resolveCollisions();
+}
+
+function animate(now = performance.now()) {
     try {
+        let dt = Math.min(0.1, (now - lastFrameTimestamp) / 1000.0);
+        lastFrameTimestamp = now;
+        physicsAccumulator += dt;
+        
+        while (physicsAccumulator >= FIXED_STEP) {
+            updatePhysicsStep();
+            physicsAccumulator -= FIXED_STEP;
+        }
+
         window.camera.zoom += (window.camera.targetZoom - window.camera.zoom) * 0.15;
         window.camera.x += (window.camera.targetX - window.camera.x) * 0.15;
         window.camera.y += (window.camera.targetY - window.camera.y) * 0.15;
@@ -1198,28 +1288,16 @@ function animate() {
             liquidCtx.scale(window.camera.zoom, window.camera.zoom);
         }
         
-        // Thermal Conductivity (Newton's Law of Cooling)
-        let diff = targetTemp - currentTemp;
-        let step = diff * 0.01;
-        
-        // Batasi kecepatan pemanasan ekstrim (misal ke 5000C) agar tidak instan
-        if (step > 2.5) step = 2.5; 
-        if (step < -5.0) step = -5.0; // Pendinginan boleh lebih cepat sedikit
-        
-        currentTemp += step;
-        
-        updatePHIndicator();
-        
-        particles.forEach(p => p.updatePhysics());
-        resolveCollisions();
-        
         // Draw Particles
         particles.forEach(p => p.draw());
         
-        // Draw Flashes
+        // Draw Flashes (P2.12: Hormati prefers-reduced-motion)
+        const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         flashes.forEach(f => {
             f.update();
-            f.draw();
+            if (!prefersReducedMotion) {
+                f.draw();
+            }
         });
         flashes = flashes.filter(f => f.alpha > 0);
         
@@ -1234,7 +1312,7 @@ function animate() {
         if (currentTemp > 80) {
             let intensity = Math.min((currentTemp - 80) / 200, 1.0);
             
-            // Embers / Heat wave overlay (tanpa mengganggu pH background color)
+            // Embers / Heat wave overlay
             ctx.save();
             ctx.fillStyle = `rgba(255, 60, 0, ${0.05 * intensity})`;
             ctx.fillRect(0, canvas.height - 50 * intensity, canvas.width, 50 * intensity);
@@ -1244,7 +1322,7 @@ function animate() {
                 let px = Math.random() * canvas.width;
                 let py = canvas.height - Math.random() * 20;
                 let vfx = new VisualEffect(px, py, 'smoke');
-                vfx.color = '255, 100, 0'; // api/oranye
+                vfx.color = '255, 100, 0';
                 vfx.life = 0.5 + Math.random() * 0.5;
                 visualEffects.push(vfx);
             }
@@ -1261,11 +1339,11 @@ function animate() {
             // Spawn frost / ice crystals
             if (Math.random() < 0.1 * intensity && particles.length > 0) {
                 let px = Math.random() * canvas.width;
-                let py = Math.random() * canvas.height;
+                let py = canvas.height - Math.random() * 20;
                 let vfx = new VisualEffect(px, py, 'smoke');
-                vfx.color = '200, 240, 255'; // es
+                vfx.color = '200, 240, 255';
                 vfx.vx = (Math.random() - 0.5) * 0.5;
-                vfx.vy = Math.random() * 0.5 + 0.1; // jatuh ke bawah
+                vfx.vy = Math.random() * 0.5 + 0.1;
                 vfx.life = 0.8 + Math.random() * 0.5;
                 visualEffects.push(vfx);
             }
@@ -1278,13 +1356,13 @@ function animate() {
                 selectedParticle = null;
                 document.getElementById('particleInfo').classList.add('hidden');
             } else {
-                let molData = DB.molecules.find(m => m.label === selectedParticle.label);
+                let molData = DB.molecules ? DB.molecules.find(m => m.label === selectedParticle.label) : null;
                 document.getElementById('infoName').textContent = selectedParticle.label;
                 document.getElementById('infoCurrentTemp').textContent = currentTemp.toFixed(1) + ' °C';
                 document.getElementById('infoMolarMass').textContent = (molData && molData.molar_mass) ? molData.molar_mass.toFixed(2) + ' g/mol' : selectedParticle.mass.toFixed(2) + ' g/mol (Kalkulasi)';
                 document.getElementById('infoDensity').textContent = (molData && molData.density) ? molData.density + ' g/cm³' : 'N/A';
-                document.getElementById('infoMP').textContent = (selectedParticle.current_mp !== undefined ? selectedParticle.current_mp.toFixed(1) : "N/A") + ' °C';
-                document.getElementById('infoBP').textContent = (selectedParticle.current_bp !== undefined ? selectedParticle.current_bp.toFixed(1) : "N/A") + ' °C';
+                document.getElementById('infoMP').textContent = (selectedParticle.current_mp !== undefined && selectedParticle.current_mp !== null ? selectedParticle.current_mp.toFixed(1) + ' °C' : "N/A (Sublimasi/Radikal)");
+                document.getElementById('infoBP').textContent = (selectedParticle.current_bp !== undefined && selectedParticle.current_bp !== null && selectedParticle.current_bp !== Infinity ? selectedParticle.current_bp.toFixed(1) + ' °C' : "N/A (Terurai/Radikal)");
                 document.getElementById('infoPhase').textContent = selectedParticle.state;
                 
                 let abType = DB.moleculeAcidBase[selectedParticle.label];

@@ -81,7 +81,7 @@ window.QuestEngine = {
             target: "NH3 (Gas Amonia)",
             rewardText: "Klan Halogen & Logam Alkali Terbuka.",
             rewardAtoms: ["F", "Br", "I", "K", "Mg", "Ca"],
-            educationalText: "Amonia (NH3) banyak dipakai di pabrik sebagai bahan dasar pembuat pupuk tanaman. Jadi meski baunya menyengat, kehadirannya sangat membantu pertanian global.",
+            educationalText: "Amonia (NH3) memiliki bentuk geometri molekul piramida trigonal (~107°) karena tolakan pasangan elektron bebas pada atom Nitrogen. Amonia banyak dipakai sebagai bahan dasar pembuat pupuk tanaman.",
             hint: "Amonia butuh 1 atom Nitrogen (N) dan 3 atom Hidrogen (H). Tarik mereka semua ke area tengah kanvas."
         },
         {
@@ -629,9 +629,28 @@ window.QuestEngine = {
         if (window.getCanvasState) {
             this.state.canvas = window.getCanvasState();
         }
-        localStorage.setItem('labSimulatorProgress', JSON.stringify(this.state));
+        this.state.schema = 3; // Schema v3 indicator
+        
+        // P1.9: Debounce autosave ±1 detik
+        if (this._saveTimeout) clearTimeout(this._saveTimeout);
+        this._saveTimeout = setTimeout(() => {
+            this.executeSaveProgress();
+        }, 1000);
+    },
 
-        // Hindari menumpuk toast
+    executeSaveProgress() {
+        if (window.getCanvasState) {
+            this.state.canvas = window.getCanvasState();
+        }
+        this.state.schema = 3;
+        try {
+            localStorage.setItem('labSimulatorProgress', JSON.stringify(this.state));
+        } catch (e) {
+            console.error("Gagal menyimpan progress:", e);
+            return;
+        }
+
+        // Tampilkan toast auto-save
         if (document.querySelector('.auto-save-toast')) {
             const existing = document.querySelector('.auto-save-toast');
             anime.remove(existing);
@@ -640,10 +659,9 @@ window.QuestEngine = {
 
         const toast = document.createElement('div');
         toast.className = 'auto-save-toast';
-        toast.innerHTML = '💾 Auto-Saved';
+        toast.textContent = '💾 Auto-Saved';
         document.body.appendChild(toast);
 
-        // Animasi masuk smooth
         anime({
             targets: toast,
             opacity: [0, 1],
@@ -651,13 +669,12 @@ window.QuestEngine = {
             duration: 300,
             easing: 'easeOutQuart',
             complete: () => {
-                // Animasi keluar setelah 2 detik
                 anime({
                     targets: toast,
                     opacity: [1, 0],
                     translateY: [0, 10],
                     duration: 400,
-                    delay: 2000,
+                    delay: 1500,
                     easing: 'easeInQuart',
                     complete: () => toast.remove()
                 });
@@ -669,8 +686,11 @@ window.QuestEngine = {
         const saved = localStorage.getItem('labSimulatorProgress');
         if (saved) {
             try {
-                const parsed = JSON.parse(saved);
-                // Merge state to handle structural updates in the future
+                let parsed = JSON.parse(saved);
+                // Migrasi schema lama ke v3
+                if (!parsed.schema || parsed.schema < 3) {
+                    parsed.schema = 3;
+                }
                 this.state = { ...this.state, ...parsed };
 
                 if (this.state.canvas && window.restoreCanvasState) {
@@ -680,8 +700,17 @@ window.QuestEngine = {
                 console.error("Gagal membaca save data:", e);
             }
         }
-    },
 
+        // Simpan paksa saat tab ditutup / pindah background
+        const forceSave = () => {
+            if (this._saveTimeout) clearTimeout(this._saveTimeout);
+            this.executeSaveProgress();
+        };
+        window.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') forceSave();
+        });
+        window.addEventListener('pagehide', forceSave);
+    },
 
     resetProgress() {
         if (confirm("Yakin mau menghapus semua catatan eksperimenmu dan mengulang dari nol? (Pencapaian yang dihapus tidak bisa dikembalikan lho!)")) {
@@ -697,12 +726,13 @@ window.QuestEngine = {
         if (window.getCanvasState) {
             this.state.canvas = window.getCanvasState();
         }
+        this.state.schema = 3;
 
         const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.state, null, 2));
         const downloadAnchorNode = document.createElement('a');
         downloadAnchorNode.setAttribute("href", dataStr);
-        downloadAnchorNode.setAttribute("download", `lab-progress-backup_${dateStr}.json`);
-        document.body.appendChild(downloadAnchorNode); // required for firefox
+        downloadAnchorNode.setAttribute("download", `lab-progress-backup-v3_${dateStr}.json`);
+        document.body.appendChild(downloadAnchorNode);
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
     },
@@ -715,16 +745,42 @@ window.QuestEngine = {
         reader.onload = (e) => {
             try {
                 const parsed = JSON.parse(e.target.result);
-                if (parsed.unlockedAtoms && parsed.completedQuests) {
-                    this.state = parsed;
-                    this.saveProgress();
-                    alert("Yeay! Data progres eksperimenmu berhasil dimuat ulang.");
-                    location.reload();
-                } else {
-                    alert("File backup tidak valid!");
+                
+                // P1.9: Validasi format & nilai impor
+                if (!parsed || typeof parsed !== 'object') {
+                    throw new Error("Format berkas bukan JSON objek yang valid!");
                 }
+                if (!Array.isArray(parsed.unlockedAtoms) || !Array.isArray(parsed.completedQuests)) {
+                    throw new Error("Berkas cadangan tidak memiliki data atom atau quest yang valid!");
+                }
+
+                // Validasi data kanvas jika ada
+                if (parsed.canvas) {
+                    if (parsed.canvas.temp !== undefined) {
+                        let t = parseFloat(parsed.canvas.temp);
+                        if (isNaN(t) || t < -273.15 || t > 5000) {
+                            throw new Error(`Suhu berkas (${t} °C) berada di luar batas valid (-273.15 sampai 5000 °C)!`);
+                        }
+                    }
+                    if (parsed.canvas.press !== undefined) {
+                        let p = parseFloat(parsed.canvas.press);
+                        if (isNaN(p) || p < 0.1 || p > 100.0) {
+                            throw new Error(`Tekanan berkas (${p} atm) berada di luar batas valid (0.1 sampai 100.0 atm)!`);
+                        }
+                    }
+                    if (Array.isArray(parsed.canvas.particles) && parsed.canvas.particles.length > 100) {
+                        parsed.canvas.particles = parsed.canvas.particles.slice(0, 100);
+                    }
+                }
+
+                // Migrasi schema lama ke schema 3
+                parsed.schema = 3;
+                this.state = parsed;
+                this.executeSaveProgress();
+                alert("Yeay! Data progres eksperimenmu berhasil diverifikasi dan dimuat ulang.");
+                location.reload();
             } catch (err) {
-                alert("Gagal membaca file backup!");
+                alert("Gagal memuat berkas: " + err.message);
             }
         };
         reader.readAsText(file);

@@ -25,6 +25,11 @@
             </div>
             <!-- Notifikasi Reaksi -->
             <div id="reaction-toast" class="toast hidden"></div>
+            <!-- Indikator pH Numerik (P2.13) -->
+            <div id="phIndicatorBadge" class="ph-indicator-badge" style="position: absolute; top: 15px; left: 15px; z-index: 10; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.15); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; color: #f8fafc; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                <span>🧪 pH: <strong id="phValue" style="color: #38bdf8;">7.00</strong></span>
+                <span id="phStatus" style="font-size: 0.75rem; background: rgba(255, 255, 255, 0.1); padding: 2px 8px; border-radius: 10px; color: #cbd5e1;">Netral</span>
+            </div>
         </div>
 
         <!-- Panel Kontrol -->
@@ -42,7 +47,7 @@
 
             <div class="control-group">
                 <label>Suhu Wadah (<span id="tempValue" style="color: #ff4757; font-weight: bold;">25.0</span> °C)</label>
-                <input type="range" id="tempSlider" min="-273" max="5000" value="25">
+                <input type="range" id="tempSlider" min="-273.15" max="5000" step="0.5" value="25">
             </div>
 
             <div class="control-group">
