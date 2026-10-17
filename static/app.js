@@ -418,8 +418,18 @@ window.toggleAtomStyle = function() {
 class Particle {
     constructor(atomSymbols, x, y, moleculeName = null) {
         this.id = particleCounter++;
-        this.atomData = atomSymbols.map(sym => getAtomData(sym));
         this.moleculeName = moleculeName;
+
+        // Jika ini molekul, pastikan daftar atom penyusunnya selalu lengkap dari definisi database
+        if (moleculeName && window.DB && window.DB.moleculeAtoms && window.DB.moleculeAtoms[moleculeName]) {
+            atomSymbols = window.DB.moleculeAtoms[moleculeName];
+        } else if (moleculeName && (!atomSymbols || atomSymbols.length <= 1) && window.DB && window.DB.moleculeAtoms) {
+            let formula = moleculeName.split(' ')[0].trim();
+            let foundKey = Object.keys(window.DB.moleculeAtoms).find(k => k.split(' ')[0] === formula);
+            if (foundKey) atomSymbols = window.DB.moleculeAtoms[foundKey];
+        }
+
+        this.atomData = (atomSymbols || ['C']).map(sym => getAtomData(sym));
         this.label = moleculeName ? moleculeName : this.atomData.map(a => a.symbol).join('+');
         
         this.mass = this.atomData.reduce((sum, a) => sum + a.mass, 0);
@@ -576,10 +586,20 @@ class Particle {
         }
 
         // --- DRAW EXPERIMENTAL COMPOSITE MOLECULE STRUCTURE ---
-        const EXPERIMENTAL_SPRITE_MOLECULES = ['H2O', 'CO2', 'HCl', 'NH3', 'CH4', 'NaCl', 'H2', 'Cl2', 'O2'];
-        let cleanMolFormula = this.moleculeName ? this.moleculeName.split(' ')[0].trim() : '';
+        // Jika atomData kurang dari 2 karena data lama di localStorage, pulihkan dari DB
+        if (this.moleculeName && this.atomData.length <= 1 && window.DB && window.DB.moleculeAtoms) {
+            let formula = this.moleculeName.split(' ')[0].trim();
+            let foundKey = Object.keys(window.DB.moleculeAtoms).find(k => k.split(' ')[0] === formula);
+            if (foundKey && window.DB.moleculeAtoms[foundKey].length > 1) {
+                this.atomData = window.DB.moleculeAtoms[foundKey].map(sym => getAtomData(sym));
+            }
+        }
 
-        if (this.moleculeName && this.atomData.length > 1 && EXPERIMENTAL_SPRITE_MOLECULES.includes(cleanMolFormula)) {
+        let cleanMolFormula = this.moleculeName ? this.moleculeName.split(' ')[0].trim() : '';
+        const EXPERIMENTAL_SPRITE_MOLECULES = ['H2O', 'CO2', 'HCl', 'NH3', 'CH4', 'NaCl', 'H2', 'Cl2', 'O2', 'OH', 'NaOH', 'O3', 'H2O2', 'HCN'];
+        const isSupportedMol = EXPERIMENTAL_SPRITE_MOLECULES.includes(cleanMolFormula) || (this.atomData.length >= 2 && this.atomData.length <= 5);
+
+        if (this.moleculeName && this.atomData.length > 1 && isSupportedMol) {
             try {
                 // Cari atom pusat (valensi tertinggi, atau atom pertama jika sama)
                 let sortedAtoms = [...this.atomData].sort((a, b) => getValence(b.symbol) - getValence(a.symbol));
