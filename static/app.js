@@ -426,12 +426,12 @@ class Particle {
         
         let rad = 0;
         if (moleculeName) {
-            rad = 44 + Math.min(this.mass, 76);
+            rad = 20 + Math.min(this.mass, 40);
         } else {
-            // Rumus ukuran atom: jika Ar = 1 (H) -> 45px, Ar = 2 -> 46px, dst.
-            rad = 44 + this.mass;
+            // Rumus ukuran atom: jika Ar = 1 (H) -> 20px, Ar = 2 -> 21px, dst.
+            rad = 19 + this.mass;
         }
-        this.radius = Math.min(rad, 120); // Batas maksimal 120px agar atom berat tetap proporsional
+        this.radius = Math.min(rad, 70); // Batas maksimal 70px agar atom berat tetap proporsional
         
         this.x = x || Math.random() * (canvas.width - 100) + 50;
         this.y = y || Math.random() * (canvas.height - 100) + 50;
