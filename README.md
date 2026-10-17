@@ -35,26 +35,6 @@ Anda hanya perlu mengaktifkan **GitHub Pages** di repositori ini, dan membagikan
 
 ---
 
-## 🚀 Cara Menjalankan (Bagi Developer / Kontributor)
-
-Jika Anda adalah seorang programmer yang ingin mengunduh (*clone*) kode ini untuk dimodifikasi atau dikembangkan di komputer Anda sendiri (*localhost*):
-
-```bash
-# 1. Clone repositori
-git clone https://github.com/hamzahffcl/laboratorium_kimia.git
-cd laboratorium_kimia
-
-# 2. Jalankan local server (wajib agar file eksternal .js bisa dimuat oleh browser)
-python -m http.server 8080
-
-# 3. Buka di browser
-# http://localhost:8080
-```
-
-> **Catatan:** Langkah *Localhost* di atas HANYA untuk *developer*. Pemain biasa cukup menggunakan link GitHub Pages untuk bermain.
-
----
-
 ## 🎮 Cara Bermain
 
 1. **Spawn Atom** — Buka panel *Pilih Atom* dan klik elemen yang ingin dimunculkan ke dalam kanvas reaktor.
