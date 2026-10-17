@@ -147,6 +147,13 @@ def main():
         })
 
     # 3. Elements (Periodic table)
+    # Load metadata from main branch (colors and charges)
+    main_meta = {}
+    meta_path = os.path.join(os.path.dirname(__file__), '..', 'scratch', 'main_elements_meta.json')
+    if os.path.exists(meta_path):
+        with open(meta_path, 'r', encoding='utf-8') as f:
+            main_meta = json.load(f)
+
     c.execute("""
         SELECT atomic_number, symbol, name, atomic_mass, category, valence
         FROM Elements
@@ -154,13 +161,18 @@ def main():
     """)
     elements_list = []
     for el in c.fetchall():
+        sym = el[1]
+        meta = main_meta.get(sym, {})
         elements_list.append({
             'atomic_number': el[0],
-            'symbol': el[1],
+            'symbol': sym,
             'name': el[2],
             'atomic_mass': el[3],
+            'mass': el[3], # Kompatibel 100% dengan kode main branch
             'category': el[4],
-            'valence': el[5]
+            'valence': el[5],
+            'color': meta.get('color', '#64748b'),
+            'charge': meta.get('charge', 0)
         })
 
     conn.close()

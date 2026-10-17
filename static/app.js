@@ -271,8 +271,18 @@ async function initDB() {
 }
 
 function getAtomData(symbol) {
-    let found = DB.periodicTable.find(a => a.symbol === symbol);
-    if (found) return found;
+    let found = DB.periodicTable ? DB.periodicTable.find(a => a.symbol === symbol) : null;
+    if (found) {
+        return {
+            symbol: found.symbol,
+            name: found.name || found.symbol,
+            mass: found.mass || found.atomic_mass || 12,
+            color: found.color || '#64748b',
+            charge: found.charge !== undefined ? found.charge : 0,
+            atomic_number: found.atomic_number,
+            valence: found.valence
+        };
+    }
     return { symbol: symbol, name: symbol, mass: 12, color: '#64748b', charge: 0 };
 }
 
@@ -421,7 +431,7 @@ window.AtomSpriteSystem = {
         try {
             const totalFrames = 16;
             const frameW = 160;
-            const ballH = 150; // P2.16: Pangkas y >= 151 (atom besar berakhir di y ≈ 146-148, bayangan lantai di y >= 152)
+            const ballH = 142; // Pangkas baris bawah (y >= 143) untuk menghilangkan bayangan lantai (preferensi data main)
             
             // Variasi fase agar tidak memantul kaku serempak
             const time = Date.now() / 1000;
@@ -482,9 +492,10 @@ class Particle {
         this.atomData = (atomSymbols || ['C']).map(sym => getAtomData(sym));
         this.label = moleculeName ? moleculeName : this.atomData.map(a => a.symbol).join('+');
         
-        this.mass = this.atomData.reduce((sum, a) => sum + a.mass, 0);
+        this.mass = this.atomData.reduce((sum, a) => sum + (a.mass || 12), 0);
+        if (!this.mass || isNaN(this.mass) || this.mass <= 0) this.mass = 12;
         
-        // Hitung radius partikel berdasarkan kelompok Ar / Mr
+        // Hitung radius partikel berdasarkan kelompok Ar / Mr (Skala presisi main branch)
         let m = this.mass;
         if (moleculeName && this.atomData.length > 1) {
             // Molekul menggunakan massa total (Mr) dengan sedikit penyesuaian
@@ -642,8 +653,14 @@ class Particle {
             this.dy = (this.dy / v) * maxSpeed;
         }
         
+        if (isNaN(this.dx) || !isFinite(this.dx)) this.dx = 0;
+        if (isNaN(this.dy) || !isFinite(this.dy)) this.dy = 0;
+
         this.x += this.dx;
         this.y += this.dy;
+        
+        if (isNaN(this.x) || !isFinite(this.x)) this.x = Math.random() * (canvas.width - 100) + 50;
+        if (isNaN(this.y) || !isFinite(this.y)) this.y = Math.random() * (canvas.height - 100) + 50;
         
         if (this.x - this.radius < 0) { this.x = this.radius; this.dx *= -this.restitution; }
         if (this.x + this.radius > canvas.width) { this.x = canvas.width - this.radius; this.dx *= -this.restitution; }
@@ -1148,17 +1165,21 @@ function resolveCollisions() {
                             
                             if (velAlongNormal > 0) continue;
                             
+                            let m1 = (p1.mass && !isNaN(p1.mass) && p1.mass > 0) ? p1.mass : 12;
+                            let m2 = (p2.mass && !isNaN(p2.mass) && p2.mass > 0) ? p2.mass : 12;
                             let e = Math.min(p1.restitution, p2.restitution);
                             let j_impulse = -(1 + e) * velAlongNormal;
-                            j_impulse /= (1/p1.mass) + (1/p2.mass);
-                            
-                            let impulseX = j_impulse * nx;
-                            let impulseY = j_impulse * ny;
-                            
-                            p1.dx += impulseX / p1.mass;
-                            p1.dy += impulseY / p1.mass;
-                            p2.dx -= impulseX / p2.mass;
-                            p2.dy -= impulseY / p2.mass;
+                            let invMassSum = (1 / m1) + (1 / m2);
+                            if (invMassSum > 0) {
+                                j_impulse /= invMassSum;
+                                let impulseX = j_impulse * nx;
+                                let impulseY = j_impulse * ny;
+                                
+                                p1.dx += impulseX / m1;
+                                p1.dy += impulseY / m1;
+                                p2.dx -= impulseX / m2;
+                                p2.dy -= impulseY / m2;
+                            }
                         }
                     }
                 }
