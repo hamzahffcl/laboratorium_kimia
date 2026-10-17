@@ -6544,6 +6544,33 @@ window.CHEM_DATA = {
       "ionization_factor": null
     },
     {
+      "label": "SF (Radikal Sulfur Monofluorida)",
+      "atoms_csv": "F,S",
+      "mp": 500,
+      "bp": 1000,
+      "acid_base_type": null,
+      "acid_base_strength": null,
+      "ionization_factor": null
+    },
+    {
+      "label": "SF2 (Sulfur Difluorida)",
+      "atoms_csv": "F,F,S",
+      "mp": -120.5,
+      "bp": -38,
+      "acid_base_type": null,
+      "acid_base_strength": null,
+      "ionization_factor": null
+    },
+    {
+      "label": "SF4 (Sulfur Tetrafluorida)",
+      "atoms_csv": "F,F,F,F,S",
+      "mp": -121.0,
+      "bp": -38.0,
+      "acid_base_type": null,
+      "acid_base_strength": null,
+      "ionization_factor": null
+    },
+    {
       "label": "SF6 (Sulfur Heksafluorida)",
       "atoms_csv": "F,F,F,F,F,F,S",
       "mp": 500,
@@ -21327,6 +21354,54 @@ window.CHEM_DATA = {
     },
     {
       "r1": "S",
+      "r2": "F",
+      "products": [
+        "SF (Radikal Sulfur Monofluorida)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -340
+    },
+    {
+      "r1": "SF (Radikal Sulfur Monofluorida)",
+      "r2": "F",
+      "products": [
+        "SF2 (Sulfur Difluorida)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -380
+    },
+    {
+      "r1": "S",
+      "r2": "F2 (Gas Fluorin)",
+      "products": [
+        "SF2 (Sulfur Difluorida)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -720
+    },
+    {
+      "r1": "SF2 (Sulfur Difluorida)",
+      "r2": "F2 (Gas Fluorin)",
+      "products": [
+        "SF4 (Sulfur Tetrafluorida)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -580
+    },
+    {
+      "r1": "SF4 (Sulfur Tetrafluorida)",
       "r2": "F2 (Gas Fluorin)",
       "products": [
         "SF6 (Sulfur Heksafluorida)"
@@ -21335,7 +21410,7 @@ window.CHEM_DATA = {
       "catalyst": null,
       "min_temp_catalyzed": null,
       "is_exothermic": 1,
-      "delta_H_kJ": -1220
+      "delta_H_kJ": -460
     },
     {
       "r1": "N",
