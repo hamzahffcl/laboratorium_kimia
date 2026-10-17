@@ -426,12 +426,12 @@ class Particle {
         
         let rad = 0;
         if (moleculeName) {
-            rad = 20 + Math.min(this.mass, 40);
+            rad = 10 + Math.min(this.mass, 25);
         } else {
-            // Rumus ukuran atom: jika Ar = 1 (H) -> 20px, Ar = 2 -> 21px, dst.
-            rad = 19 + this.mass;
+            // Rumus ukuran atom: jika Ar = 1 (H) -> 10px, Ar = 2 -> 11px, dst.
+            rad = 9 + this.mass;
         }
-        this.radius = Math.min(rad, 70); // Batas maksimal 70px agar atom berat tetap proporsional
+        this.radius = Math.min(rad, 45); // Batas maksimal 45px agar atom berat tetap proporsional
         
         this.x = x || Math.random() * (canvas.width - 100) + 50;
         this.y = y || Math.random() * (canvas.height - 100) + 50;
@@ -688,7 +688,8 @@ class Particle {
         // Gambar teks jika ini molekul ATAU jika sprite tidak aktif (agar simbol di pixel art tidak tertumpuk)
         if (this.moleculeName || !drawnWithSprite) {
             ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 10px Inter';
+            let fontSize = Math.max(8, Math.min(11, Math.floor(this.radius * 0.75)));
+            ctx.font = `bold ${fontSize}px Inter`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             
