@@ -371,7 +371,7 @@ window.AtomSpriteSystem = {
         try {
             const totalFrames = 16;
             const frameW = 160;
-            const frameH = 176;
+            const ballH = 142; // Pangkas baris bawah (y >= 143) untuk menghilangkan bayangan lantai (ground shadow)
             
             // Variasi fase agar tidak memantul kaku serempak
             const time = Date.now() / 1000;
@@ -380,15 +380,15 @@ window.AtomSpriteSystem = {
             
             // Hitung ukuran rendering proporsional terhadap radius
             const drawW = (radius * 2) * (160 / 88);
-            const drawH = drawW * (176 / 160);
+            const drawH = drawW * (ballH / 160);
             const drawX = x - drawW * 0.5;
-            const drawY = y - drawH * (80 / 176);
+            const drawY = y - drawH * 0.52; // Pusat bola pas di tengah tanpa bayangan bawah
             
             targetCtx.save();
             targetCtx.imageSmoothingEnabled = false; // Efek tajam pixel art
             targetCtx.drawImage(
                 img,
-                frameIndex * frameW, 0, frameW, frameH,
+                frameIndex * frameW, 0, frameW, ballH,
                 drawX, drawY, drawW, drawH
             );
             targetCtx.restore();
@@ -698,7 +698,7 @@ class Particle {
 
                 targetCtx.restore();
 
-                // 4. Label Nama Molekul di atas partikel
+                // 4. Label Nama Molekul di atas partikel (bersih tanpa shadow)
                 ctx.save();
                 ctx.translate(this.x, this.y - this.radius * 1.3);
                 ctx.scale(1 / window.camera.zoom, 1 / window.camera.zoom);
@@ -706,8 +706,6 @@ class Particle {
                 ctx.font = 'bold 10px Inter';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.shadowColor = 'rgba(0,0,0,0.8)';
-                ctx.shadowBlur = 3;
                 ctx.fillText(cleanMolFormula, 0, 0);
                 ctx.restore();
 
@@ -788,12 +786,7 @@ class Particle {
             ctx.save();
             ctx.translate(this.x, this.y);
             ctx.scale(1 / window.camera.zoom, 1 / window.camera.zoom);
-            
-            ctx.shadowColor = "rgba(0,0,0,0.8)";
-            ctx.shadowBlur = 2;
             ctx.fillText(displayLabel, 0, 0);
-            ctx.shadowBlur = 0;
-            
             ctx.restore();
         }
     }
