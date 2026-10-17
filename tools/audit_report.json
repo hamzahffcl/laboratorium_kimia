@@ -1,0 +1,280 @@
+{
+  "total_reactions": 973,
+  "unknown_species": [],
+  "imbalanced_count": 12,
+  "imbalanced": [
+    {
+      "index": 925,
+      "r1": "CH2NH (Metanimina)",
+      "r2": "O2 (Gas Oksigen)",
+      "products": [
+        "HCN (Asam Sianida)",
+        "H2O (Air)"
+      ],
+      "react_atoms": {
+        "C": 1,
+        "H": 3,
+        "N": 1,
+        "O": 2
+      },
+      "prod_atoms": {
+        "C": 1,
+        "H": 3,
+        "N": 1,
+        "O": 1
+      },
+      "gain": {},
+      "loss": {
+        "O": 1
+      }
+    },
+    {
+      "index": 933,
+      "r1": "K",
+      "r2": "H2SO4 (Asam Sulfat)",
+      "products": [
+        "K2SO4 (Kalium Sulfat)",
+        "H2 (Gas Hidrogen)"
+      ],
+      "react_atoms": {
+        "K": 1,
+        "H": 2,
+        "O": 4,
+        "S": 1
+      },
+      "prod_atoms": {
+        "K": 2,
+        "O": 4,
+        "S": 1,
+        "H": 2
+      },
+      "gain": {
+        "K": 1
+      },
+      "loss": {}
+    },
+    {
+      "index": 934,
+      "r1": "KOH (Kalium Hidroksida)",
+      "r2": "H2SO4 (Asam Sulfat)",
+      "products": [
+        "K2SO4 (Kalium Sulfat)",
+        "H2O (Air)"
+      ],
+      "react_atoms": {
+        "H": 3,
+        "K": 1,
+        "O": 5,
+        "S": 1
+      },
+      "prod_atoms": {
+        "K": 2,
+        "O": 5,
+        "S": 1,
+        "H": 2
+      },
+      "gain": {
+        "K": 1
+      },
+      "loss": {
+        "H": 1
+      }
+    },
+    {
+      "index": 937,
+      "r1": "Na",
+      "r2": "H2O (Air)",
+      "products": [
+        "NaOH (Natrium Hidroksida)",
+        "H2 (Gas Hidrogen)"
+      ],
+      "react_atoms": {
+        "Na": 1,
+        "H": 2,
+        "O": 1
+      },
+      "prod_atoms": {
+        "H": 3,
+        "Na": 1,
+        "O": 1
+      },
+      "gain": {
+        "H": 1
+      },
+      "loss": {}
+    },
+    {
+      "index": 938,
+      "r1": "Na",
+      "r2": "O",
+      "products": [
+        "NaOH (Natrium Hidroksida)"
+      ],
+      "react_atoms": {
+        "Na": 1,
+        "O": 1
+      },
+      "prod_atoms": {
+        "H": 1,
+        "Na": 1,
+        "O": 1
+      },
+      "gain": {
+        "H": 1
+      },
+      "loss": {}
+    },
+    {
+      "index": 939,
+      "r1": "N",
+      "r2": "H2 (Gas Hidrogen)",
+      "products": [
+        "NH3 (Gas Amonia)"
+      ],
+      "react_atoms": {
+        "N": 1,
+        "H": 2
+      },
+      "prod_atoms": {
+        "H": 3,
+        "N": 1
+      },
+      "gain": {
+        "H": 1
+      },
+      "loss": {}
+    },
+    {
+      "index": 940,
+      "r1": "Pb",
+      "r2": "KI (Kalium Iodida)",
+      "products": [
+        "PbI2 (Endapan Kuning Timbal Iodida)",
+        "K"
+      ],
+      "react_atoms": {
+        "Pb": 1,
+        "I": 1,
+        "K": 1
+      },
+      "prod_atoms": {
+        "I": 2,
+        "Pb": 1,
+        "K": 1
+      },
+      "gain": {
+        "I": 1
+      },
+      "loss": {}
+    },
+    {
+      "index": 941,
+      "r1": "C",
+      "r2": "H2 (Gas Hidrogen)",
+      "products": [
+        "CH4 (Gas Metana)"
+      ],
+      "react_atoms": {
+        "C": 1,
+        "H": 2
+      },
+      "prod_atoms": {
+        "C": 1,
+        "H": 4
+      },
+      "gain": {
+        "H": 2
+      },
+      "loss": {}
+    },
+    {
+      "index": 945,
+      "r1": "C",
+      "r2": "H2O (Air)",
+      "products": [
+        "CH3OH (Metanol)"
+      ],
+      "react_atoms": {
+        "C": 1,
+        "H": 2,
+        "O": 1
+      },
+      "prod_atoms": {
+        "C": 1,
+        "H": 4,
+        "O": 1
+      },
+      "gain": {
+        "H": 2
+      },
+      "loss": {}
+    },
+    {
+      "index": 946,
+      "r1": "Ti",
+      "r2": "O2 (Gas Oksigen)",
+      "products": [
+        "TiO2 (Titanium Dioksida)"
+      ],
+      "react_atoms": {
+        "Ti": 1,
+        "O": 2
+      },
+      "prod_atoms": {
+        "O": 1,
+        "Ti": 2
+      },
+      "gain": {
+        "Ti": 1
+      },
+      "loss": {
+        "O": 1
+      }
+    },
+    {
+      "index": 966,
+      "r1": "CH4 (Gas Metana)",
+      "r2": "NH3 (Gas Amonia)",
+      "products": [
+        "HCN (Asam Sianida)",
+        "H2 (Gas Hidrogen)"
+      ],
+      "react_atoms": {
+        "C": 1,
+        "H": 7,
+        "N": 1
+      },
+      "prod_atoms": {
+        "C": 1,
+        "H": 3,
+        "N": 1
+      },
+      "gain": {},
+      "loss": {
+        "H": 4
+      }
+    },
+    {
+      "index": 968,
+      "r1": "TiO (Titanium Monoksida)",
+      "r2": "O",
+      "products": [
+        "TiO2 (Titanium Dioksida)"
+      ],
+      "react_atoms": {
+        "O": 2,
+        "Ti": 1
+      },
+      "prod_atoms": {
+        "O": 1,
+        "Ti": 2
+      },
+      "gain": {
+        "Ti": 1
+      },
+      "loss": {
+        "O": 1
+      }
+    }
+  ]
+}

@@ -319,7 +319,7 @@ window.CHEM_DATA = {
       "label": "NaOH (Natrium Hidroksida)",
       "atoms_csv": "H,Na,O",
       "mp": 317.77777777777777,
-      "bp": 130,
+      "bp": 1388.0,
       "acid_base_type": "BASE",
       "acid_base_strength": "STRONG",
       "ionization_factor": 1
@@ -328,7 +328,7 @@ window.CHEM_DATA = {
       "label": "KOH (Kalium Hidroksida)",
       "atoms_csv": "H,K,O",
       "mp": 360,
-      "bp": 130,
+      "bp": 1327.0,
       "acid_base_type": "BASE",
       "acid_base_strength": "STRONG",
       "ionization_factor": 1
@@ -373,7 +373,7 @@ window.CHEM_DATA = {
       "label": "MgCl2 (Magnesium Klorida)",
       "atoms_csv": "Cl,Cl,Mg",
       "mp": 712,
-      "bp": 412,
+      "bp": 1412.0,
       "acid_base_type": null,
       "acid_base_strength": null,
       "ionization_factor": null
@@ -452,7 +452,7 @@ window.CHEM_DATA = {
     },
     {
       "label": "TiO2 (Titanium Dioksida)",
-      "atoms_csv": "O,Ti,Ti",
+      "atoms_csv": "O,O,Ti",
       "mp": 1860,
       "bp": 2500,
       "acid_base_type": null,
@@ -9307,6 +9307,27 @@ window.CHEM_DATA = {
       "charge": 0,
       "complexity": 10.0,
       "isomeric_smiles": "[Pb]I"
+    },
+    {
+      "label": "KHSO4 (Kalium Bisulfat)",
+      "atoms_csv": "H,K,O,O,O,O,S",
+      "mp": 197.0,
+      "bp": 300.0,
+      "acid_base_type": "ACID",
+      "acid_base_strength": "SEDANG",
+      "ionization_factor": 0.8,
+      "bond_type": "Ionik/Kovalen",
+      "molar_mass": 136.17,
+      "density": 2.24,
+      "heat_capacity": 0.95,
+      "enthalpy_formation": -1160.0,
+      "pubchem_cid": 516882,
+      "iupac_name": "Potassium hydrogen sulfate",
+      "molecular_weight": 136.17,
+      "exact_mass": 135.9233,
+      "charge": 0,
+      "complexity": 62.0,
+      "isomeric_smiles": "OS(=O)(=O)[O-].[K+]"
     }
   ],
   "reactions": [
@@ -9355,19 +9376,6 @@ window.CHEM_DATA = {
       "products": [
         "AgCl (Endapan Perak Klorida)",
         "NaNO3 (Natrium Nitrat)"
-      ],
-      "min_temp": 25,
-      "catalyst": null,
-      "min_temp_catalyzed": null,
-      "is_exothermic": 1,
-      "delta_H_kJ": -50
-    },
-    {
-      "r1": "HCl (Asam Klorida)",
-      "r2": "NaOH (Natrium Hidroksida)",
-      "products": [
-        "NaCl (Garam Dapur)",
-        "H2O (Air)"
       ],
       "min_temp": 25,
       "catalyst": null,
@@ -21088,7 +21096,7 @@ window.CHEM_DATA = {
       "r2": "O2 (Gas Oksigen)",
       "products": [
         "HCN (Asam Sianida)",
-        "H2O (Air)"
+        "H2O2 (Hidrogen Peroksida)"
       ],
       "min_temp": 25,
       "catalyst": "Pt",
@@ -21184,8 +21192,8 @@ window.CHEM_DATA = {
       "r1": "K",
       "r2": "H2SO4 (Asam Sulfat)",
       "products": [
-        "K2SO4 (Kalium Sulfat)",
-        "H2 (Gas Hidrogen)"
+        "KHSO4 (Kalium Bisulfat)",
+        "H"
       ],
       "min_temp": 25,
       "catalyst": null,
@@ -21197,7 +21205,7 @@ window.CHEM_DATA = {
       "r1": "KOH (Kalium Hidroksida)",
       "r2": "H2SO4 (Asam Sulfat)",
       "products": [
-        "K2SO4 (Kalium Sulfat)",
+        "KHSO4 (Kalium Bisulfat)",
         "H2O (Air)"
       ],
       "min_temp": 25,
@@ -21235,7 +21243,7 @@ window.CHEM_DATA = {
       "r2": "H2O (Air)",
       "products": [
         "NaOH (Natrium Hidroksida)",
-        "H2 (Gas Hidrogen)"
+        "H"
       ],
       "min_temp": 25,
       "catalyst": null,
@@ -21245,7 +21253,7 @@ window.CHEM_DATA = {
     },
     {
       "r1": "Na",
-      "r2": "O",
+      "r2": "OH (Radikal Hidroksil)",
       "products": [
         "NaOH (Natrium Hidroksida)"
       ],
@@ -21259,7 +21267,7 @@ window.CHEM_DATA = {
       "r1": "N",
       "r2": "H2 (Gas Hidrogen)",
       "products": [
-        "NH3 (Gas Amonia)"
+        "NH2 (Radikal Amino)"
       ],
       "min_temp": 25,
       "catalyst": null,
@@ -21271,7 +21279,7 @@ window.CHEM_DATA = {
       "r1": "Pb",
       "r2": "KI (Kalium Iodida)",
       "products": [
-        "PbI2 (Endapan Kuning Timbal Iodida)",
+        "PbI (Timbal Monoidida)",
         "K"
       ],
       "min_temp": 25,
@@ -21284,7 +21292,7 @@ window.CHEM_DATA = {
       "r1": "C",
       "r2": "H2 (Gas Hidrogen)",
       "products": [
-        "CH4 (Gas Metana)"
+        "CH2 (Metilena)"
       ],
       "min_temp": 25,
       "catalyst": null,
@@ -21332,7 +21340,8 @@ window.CHEM_DATA = {
       "r1": "C",
       "r2": "H2O (Air)",
       "products": [
-        "CH3OH (Metanol)"
+        "CO (Karbon Monoksida)",
+        "H2 (Gas Hidrogen)"
       ],
       "min_temp": 25,
       "catalyst": null,
@@ -21586,6 +21595,8 @@ window.CHEM_DATA = {
       "r2": "NH3 (Gas Amonia)",
       "products": [
         "HCN (Asam Sianida)",
+        "H2 (Gas Hidrogen)",
+        "H2 (Gas Hidrogen)",
         "H2 (Gas Hidrogen)"
       ],
       "min_temp": 25,
@@ -21665,6 +21676,106 @@ window.CHEM_DATA = {
       "min_temp_catalyzed": null,
       "is_exothermic": 1,
       "delta_H_kJ": -175
+    },
+    {
+      "r1": "K",
+      "r2": "KHSO4 (Kalium Bisulfat)",
+      "products": [
+        "K2SO4 (Kalium Sulfat)",
+        "H"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -150
+    },
+    {
+      "r1": "KOH (Kalium Hidroksida)",
+      "r2": "KHSO4 (Kalium Bisulfat)",
+      "products": [
+        "K2SO4 (Kalium Sulfat)",
+        "H2O (Air)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -60
+    },
+    {
+      "r1": "PbI (Timbal Monoidida)",
+      "r2": "KI (Kalium Iodida)",
+      "products": [
+        "PbI2 (Endapan Kuning Timbal Iodida)",
+        "K"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -45
+    },
+    {
+      "r1": "PbI (Timbal Monoidida)",
+      "r2": "I",
+      "products": [
+        "PbI2 (Endapan Kuning Timbal Iodida)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -75
+    },
+    {
+      "r1": "CH2 (Metilena)",
+      "r2": "H2 (Gas Hidrogen)",
+      "products": [
+        "CH4 (Gas Metana)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -180
+    },
+    {
+      "r1": "NH2 (Radikal Amino)",
+      "r2": "H2 (Gas Hidrogen)",
+      "products": [
+        "NH3 (Gas Amonia)",
+        "H"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -40
+    },
+    {
+      "r1": "NH (Radikal Imidogen)",
+      "r2": "H2 (Gas Hidrogen)",
+      "products": [
+        "NH3 (Gas Amonia)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -220
+    },
+    {
+      "r1": "CH3 (Radikal Metil)",
+      "r2": "OH (Radikal Hidroksil)",
+      "products": [
+        "CH3OH (Metanol)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -380
     }
   ],
   "periodic_table": [
