@@ -521,9 +521,9 @@ class Particle {
         this.x = x || Math.random() * (canvas.width - 100) + 50;
         this.y = y || Math.random() * (canvas.height - 100) + 50;
         
-        // Kecepatan gerak awal diperlambat 1.5x
-        this.dx = ((Math.random() - 0.5) * 4) / 1.5;
-        this.dy = ((Math.random() - 0.5) * 4) / 1.5;
+        // Kecepatan gerak awal tenang dan terkontrol
+        this.dx = (Math.random() - 0.5) * 1.5;
+        this.dy = (Math.random() - 0.5) * 1.5;
         this.restitution = 0.8;
         
         if (moleculeName) {
@@ -544,40 +544,30 @@ class Particle {
 
     updatePhysics() {
         let molData = DB.molecules ? DB.molecules.find(m => m.label === this.label) : null;
+        let isRadicalIntermediate = (molData && molData.is_intermediate === 1);
         
-        // Per P2 item 14: Radikal perantara dipaksa selalu fase gas
-        if (molData && molData.is_intermediate === 1) {
-            this.state = "GAS";
-            this.current_mp = null;
-            this.current_bp = null;
-            let speedMult = ((Math.max(1, currentTemp + 273.15)) / 298.15) / 1.5;
-            this.restitution = 1.0;
-            this.dy -= 0.05 * speedMult;
-            this.dx += (Math.random() - 0.5) * 0.2 * speedMult;
-            this.dy += (Math.random() - 0.5) * 0.2 * speedMult;
-            return;
-        }
-
         let thermo = DB.moleculeThermo[this.label];
         let mp = null, bp = null;
-        if (thermo && thermo.mp !== undefined) {
-            mp = thermo.mp;
-            bp = thermo.bp;
-        } else if (molData) {
-            mp = molData.mp;
-            bp = molData.bp;
-        } else if (!this.moleculeName) {
-            let atm = this.atomData[0];
-            if (atm && atm.mp !== undefined && atm.bp !== undefined && atm.mp !== 0.0) {
-                mp = atm.mp;
-                bp = atm.bp;
-            } else if (atm) {
-                if (atm.symbol === 'C') {
-                    mp = 3550; bp = 3825;
-                } else if (['Fe', 'Zn', 'Mg', 'Al', 'Ag', 'Pb', 'Pt', 'Na', 'K', 'Ca', 'P', 'S', 'I'].includes(atm.symbol)) {
-                    mp = 600; bp = 2000;
-                } else if (['H', 'O', 'N', 'Cl', 'F', 'He', 'Ne', 'Ar', 'Kr', 'Xe'].includes(atm.symbol)) {
-                    mp = -250; bp = -200;
+        if (!isRadicalIntermediate) {
+            if (thermo && thermo.mp !== undefined) {
+                mp = thermo.mp;
+                bp = thermo.bp;
+            } else if (molData) {
+                mp = molData.mp;
+                bp = molData.bp;
+            } else if (!this.moleculeName) {
+                let atm = this.atomData[0];
+                if (atm && atm.mp !== undefined && atm.bp !== undefined && atm.mp !== 0.0) {
+                    mp = atm.mp;
+                    bp = atm.bp;
+                } else if (atm) {
+                    if (atm.symbol === 'C') {
+                        mp = 3550; bp = 3825;
+                    } else if (['Fe', 'Zn', 'Mg', 'Al', 'Ag', 'Pb', 'Pt', 'Na', 'K', 'Ca', 'P', 'S', 'I'].includes(atm.symbol)) {
+                        mp = 600; bp = 2000;
+                    } else if (['H', 'O', 'N', 'Cl', 'F', 'He', 'Ne', 'Ar', 'Kr', 'Xe'].includes(atm.symbol)) {
+                        mp = -250; bp = -200;
+                    }
                 }
             }
         }
@@ -587,7 +577,6 @@ class Particle {
         let dynamic_bp = Infinity;
         if (bp !== null && bp !== undefined && bp > -273.15) {
             let Tref = bp + 273.15; // Kelvin
-            // Gunakan hvap_kj_mol dari data v3 jika ada, fallback ke Trouton: 0.088 * Tref (J/mol)
             let H = (molData && molData.hvap_kj_mol) ? (molData.hvap_kj_mol * 1000.0) : (88.0 * Tref);
             let inv = (1.0 / Tref) - (R / H) * Math.log(Math.max(0.01, currentPress));
             dynamic_bp = inv > 0 ? (1.0 / inv - 273.15) : Infinity;
@@ -608,10 +597,12 @@ class Particle {
         // Sublimasi: jika titik didih <= titik leleh atau tidak ada fase cair normal, lewati fase cair
         let isSublimating = (dynamic_mp === null || dynamic_mp === undefined || dynamic_bp <= dynamic_mp);
         
-        if (currentTemp >= dynamic_bp) {
+        if (isRadicalIntermediate) {
+            this.state = "GAS";
+        } else if (currentTemp >= dynamic_bp) {
             if (this.state !== "GAS") {
                 this.state = "GAS";
-                this.dy -= 3 / 1.5;
+                this.dy -= 1.5;
             }
         } else if (!isSublimating && currentTemp >= dynamic_mp) {
             this.state = "CAIR";
@@ -619,35 +610,36 @@ class Particle {
             this.state = "PADAT";
         }
         
-        // Kecepatan fisika diperlambat 1.5x
-        let speedMult = ((currentTemp + 273.15) / 298.15) / 1.5;
-        speedMult = Math.max(0.1 / 1.5, Math.min(speedMult, 3.0 / 1.5));
+        // Kecepatan fisika diperhalus agar tidak terlalu cepat
+        let speedMult = Math.min(2.0, Math.max(0.2, (currentTemp + 273.15) / 298.15));
         
         if (this.state === "GAS") {
-            this.restitution = 1.0;
-            this.dy -= 0.05 * speedMult;
-            this.dx += (Math.random() - 0.5) * 0.2 * speedMult;
-            this.dy += (Math.random() - 0.5) * 0.2 * speedMult;
+            this.restitution = 0.85;
+            this.dy -= 0.015 * speedMult; // daya apung gas lembut
+            this.dx += (Math.random() - 0.5) * 0.06 * speedMult;
+            this.dy += (Math.random() - 0.5) * 0.06 * speedMult;
+            this.dx *= 0.995; // hambatan udara tipis
+            this.dy *= 0.995;
         } else if (this.state === "CAIR") {
-            this.restitution = 0.3; // Tidak memantul seperti bola karet
-            this.dy += 0.4 / 1.5; // Jatuh ke dasar wadah
+            this.restitution = 0.25;
+            this.dy += 0.2; // jatuh lembut ke dasar
             if (currentTemp > -273) {
-                let jitter = ((currentTemp + 273) * 0.00005) / 1.5;
+                let jitter = ((currentTemp + 273) * 0.00003);
                 this.dx += (Math.random() - 0.5) * jitter;
                 this.dy += (Math.random() - 0.5) * jitter;
             }
-            this.dx *= 0.95; // Gesekan cairan
+            this.dx *= 0.95; // viskositas cairan
             this.dy *= 0.95;
         } else {
             // PADAT
-            this.restitution = 0.1; // Sangat kaku
-            this.dy += 0.6 / 1.5; // Cepat jatuh
-            this.dx *= 0.85; // Gesekan padat tinggi
-            this.dy *= 0.85;
+            this.restitution = 0.1;
+            this.dy += 0.35; // gravitasi padat
+            this.dx *= 0.88; // friksi padatan
+            this.dy *= 0.88;
         }
         
         let v = Math.hypot(this.dx, this.dy);
-        const maxSpeed = 10 / 1.5;
+        const maxSpeed = 3.2; // Batas kecepatan maksimal yang nyaman dipandang
         if (v > maxSpeed) {
             this.dx = (this.dx / v) * maxSpeed;
             this.dy = (this.dy / v) * maxSpeed;
@@ -904,13 +896,14 @@ function applyReactionHeat(deltaH_kJ, numReactions = 1) {
         let cp = (mol && mol.heat_capacity) ? mol.heat_capacity : 75.3; // Default 75.3 J/(mol·K)
         totalHeatCap += N0 * cp;
     });
-    if (totalHeatCap < 1.0) totalHeatCap = 1.0; // Inersia termal minimum
+    // Inersia termal minimum agar reaksi 2 partikel tidak meledak ke ribuan derajat
+    if (totalHeatCap < 8.0) totalHeatCap = 8.0;
 
     // Eksotermik (deltaH < 0) menaikkan suhu (+); Endotermik (deltaH > 0) menurunkan suhu (-)
     let deltaT = -(deltaH_kJ * 1000.0 * N0 * numReactions) / totalHeatCap;
     
-    // Batas perubahan yang nyaman (+2.5 °C / -5.0 °C per frame)
-    const clampedDelta = Math.min(Math.max(deltaT, -5.0), 2.5);
+    // Batas kenaikan suhu yang nyaman (+30 °C / -30 °C per reaksi)
+    const clampedDelta = Math.min(Math.max(deltaT, -30.0), 30.0);
     currentTemp += clampedDelta;
     
     // Batas bawah nol mutlak (-273.15 °C)
@@ -1076,13 +1069,14 @@ function resolveCollisions() {
                         let minDist = p1.radius + p2.radius;
                         
                         // --- GAYA TARIK KIMIA (CHEMICAL ATTRACTION) ---
-                        if (dist >= minDist && dist < minDist + 150) {
+                        // Tarikan halus hanya saat partikel sudah cukup dekat (radius 35 px dari batas tabrakan)
+                        const ATTRACTION_RANGE = 35;
+                        if (dist >= minDist && dist < minDist + ATTRACTION_RANGE) {
                             if (areParticlesRelated(p1, p2)) {
-                                // Memindahkan posisi (x,y) secara langsung agar efek tarikan mutlak terjadi
-                                // dan tidak teredam oleh gesekan (friction) atau gravitasi di updatePhysics.
-                                let pullSpeed = (2.0 * (1 - (dist - minDist) / 150)) / 1.5; 
-                                let nx = distX / dist;
-                                let ny = distY / dist;
+                                let pullFactor = (1 - (dist - minDist) / ATTRACTION_RANGE);
+                                let pullSpeed = 0.4 * pullFactor; 
+                                let nx = dist > 0 ? (distX / dist) : 1;
+                                let ny = dist > 0 ? (distY / dist) : 0;
                                 
                                 p1.x -= nx * pullSpeed;
                                 p1.y -= ny * pullSpeed;
@@ -1270,10 +1264,14 @@ let lastFrameTimestamp = performance.now();
 function updatePhysicsStep() {
     // Thermal Conductivity (Newton's Law of Cooling)
     let diff = targetTemp - currentTemp;
-    let step = diff * 0.01;
-    if (step > 2.5) step = 2.5; 
-    if (step < -5.0) step = -5.0;
+    let step = diff * 0.04;
+    if (step > 4.0) step = 4.0; 
+    if (step < -8.0) step = -8.0;
     currentTemp += step;
+    
+    // Tampilkan suhu aktual kanvas secara langsung
+    const tempEl = document.getElementById('tempValue');
+    if (tempEl) tempEl.textContent = currentTemp.toFixed(1);
     
     updatePHIndicator();
     particles.forEach(p => p.updatePhysics());
@@ -1468,8 +1466,12 @@ const tempSliderEl = document.getElementById('tempSlider');
 if (tempSliderEl) {
     tempSliderEl.addEventListener('input', (e) => {
         targetTemp = parseFloat(e.target.value);
+        // Jika selisih suhu besar, percepat sinkronisasi awal
+        if (Math.abs(currentTemp - targetTemp) > 100) {
+            currentTemp += (targetTemp - currentTemp) * 0.25;
+        }
         const tempEl = document.getElementById('tempValue');
-        if (tempEl) tempEl.textContent = targetTemp.toFixed(0);
+        if (tempEl) tempEl.textContent = currentTemp.toFixed(1);
     });
 }
 
@@ -1480,7 +1482,25 @@ document.getElementById('pressSlider').addEventListener('input', (e) => {
 
 document.getElementById('clearBtn').addEventListener('click', () => {
     particles = [];
+    currentTemp = 25.0;
+    targetTemp = 25.0;
+    currentPress = 1.0;
+    
+    const tempEl = document.getElementById('tempValue');
+    const tempSl = document.getElementById('tempSlider');
+    if (tempEl) tempEl.textContent = '25.0';
+    if (tempSl) tempSl.value = '25';
+    
+    const pressEl = document.getElementById('pressValue');
+    const pressSl = document.getElementById('pressSlider');
+    if (pressEl) pressEl.textContent = '1.0';
+    if (pressSl) pressSl.value = '1';
+    
+    currentPH = 7.0;
+    updatePHIndicator();
+    
     if (window.QuestEngine) window.QuestEngine.saveProgress();
+    showToast("Meja lab dikosongkan. Suhu disetel ke 25 °C, Tekanan 1.0 atm.");
 });
 
 document.getElementById('addAtomBtn').addEventListener('click', () => {

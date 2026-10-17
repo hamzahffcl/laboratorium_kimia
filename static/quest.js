@@ -437,21 +437,7 @@ window.QuestEngine = {
                 window.shootConfetti();
             }
 
-            // Pengecoh: Reset suhu dan tekanan ke default
-            if (typeof currentTemp !== 'undefined') {
-                currentTemp = 25;
-                const tempEl = document.getElementById('tempValue');
-                const tempSl = document.getElementById('tempSlider');
-                if (tempEl) tempEl.textContent = currentTemp.toFixed(1);
-                if (tempSl) tempSl.value = currentTemp;
-            }
-            if (typeof currentPress !== 'undefined') {
-                currentPress = 1.0;
-                const pressEl = document.getElementById('pressValue');
-                const pressSl = document.getElementById('pressSlider');
-                if (pressEl) pressEl.textContent = currentPress.toFixed(1);
-                if (pressSl) pressSl.value = currentPress;
-            }
+            // Misi selesai - jangan ubah setelan suhu/tekanan pengguna
         }
 
         if (questCompleted) {
