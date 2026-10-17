@@ -1,7 +1,7 @@
 # 🧪 SPESIFIKASI SISTEM DAN ARSITEKTUR TEKNIS
 ## Laboratorium Fisika Kimia 2D (Virtual Lab Simulator)
 
-> **Dokumen Versi:** 2.4.0  
+> **Dokumen Versi:** 2.5.0  
 > **Status:** Production / Stable  
 > **Lingkungan Eksekusi:** Client-Side Browser (PWA/SPA Ready)  
 > **Lisensi:** Open Source / Educational Research  
@@ -156,8 +156,8 @@ Setiap partikel $i$ direpresentasikan oleh vektor posisi $\vec{r}_i = (x_i, y_i)
 
 $$\vec{r}_i(t + \Delta t) = \vec{r}_i(t) + \vec{v}_i(t)$$
 
-Kecepatan terminal dibatasi oleh batas atas keamanan agar tidak menembus batas kanvas (*tunneling effect*):
-$$|\vec{v}_i| \le v_{\text{max}} = \frac{10}{1.5} \approx 6.67 \text{ px/frame}$$
+Kecepatan terminal dibatasi oleh batas atas kenyamanan dan stabilitas visual:
+$$|\vec{v}_i| \le v_{\text{max}} = 3.2 \text{ px/frame}$$
 
 ### 4.2 Skala Radius Massa Relatif ($A_r$ / $M_r$)
 Radius visual partikel dihitung berdasarkan massa molar ($M$):
@@ -188,9 +188,9 @@ Partikel hanya memeriksa partikel lain yang berada pada sel yang sama atau 8 sel
 $$\text{CellX} = \lfloor x / 250 \rfloor, \quad \text{CellY} = \lfloor y / 250 \rfloor$$
 
 ### 4.5 Gaya Tarik Kimiawi (Chemical Attraction)
-Partikel yang memiliki pasangan reaksi terdaftar di `reactionMap` atau memiliki afinitas katalis akan merasakan gaya tarik mutual ketika berada pada jarak $r < r_1 + r_2 + 150 \text{ px}$:
+Partikel yang memiliki pasangan reaksi terdaftar di `reactionMap` atau memiliki afinitas katalis akan merasakan gaya tarik mutual ketika berada pada jarak dekat $r < r_1 + r_2 + 35 \text{ px}$:
 
-$$v_{\text{pull}} = \frac{2.0}{1.5} \cdot \left(1 - \frac{r - (r_1 + r_2)}{150}\right)$$
+$$v_{\text{pull}} = 0.4 \cdot \left(1 - \frac{r - (r_1 + r_2)}{35}\right)$$
 
 ---
 
@@ -199,9 +199,9 @@ $$v_{\text{pull}} = \frac{2.0}{1.5} \cdot \left(1 - \frac{r - (r_1 + r_2)}{150}\
 ### 5.1 Hukum Pendinginan Newton (Konduktivitas Termal)
 Perpindahan panas dari suhu target lingkungan ($T_{\text{target}}$) ke suhu fluida wadah ($T$) berlangsung secara eksponensial halus:
 
-$$\frac{dT}{dt} = k \cdot (T_{\text{target}} - T), \quad k = 0.01$$
+$$\frac{dT}{dt} = k \cdot (T_{\text{target}} - T), \quad k = 0.04$$
 
-Laju pemanasan dibatasi maksimum $+2.5^\circ\text{C/frame}$ dan laju pendinginan $-5.0^\circ\text{C/frame}$ untuk menjaga stabilitas fisika.
+Laju pemanasan dibatasi maksimum $+4.0^\circ\text{C/frame}$ dan laju pendinginan $-8.0^\circ\text{C/frame}$ untuk menjaga stabilitas termodinamika.
 
 ### 5.2 Titik Didih Dinamis Berdasarkan Tekanan (Persamaan Clausius-Clapeyron)
 Titik didih partikel berubah secara dinamis terhadap tekanan wadah ($P$):
