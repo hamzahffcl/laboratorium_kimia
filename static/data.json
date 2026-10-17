@@ -21068,6 +21068,262 @@
       "min_temp_catalyzed": 20,
       "is_exothermic": 1,
       "delta_H_kJ": -100
+    },
+    {
+      "r1": "K",
+      "r2": "H2SO4 (Asam Sulfat)",
+      "products": [
+        "K2SO4 (Kalium Sulfat)",
+        "H2 (Gas Hidrogen)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -250
+    },
+    {
+      "r1": "KOH (Kalium Hidroksida)",
+      "r2": "H2SO4 (Asam Sulfat)",
+      "products": [
+        "K2SO4 (Kalium Sulfat)",
+        "H2O (Air)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -120
+    },
+    {
+      "r1": "Cl",
+      "r2": "Cl",
+      "products": [
+        "Cl2 (Gas Klorin)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -240
+    },
+    {
+      "r1": "H",
+      "r2": "H",
+      "products": [
+        "H2 (Gas Hidrogen)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -436
+    },
+    {
+      "r1": "Na",
+      "r2": "H2O (Air)",
+      "products": [
+        "NaOH (Natrium Hidroksida)",
+        "H2 (Gas Hidrogen)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -140
+    },
+    {
+      "r1": "Na",
+      "r2": "O",
+      "products": [
+        "NaOH (Natrium Hidroksida)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -100
+    },
+    {
+      "r1": "N",
+      "r2": "H",
+      "products": [
+        "NH3 (Gas Amonia)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -46
+    },
+    {
+      "r1": "N",
+      "r2": "H2 (Gas Hidrogen)",
+      "products": [
+        "NH3 (Gas Amonia)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -46
+    },
+    {
+      "r1": "Pb",
+      "r2": "I",
+      "products": [
+        "PbI2 (Endapan Kuning Timbal Iodida)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -175
+    },
+    {
+      "r1": "Pb",
+      "r2": "KI (Kalium Iodida)",
+      "products": [
+        "PbI2 (Endapan Kuning Timbal Iodida)",
+        "K"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -100
+    },
+    {
+      "r1": "C",
+      "r2": "H",
+      "products": [
+        "CH4 (Gas Metana)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -75
+    },
+    {
+      "r1": "C",
+      "r2": "H2 (Gas Hidrogen)",
+      "products": [
+        "CH4 (Gas Metana)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -75
+    },
+    {
+      "r1": "O2 (Gas Oksigen)",
+      "r2": "O",
+      "products": [
+        "O3 (Gas Ozon)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 0,
+      "delta_H_kJ": 142
+    },
+    {
+      "r1": "O",
+      "r2": "O",
+      "products": [
+        "O2 (Gas Oksigen)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -498
+    },
+    {
+      "r1": "CH4 (Gas Metana)",
+      "r2": "O",
+      "products": [
+        "CH3OH (Metanol)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -120
+    },
+    {
+      "r1": "C",
+      "r2": "H2O (Air)",
+      "products": [
+        "CH3OH (Metanol)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -60
+    },
+    {
+      "r1": "Ti",
+      "r2": "O2 (Gas Oksigen)",
+      "products": [
+        "TiO2 (Titanium Dioksida)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -944
+    },
+    {
+      "r1": "Ti",
+      "r2": "O",
+      "products": [
+        "TiO2 (Titanium Dioksida)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -500
+    },
+    {
+      "r1": "S",
+      "r2": "F",
+      "products": [
+        "SF6 (Sulfur Heksafluorida)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -1220
+    },
+    {
+      "r1": "S",
+      "r2": "F2 (Gas Fluorin)",
+      "products": [
+        "SF6 (Sulfur Heksafluorida)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -1220
+    },
+    {
+      "r1": "S (Belerang)",
+      "r2": "F",
+      "products": [
+        "SF6 (Sulfur Heksafluorida)"
+      ],
+      "min_temp": 25,
+      "catalyst": null,
+      "min_temp_catalyzed": null,
+      "is_exothermic": 1,
+      "delta_H_kJ": -1220
     }
   ],
   "periodic_table": [
