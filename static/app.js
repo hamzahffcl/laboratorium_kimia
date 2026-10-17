@@ -251,9 +251,11 @@ function getValence(symbol) {
     const valences = {
         'H': 1, 'Li': 1, 'Na': 1, 'K': 1, 'Rb': 1, 'Cs': 1, 'Fr': 1,
         'F': 1, 'Cl': 1, 'Br': 1, 'I': 1,
-        'O': 2, 'S': 2, 'Se': 2, 'Te': 2, 'Be': 2, 'Mg': 2, 'Ca': 2, 'Sr': 2, 'Ba': 2, 'Ra': 2,
-        'N': 3, 'P': 3, 'As': 3, 'Sb': 3, 'Bi': 3, 'B': 3, 'Al': 3,
+        'O': 2, 'Se': 2, 'Te': 2, 'Be': 2, 'Mg': 2, 'Ca': 2, 'Sr': 2, 'Ba': 2, 'Ra': 2,
+        'N': 3, 'As': 3, 'Sb': 3, 'Bi': 3, 'B': 3, 'Al': 3,
         'C': 4, 'Si': 4, 'Ge': 4,
+        'P': 5,
+        'S': 6,
         'He': 0, 'Ne': 0, 'Ar': 0, 'Kr': 0, 'Xe': 0, 'Rn': 0
     };
     return valences[symbol] || 0;
@@ -596,10 +598,9 @@ class Particle {
         }
 
         let cleanMolFormula = this.moleculeName ? this.moleculeName.split(' ')[0].trim() : '';
-        const EXPERIMENTAL_SPRITE_MOLECULES = ['H2O', 'CO2', 'HCl', 'NH3', 'CH4', 'NaCl', 'H2', 'Cl2', 'O2', 'OH', 'NaOH', 'O3', 'H2O2', 'HCN'];
-        const isSupportedMol = EXPERIMENTAL_SPRITE_MOLECULES.includes(cleanMolFormula) || (this.atomData.length >= 2 && this.atomData.length <= 5);
 
-        if (this.moleculeName && this.atomData.length > 1 && isSupportedMol) {
+        // Dukung SEMUA molekul majemuk (termasuk molekul panjang seperti H2SO4, Na2SO4, C2H5OH, dll)
+        if (this.moleculeName && this.atomData.length > 1) {
             try {
                 // Cari atom pusat (valensi tertinggi, atau atom pertama jika sama)
                 let sortedAtoms = [...this.atomData].sort((a, b) => getValence(b.symbol) - getValence(a.symbol));
@@ -650,10 +651,15 @@ class Particle {
                 targetCtx.lineCap = 'round';
 
                 let branchPositions = [];
+                // Jarak ikatan adaptif: untuk molekul dengan banyak cabang (seperti H2SO4 dengan 6 cabang), jaraknya meluas agar tidak bertabrakan
+                let minCircumference = branches.length * 20;
+                let neededDist = minCircumference / (2 * Math.PI);
+                let defaultDist = centerR + 13;
+                let bondDist = Math.max(defaultDist, neededDist);
+
                 for (let i = 0; i < branches.length; i++) {
                     let bAtom = branches[i];
                     let branchR = getSubRadius(bAtom.symbol, bAtom.mass);
-                    let bondDist = centerR + branchR + 2; // Menempel rapat dan menyatu
                     let ang = angles[i] !== undefined ? angles[i] : (i * (Math.PI * 2 / branches.length));
                     let bx = Math.cos(ang) * bondDist;
                     let by = Math.sin(ang) * bondDist;

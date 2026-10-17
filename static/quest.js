@@ -303,8 +303,16 @@ window.QuestEngine = {
             if (isDiscovered) {
                 const atoms = (window.DB && window.DB.moleculeAtoms && window.DB.moleculeAtoms[molLabel]) ? window.DB.moleculeAtoms[molLabel] : [molLabel];
                 
-                // Tampilkan atom-atom pembentuk molekul (maksimal 4 atom dalam kluster visual)
-                const displayAtoms = atoms.slice(0, 4);
+                // Tampilkan atom-atom pembentuk molekul
+                // Untuk molekul panjang (>4 atom seperti H2SO4), prioritaskan unsur-unsur uniknya agar atom penting (seperti S pada H2SO4) terlihat
+                let displayAtoms = [];
+                if (atoms.length <= 4) {
+                    displayAtoms = atoms;
+                } else {
+                    // Ambil unsur unik terlebih dahulu (contoh H2SO4: H, O, S)
+                    const uniqueSyms = [...new Set(atoms)];
+                    displayAtoms = uniqueSyms.slice(0, 4);
+                }
                 const count = displayAtoms.length;
                 let sizeClass = 'size-single';
                 if (count === 2) sizeClass = 'size-double';
