@@ -426,12 +426,12 @@ class Particle {
         
         let rad = 0;
         if (moleculeName) {
-            rad = 10 + Math.min(this.mass, 25);
+            rad = 2 + Math.min(this.mass, 15);
         } else {
-            // Rumus ukuran atom: jika Ar = 1 (H) -> 10px, Ar = 2 -> 11px, dst.
-            rad = 9 + this.mass;
+            // Rumus ukuran atom: jika Ar = 1 (H) -> 1px, Ar = 2 -> 2px, dst.
+            rad = this.mass;
         }
-        this.radius = Math.min(rad, 45); // Batas maksimal 45px agar atom berat tetap proporsional
+        this.radius = Math.max(1, Math.min(rad, 25)); // Batas maksimal 25px
         
         this.x = x || Math.random() * (canvas.width - 100) + 50;
         this.y = y || Math.random() * (canvas.height - 100) + 50;
@@ -1343,8 +1343,8 @@ let panStartCameraY = 0;
 canvas.addEventListener('mousedown', (e) => {
     let { mx, my } = getCanvasPos(e.clientX, e.clientY);
     
-    // Cari partikel dari atas ke bawah (z-index visual)
-    selectedParticle = particles.slice().reverse().find(p => Math.hypot(p.x - mx, p.y - my) <= p.radius * 1.5);
+    // Cari partikel dari atas ke bawah (z-index visual, min hit area 20px agar atom kecil tetap mudah diklik)
+    selectedParticle = particles.slice().reverse().find(p => Math.hypot(p.x - mx, p.y - my) <= Math.max(20, p.radius * 1.5));
     const infoPanel = document.getElementById('particleInfo');
     
     if (selectedParticle) {
@@ -1433,7 +1433,7 @@ canvas.addEventListener('mousemove', (e) => {
         clampCamera();
     } else {
         // Ubah kursor menjadi tangan jika di atas partikel
-        const hover = particles.some(p => Math.hypot(p.x - mx, p.y - my) <= p.radius * 1.5);
+        const hover = particles.some(p => Math.hypot(p.x - mx, p.y - my) <= Math.max(20, p.radius * 1.5));
         canvas.style.cursor = hover ? 'grab' : 'default';
     }
 });
@@ -1480,7 +1480,7 @@ canvas.addEventListener('touchstart', (e) => {
     const touch = e.touches[0];
     let { mx, my } = getCanvasPos(touch.clientX, touch.clientY);
     
-    selectedParticle = particles.slice().reverse().find(p => Math.hypot(p.x - mx, p.y - my) <= p.radius * 2);
+    selectedParticle = particles.slice().reverse().find(p => Math.hypot(p.x - mx, p.y - my) <= Math.max(25, p.radius * 2));
     const infoPanel = document.getElementById('particleInfo');
     
     if (selectedParticle) {
