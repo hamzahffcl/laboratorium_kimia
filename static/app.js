@@ -66,17 +66,21 @@ function buildBg(mk) {
     r(0, y2, W, H - y2, "#3a3e4d");
     r(0, y2, W, 1, "#2b2e3a");
     if (sign) {
-        const sw = 128, sh = 36, sx = cx - sw / 2, sy = 14;
+        const sw = 128, sh = 36, sx = cx - sw / 2, sy = 12;
+        // Frame luar biru gelap
         r(sx - 3, sy - 3, sw + 6, sh + 6, "#2a3f8f");
+        // Border putih
         r(sx - 1, sy - 1, sw + 2, sh + 2, "#dfe7ff");
+        // Dalam gelap
         r(sx + 1, sy + 1, sw - 2, sh - 2, "#141a33");
         b.font = FONT;
         b.textAlign = "center";
         b.textBaseline = "middle";
+        // Teks "LAB KIMIA" satu baris di tengah
         b.fillStyle = "#f4f4f4";
-        b.fillText("LAB SIMULATOR", cx, sy + 12);
+        b.fillText("LAB", cx, sy + 12);
         b.fillStyle = "#ffcd75";
-        b.fillText("KIMIA 2D", cx, sy + 26);
+        b.fillText("KIMIA", cx, sy + 26);
     }
 }
 
@@ -242,30 +246,46 @@ class VisualEffect {
     constructor(x, y, type) {
         this.x = Math.round(x);
         this.y = Math.round(y);
-        this.type = type; // 'smoke' atau 'bubble'
+        this.type = type; // 'smoke', 'bubble', atau 'acid_bubble'
         this.life = 1.0;
         this.tick = 0;
         
         if (type === 'smoke') {
-            this.vx = (Math.random() - 0.5) * 1.5;
+            this.vx = (Math.random() - 0.5) * 1.0;
             this.vy = -0.8 - Math.random() * 0.8;
-            this.color = '#94b0c2';
+            // Warna asap hangat: antara abu tipis dan oranye-merah sesuai suhu
+            const smokeColors = ['#94b0c2', '#b0a0a0', '#c8a080', '#d4947a', '#c87060'];
+            this.color = smokeColors[Math.floor(Math.random() * (currentTemp > 200 ? 5 : currentTemp > 100 ? 3 : 2))];
+            this.size = Math.random() > 0.5 ? 3 : 2;
+        } else if (type === 'acid_bubble') {
+            // Gelembung hijau tipis saat larutan asam
+            this.vx = 0;
+            this.vy = -0.5 - Math.random() * 0.5;
+            this.color = Math.random() > 0.5 ? '#a7f070' : '#38b764';
+            this.wobblePhase = Math.random() * Math.PI * 2;
+            this.size = Math.random() > 0.6 ? 3 : 2;
         } else {
-            // bubble
+            // bubble biasa
             this.vx = 0;
             this.vy = -0.8 - Math.random() * 0.6;
             this.color = '#f4f4f4';
             this.wobblePhase = Math.random() * Math.PI * 2;
+            this.size = 2;
         }
     }
     
     update() {
         this.tick++;
-        if (this.tick % 2 === 0) { // Stepped motion (14-15 fps feel)
+        if (this.tick % 2 === 0) { // Stepped motion retro (14-15 fps rhythm)
             if (this.type === 'smoke') {
                 this.x += this.vx;
                 this.y += this.vy;
-                this.life -= 0.04;
+                this.life -= 0.035;
+            } else if (this.type === 'acid_bubble') {
+                this.wobblePhase += 0.25;
+                this.x += Math.sin(this.wobblePhase) * 0.5;
+                this.y += this.vy;
+                this.life -= 0.022;
             } else {
                 this.wobblePhase += 0.4;
                 this.x += Math.sin(this.wobblePhase) * 0.8;
@@ -277,15 +297,23 @@ class VisualEffect {
     
     draw() {
         if (this.life <= 0) return;
-        ctx.fillStyle = this.color;
-        if (this.type === 'smoke') {
-            // Kotak 4x4 piksel untuk efek asap / api reaksi
-            let s = this.life > 0.5 ? 4 : 2;
-            ctx.fillRect(Math.round(this.x), Math.round(this.y), s, s);
+        ctx.save();
+        if (this.type === 'acid_bubble') {
+            // Warna tipis gelembung hijau yang tidak mengganggu pandangan
+            ctx.globalAlpha = Math.min(0.45, this.life * 0.45);
+            ctx.fillStyle = this.color;
+            ctx.fillRect(Math.round(this.x), Math.round(this.y), this.size, this.size);
+        } else if (this.type === 'smoke') {
+            // Asap tipis pixel
+            ctx.globalAlpha = Math.min(0.5, this.life * 0.5);
+            ctx.fillStyle = this.color;
+            ctx.fillRect(Math.round(this.x), Math.round(this.y), this.size, this.size);
         } else {
-            // Kotak 2x2 piksel untuk gelembung air
+            ctx.globalAlpha = Math.min(0.8, this.life);
+            ctx.fillStyle = this.color;
             ctx.fillRect(Math.round(this.x), Math.round(this.y), 2, 2);
         }
+        ctx.restore();
     }
 }
 
@@ -837,8 +865,11 @@ class Particle {
         R(drawX - 5, drawY - 5, 2, 2, "rgba(255,255,255,.8)");
         R(drawX - 4, drawY - 6, 2, 1, "rgba(255,255,255,.8)");
 
-        // Simbol atom dengan auto-kontras teks
-        ctx.font = FONT;
+        // Simbol atom dengan auto-kontras teks — lebih besar dan jelas
+        let sym = this.atomData[0].symbol;
+        // Gunakan font lebih besar untuk atom tunggal agar tulisan jelas terbaca
+        const atomFontSize = sym.length === 1 ? "9px" : "7px";
+        ctx.font = `${atomFontSize} 'Press Start 2P', monospace`;
         ctx.textBaseline = "middle";
         ctx.textAlign = "center";
         
@@ -849,8 +880,10 @@ class Particle {
             let bVal = parseInt(c.slice(5, 7), 16) || 0;
             isBright = (rVal * 0.3 + gVal * 0.59 + bVal * 0.11) > 150;
         }
+        // Outline hitam tipis agar teks terbaca di semua latar
+        ctx.fillStyle = "#0d0f1c";
+        ctx.fillText(sym.slice(0, 2), drawX + 1, drawY + 2);
         ctx.fillStyle = isBright ? "#1a2138" : "#fff";
-        let sym = this.atomData[0].symbol;
         ctx.fillText(sym.slice(0, 2), drawX, drawY + 1);
     }
 }
@@ -1270,12 +1303,41 @@ function animate(now = performance.now()) {
         });
         visualEffects = visualEffects.filter(v => v.life > 0);
 
-        // 6. Efek Termal Ekstrim
+        // 6. Efek Termal Ekstrim — asap pixel + tint merah tipis di dinding
         if (currentTemp > 80 && particles.length > 0) {
             let intensity = Math.min((currentTemp - 80) / 200, 1.0);
-            if (Math.random() < 0.15 * intensity) {
+            // Spawn asap lebih sering seiring suhu naik
+            let smokeRate = 0.15 + intensity * 0.35;
+            if (Math.random() < smokeRate) {
                 const p = particles[Math.floor(Math.random() * particles.length)];
-                visualEffects.push(new VisualEffect(p.x, p.y, 'smoke'));
+                // Spawn 1–3 partikel asap per frame jika sangat panas
+                let smokeCount = intensity > 0.5 ? 2 : 1;
+                for (let si = 0; si < smokeCount; si++) {
+                    let sx = p.x + (Math.random() - 0.5) * 6;
+                    let sy = p.y - 2;
+                    visualEffects.push(new VisualEffect(sx, sy, 'smoke'));
+                }
+            }
+            // Tint merah tipis di area dinding — semakin panas semakin merah
+            if (L.cy) {
+                ctx.globalAlpha = Math.min(0.22, intensity * 0.22);
+                ctx.fillStyle = "#b13e53"; // merah retro
+                ctx.fillRect(0, 0, W, L.cy);
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        // 7. Efek Asam — gelembung hijau tipis dari atom/molekul asam
+        if (currentPH < 6.5 && particles.length > 0 && tick % 4 === 0) {
+            let acidIntensity = Math.min(1.0, (6.5 - currentPH) / 6.5);
+            let spawnChance = 0.08 * acidIntensity;
+            for (let ap of particles) {
+                let abType = DB.moleculeAcidBase[ap.label];
+                if (abType === 'ACID' && Math.random() < spawnChance) {
+                    let bx = ap.x + (Math.random() - 0.5) * 10;
+                    let by = ap.y - ap.radius;
+                    visualEffects.push(new VisualEffect(bx, by, 'acid_bubble'));
+                }
             }
         }
 
