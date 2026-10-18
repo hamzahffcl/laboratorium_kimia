@@ -2,14 +2,10 @@ const canvas = document.getElementById('labCanvas');
 const ctx = canvas.getContext('2d');
 ctx.imageSmoothingEnabled = false;
 
-const W = 192, H = 108;
-canvas.width = W;
-canvas.height = H;
-
-let tick = 0;
-let bubbles = [];
-
+let W = 0, H = 0, K = 4, bg = null, L = {}, tick = 0;
+const COL = { H: "#f4f4f4", C: "#566c86", O: "#b13e53", N: "#3b5dc9", Cl: "#38b764", Na: "#7b5fd6", S: "#ffcd75" };
 const PHC = ["#b13e53","#d3524a","#ef7d57","#f4a261","#ffcd75","#e8e36a","#a7f070","#38b764","#2fa586","#257179","#3b8fb5","#41a6f6","#3b5dc9","#5d4fb0","#5d275d"];
+const FONT = "8px 'Press Start 2P', monospace";
 
 // Fungsi pembantu persegi piksel
 const R = (x, y, w, h, c) => {
@@ -28,15 +24,103 @@ function disc(cx, cy, r, c) {
     }
 }
 
+// Batas pergerakan atom di dinding ubin (tidak masuk ke area meja)
+function bounds() {
+    return {
+        x0: 12,
+        x1: Math.max(24, W - 12),
+        y0: L.sign ? 66 : 16,
+        y1: (L.cy ? L.cy - 12 : Math.round(H * 0.74) - 12)
+    };
+}
+
+// Generator background ubin dinding + meja + papan neon persis dari pixel-scene.js
+function buildBg(mk) {
+    if (W <= 0 || H <= 0) return;
+    bg = mk(W, H);
+    const b = bg.getContext("2d");
+    const r = (x, y, w, h, c) => { b.fillStyle = c; b.fillRect(x, y, w, h); };
+    const { cx, cy, sign } = L;
+    const ts = 24;
+    
+    r(0, 0, W, H, "#1a2138");
+    const x0 = (((cx - ts / 2) % ts) + ts) % ts - ts;
+    for (let y = cy - ts; y > -ts; y -= ts) {
+        for (let x = x0; x < W; x += ts) {
+            r(x, y, ts, ts, "#1b2339");
+            for (let dy = 5; dy < ts - 3; dy += 4) {
+                for (let dx = 5 + ((dy >> 2) & 1) * 2; dx < ts - 3; dx += 4) {
+                    r(x + dx, y + dy, 1, 1, "#222d4d");
+                }
+            }
+            r(x, y, ts, 1, "#33467a");
+            r(x, y, 1, ts, "#33467a");
+            r(x, y + ts - 1, ts, 1, "#0e1326");
+            r(x + ts - 1, y, 1, ts, "#0e1326");
+        }
+    }
+    r(0, cy, W, 3, "#7a829f");
+    r(0, cy + 3, W, H - cy - 3, "#4b5163");
+    r(0, cy + 3, W, 1, "#5f6684");
+    const y2 = cy + Math.round((H - cy) * 0.5);
+    r(0, y2, W, H - y2, "#3a3e4d");
+    r(0, y2, W, 1, "#2b2e3a");
+    if (sign) {
+        const sw = 128, sh = 36, sx = cx - sw / 2, sy = 14;
+        r(sx - 3, sy - 3, sw + 6, sh + 6, "#2a3f8f");
+        r(sx - 1, sy - 1, sw + 2, sh + 2, "#dfe7ff");
+        r(sx + 1, sy + 1, sw - 2, sh - 2, "#141a33");
+        b.font = FONT;
+        b.textAlign = "center";
+        b.textBaseline = "middle";
+        b.fillStyle = "#f4f4f4";
+        b.fillText("LAB SIMULATOR", cx, sy + 12);
+        b.fillStyle = "#ffcd75";
+        b.fillText("KIMIA 2D", cx, sy + 26);
+    }
+}
+
 function fitCanvas() {
     const wrap = document.getElementById('wrap') || canvas.parentElement;
     if (!wrap) return;
-    const k = Math.max(1, Math.floor((wrap.clientWidth - 16) / W));
-    canvas.style.width = (W * k) + "px";
-    canvas.style.height = (H * k) + "px";
+    const cw = wrap.clientWidth;
+    const ch = wrap.clientHeight;
+    if (cw === 0 || ch === 0) return;
+    
+    K = Math.max(2, Math.round(cw / 260));
+    W = Math.floor(cw / K);
+    H = Math.floor(ch / K);
+    
+    canvas.width = W;
+    canvas.height = H;
+    canvas.style.width = (W * K) + "px";
+    canvas.style.height = (H * K) + "px";
+    
+    ctx.imageSmoothingEnabled = false;
+    
+    L = { cx: W >> 1, cy: Math.round(H * 0.74), sign: H >= 130 && W >= 150 };
+    
+    const b = bounds();
+    if (particles && particles.length > 0) {
+        particles.forEach(p => {
+            p.x = Math.min(b.x1 - p.radius, Math.max(b.x0 + p.radius, p.x));
+            p.y = Math.min(b.y1 - p.radius, Math.max(b.y0 + p.radius, p.y));
+        });
+    }
+    
+    buildBg((w, h) => {
+        const c = document.createElement("canvas");
+        c.width = w;
+        c.height = h;
+        return c;
+    });
 }
 window.addEventListener('resize', fitCanvas);
-fitCanvas();
+if (window.ResizeObserver) {
+    const wrapEl = document.getElementById('wrap');
+    if (wrapEl) new ResizeObserver(() => fitCanvas()).observe(wrapEl);
+}
+setTimeout(fitCanvas, 50);
 
 function getCanvasPos(clientX, clientY) {
     const rect = canvas.getBoundingClientRect();
@@ -493,28 +577,21 @@ class Particle {
         this.mass = this.atomData.reduce((sum, a) => sum + (a.mass || 12), 0);
         if (!this.mass || isNaN(this.mass) || this.mass <= 0) this.mass = 12;
         
-        // Hitung radius partikel skala resolusi rendah (192x108)
-        let m = this.mass;
-        if (moleculeName && this.atomData.length > 1) {
-            if (m <= 20) this.radius = 6.5;
-            else if (m <= 50) this.radius = 7.5;
-            else this.radius = 8.5;
-        } else {
-            // Skala atom tunggal di canvas 192x108:
-            if (m <= 4) this.radius = 5;
-            else if (m <= 30) this.radius = 6;
-            else if (m <= 80) this.radius = 6.5;
-            else this.radius = 7;
-        }
+        // Ukuran radius partikel
+        this.radius = (moleculeName && this.atomData.length > 1) ? 9 : 8;
         
-        // Spawn aman di dalam gelas kimia (x: 62-120, y: 52-78)
-        this.x = (x !== undefined && x !== null) ? x : (62 + Math.random() * 58);
-        this.y = (y !== undefined && y !== null) ? y : (52 + Math.random() * 26);
+        // Spawn bebas di area dinding ubin
+        const b = bounds();
+        this.x = (x !== undefined && x !== null) ? x : (b.x0 + 10 + Math.random() * Math.max(10, b.x1 - b.x0 - 20));
+        this.y = (y !== undefined && y !== null) ? y : (b.y0 + 10 + Math.random() * Math.max(10, b.y1 - b.y0 - 20));
         
-        // Kecepatan gerak awal tenang dan terkontrol
-        this.dx = (Math.random() - 0.5) * 0.8;
-        this.dy = (Math.random() - 0.5) * 0.8;
-        this.restitution = 0.8;
+        // Kecepatan dan arah gerak awal
+        const a = Math.random() * 6.28;
+        const v = 0.5 + Math.random() * 0.6;
+        this.dx = Math.cos(a) * v;
+        this.dy = Math.sin(a) * v;
+        this.ph = Math.random() * 6.28;
+        this.restitution = 0.85;
         
         if (moleculeName) {
             if (moleculeName.includes('Radikal')) this.color = '#9333ea';
@@ -523,8 +600,8 @@ class Particle {
             else if (moleculeName.includes('Ester') || moleculeName.includes('Karboksilat')) this.color = '#f59e0b';
             else this.color = '#64748b';
         } else {
-            let baseColor = (this.atomData[0] && this.atomData[0].color) ? this.atomData[0].color : '#64748b';
-            this.color = baseColor.replace(/\s+/g, '');
+            let sym = this.atomData[0] ? this.atomData[0].symbol : 'C';
+            this.color = COL[sym] || ((this.atomData[0] && this.atomData[0].color) ? this.atomData[0].color.replace(/\s+/g, '') : '#41a6f6');
         }
         
         this.state = "GAS";
@@ -562,13 +639,13 @@ class Particle {
             }
         }
         
-        // P0.3: Titik didih dinamis (Clausius-Clapeyron presisi)
-        const R = 8.314;
+        // Titik didih dinamis (Clausius-Clapeyron)
+        const R_const = 8.314;
         let dynamic_bp = Infinity;
         if (bp !== null && bp !== undefined && bp > -273.15) {
             let Tref = bp + 273.15; // Kelvin
             let H = (molData && molData.hvap_kj_mol) ? (molData.hvap_kj_mol * 1000.0) : (88.0 * Tref);
-            let inv = (1.0 / Tref) - (R / H) * Math.log(Math.max(0.01, currentPress));
+            let inv = (1.0 / Tref) - (R_const / H) * Math.log(Math.max(0.01, currentPress));
             dynamic_bp = inv > 0 ? (1.0 / inv - 273.15) : Infinity;
         }
         
@@ -584,85 +661,61 @@ class Particle {
         this.current_mp = dynamic_mp;
         this.current_bp = dynamic_bp;
         
-        // Sublimasi: jika titik didih <= titik leleh atau tidak ada fase cair normal, lewati fase cair
         let isSublimating = (dynamic_mp === null || dynamic_mp === undefined || dynamic_bp <= dynamic_mp);
-        
         if (isRadicalIntermediate) {
             this.state = "GAS";
         } else if (currentTemp >= dynamic_bp) {
-            if (this.state !== "GAS") {
-                this.state = "GAS";
-                this.dy -= 1.5;
-            }
+            this.state = "GAS";
         } else if (!isSublimating && currentTemp >= dynamic_mp) {
             this.state = "CAIR";
         } else {
             this.state = "PADAT";
         }
         
-        // Kecepatan fisika diperhalus agar tidak terlalu cepat
-        let speedMult = Math.min(2.0, Math.max(0.2, (currentTemp + 273.15) / 298.15));
+        // Suhu: mengatur kecepatan gerak atom (kecepatan ∝ √T)
+        // Di 25 °C gerak normal (sp = 1.0), makin panas makin cepat, mendekati nol mutlak hampir diam
+        const sp = Math.max(0.15, Math.min(3.0, Math.sqrt(Math.max(currentTemp + 273.15, 1) / 298.15)));
         
-        if (this.state === "GAS") {
-            this.restitution = 0.85;
-            this.dy -= 0.015 * speedMult; // daya apung gas lembut
-            this.dx += (Math.random() - 0.5) * 0.06 * speedMult;
-            this.dy += (Math.random() - 0.5) * 0.06 * speedMult;
-            this.dx *= 0.995; // hambatan udara tipis
-            this.dy *= 0.995;
-        } else if (this.state === "CAIR") {
-            this.restitution = 0.25;
-            this.dy += 0.2; // jatuh lembut ke dasar
-            if (currentTemp > -273) {
-                let jitter = ((currentTemp + 273) * 0.00003);
-                this.dx += (Math.random() - 0.5) * jitter;
-                this.dy += (Math.random() - 0.5) * jitter;
-            }
-            this.dx *= 0.95; // viskositas cairan
-            this.dy *= 0.95;
-        } else {
-            // PADAT
-            this.restitution = 0.1;
-            this.dy += 0.35; // gravitasi padat
-            this.dx *= 0.88; // friksi padatan
-            this.dy *= 0.88;
+        this.ph += 0.05 * sp;
+        this.x += this.dx * sp;
+        this.y += this.dy * sp;
+        
+        // Jaga kecepatan tetap terkontrol dan nyaman
+        let curV = Math.hypot(this.dx, this.dy);
+        if (curV > 2.5) {
+            this.dx = (this.dx / curV) * 2.5;
+            this.dy = (this.dy / curV) * 2.5;
+        } else if (curV < 0.25) {
+            let ang = Math.random() * 6.28;
+            this.dx = Math.cos(ang) * 0.6;
+            this.dy = Math.sin(ang) * 0.6;
         }
         
-        let v = Math.hypot(this.dx, this.dy);
-        const maxSpeed = 3.2; // Batas kecepatan maksimal yang nyaman dipandang
-        if (v > maxSpeed) {
-            this.dx = (this.dx / v) * maxSpeed;
-            this.dy = (this.dy / v) * maxSpeed;
-        }
-        
-        if (isNaN(this.dx) || !isFinite(this.dx)) this.dx = 0;
-        if (isNaN(this.dy) || !isFinite(this.dy)) this.dy = 0;
+        if (isNaN(this.dx) || !isFinite(this.dx)) this.dx = 0.5;
+        if (isNaN(this.dy) || !isFinite(this.dy)) this.dy = 0.5;
 
-        this.x += this.dx;
-        this.y += this.dy;
-        
-        if (isNaN(this.x) || !isFinite(this.x)) this.x = 64 + Math.random() * 56;
-        if (isNaN(this.y) || !isFinite(this.y)) this.y = 52 + Math.random() * 26;
-        
-        // Cek pantulan batas gelas kimia
-        const BEAKER = { left: 57, right: 127, bottom: 88, topRim: 26, liquidTop: 48 };
-        let inBeakerX = this.x >= BEAKER.left - 4 && this.x <= BEAKER.right + 4;
-        if (inBeakerX) {
-            let topBound = this.state === "GAS" ? BEAKER.topRim : Math.max(BEAKER.liquidTop, BEAKER.topRim);
-            if (this.x - this.radius < BEAKER.left) { this.x = BEAKER.left + this.radius; this.dx = Math.abs(this.dx) * this.restitution; }
-            if (this.x + this.radius > BEAKER.right) { this.x = BEAKER.right - this.radius; this.dx = -Math.abs(this.dx) * this.restitution; }
-            if (this.y - this.radius < topBound) { this.y = topBound + this.radius; this.dy = Math.abs(this.dy) * this.restitution; }
-            if (this.y + this.radius > BEAKER.bottom) { this.y = BEAKER.bottom - this.radius; this.dy = -Math.abs(this.dy) * this.restitution; }
-        } else {
-            if (this.x - this.radius < 0) { this.x = this.radius; this.dx = Math.abs(this.dx) * this.restitution; }
-            if (this.x + this.radius > W) { this.x = W - this.radius; this.dx = -Math.abs(this.dx) * this.restitution; }
-            if (this.y - this.radius < 0) { this.y = this.radius; this.dy = Math.abs(this.dy) * this.restitution; }
-            if (this.y + this.radius > 92) { this.y = 92 - this.radius; this.dy = -Math.abs(this.dy) * this.restitution; }
+        // Pantulan di batas ruangan (dinding kiri/kanan, papan neon atas, lis meja bawah)
+        const b = bounds();
+        if (this.x - this.radius < b.x0) {
+            this.x = b.x0 + this.radius;
+            this.dx = Math.abs(this.dx) * this.restitution;
+        } else if (this.x + this.radius > b.x1) {
+            this.x = b.x1 - this.radius;
+            this.dx = -Math.abs(this.dx) * this.restitution;
+        }
+        if (this.y - this.radius < b.y0) {
+            this.y = b.y0 + this.radius;
+            this.dy = Math.abs(this.dy) * this.restitution;
+        } else if (this.y + this.radius > b.y1) {
+            this.y = b.y1 - this.radius;
+            this.dy = -Math.abs(this.dy) * this.restitution;
         }
     }
 
     draw() {
         let targetCtx = ctx;
+        const drawX = Math.round(this.x);
+        const drawY = Math.round(this.y + Math.sin(this.ph) * 1.5);
 
         // --- DRAW EXPERIMENTAL COMPOSITE MOLECULE STRUCTURE ---
         if (this.moleculeName && this.atomData.length <= 1 && window.DB && window.DB.moleculeAtoms) {
@@ -675,6 +728,9 @@ class Particle {
 
         let cleanMolFormula = this.moleculeName ? this.moleculeName.split(' ')[0].trim() : this.atomData.map(a => a.symbol).join('');
 
+        // Bayangan tipis di bawah atom / molekul
+        R(drawX - 8, drawY + 10, 16, 2, "rgba(0,0,0,.28)");
+
         if (this.atomData.length > 1) {
             try {
                 let sortedAtoms = [...this.atomData].sort((a, b) => getValence(b.symbol) - getValence(a.symbol));
@@ -683,9 +739,9 @@ class Particle {
 
                 const getSubRadius = (sym, mass) => {
                     let m = mass || 1;
-                    if (m <= 10) return 3.5;
-                    if (m <= 30) return 4.5;
-                    return 5.5;
+                    if (m <= 10) return 4.5;
+                    if (m <= 30) return 5.5;
+                    return 6.5;
                 };
 
                 let centerR = getSubRadius(centerAtom.symbol, centerAtom.mass);
@@ -710,7 +766,7 @@ class Particle {
                 }
 
                 targetCtx.save();
-                targetCtx.translate(this.x, this.y);
+                targetCtx.translate(drawX, drawY);
                 targetCtx.rotate((Date.now() * 0.0004) + (this.id * 1.2));
 
                 targetCtx.strokeStyle = 'rgba(255, 255, 255, 0.75)';
@@ -718,7 +774,7 @@ class Particle {
                 targetCtx.lineCap = 'square';
 
                 let branchPositions = [];
-                let bondDist = centerR + 5;
+                let bondDist = centerR + 6;
 
                 for (let i = 0; i < branches.length; i++) {
                     let bAtom = branches[i];
@@ -734,33 +790,27 @@ class Particle {
                     targetCtx.stroke();
                 }
 
-                let drawnCenter = false;
-                if (window.AtomSpriteSystem && window.AtomSpriteSystem.enabled) {
-                    drawnCenter = window.AtomSpriteSystem.drawAtom(targetCtx, centerAtom.symbol, 0, 0, centerR, this.id);
-                }
-                if (!drawnCenter) {
-                    disc(this.x, this.y, centerR, centerAtom.color || '#3b82f6');
-                }
+                // Gambar atom pusat
+                let cColor = COL[centerAtom.symbol] || centerAtom.color || '#3b82f6';
+                disc(0, 0, centerR + 1, "#0d0f1c");
+                disc(0, 0, centerR, cColor);
 
+                // Gambar cabang
                 for (let i = 0; i < branchPositions.length; i++) {
                     let bp = branchPositions[i];
-                    let drawnBranch = false;
-                    if (window.AtomSpriteSystem && window.AtomSpriteSystem.enabled) {
-                        drawnBranch = window.AtomSpriteSystem.drawAtom(targetCtx, bp.bAtom.symbol, bp.bx, bp.by, bp.branchR, this.id + i + 1);
-                    }
-                    if (!drawnBranch) {
-                        disc(this.x + bp.bx, this.y + bp.by, bp.branchR, bp.bAtom.color || '#94a3b8');
-                    }
+                    let bColor = COL[bp.bAtom.symbol] || bp.bAtom.color || '#94a3b8';
+                    disc(bp.bx, bp.by, bp.branchR + 1, "#0d0f1c");
+                    disc(bp.bx, bp.by, bp.branchR, bColor);
                 }
 
                 targetCtx.restore();
 
                 // Formula Label (Press Start 2P)
                 ctx.fillStyle = '#ffffff';
-                ctx.font = "8px 'Press Start 2P'";
+                ctx.font = FONT;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText(cleanMolFormula, Math.round(this.x), Math.round(this.y - this.radius - 4));
+                ctx.fillText(cleanMolFormula, drawX, Math.round(drawY - this.radius - 5));
 
                 return;
             } catch (err) {
@@ -768,57 +818,40 @@ class Particle {
             }
         }
 
-        // Tangan Ikatan Atom Tunggal (Valensi)
-        if (this.atomData.length === 1 && this.state !== "CAIR") {
-            let valence = getValence(this.atomData[0].symbol);
-            if (valence > 0) {
-                targetCtx.save();
-                targetCtx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
-                targetCtx.lineWidth = 1;
-                targetCtx.lineCap = 'square';
-                
-                let timeOffset = Date.now() * 0.001 * 0.5;
-                let baseAngle = timeOffset + (this.id * 0.5);
-                let angleStep = (Math.PI * 2) / valence;
-                
-                for (let i = 0; i < valence; i++) {
-                    let angle = baseAngle + (i * angleStep);
-                    let startX = this.x + Math.cos(angle) * (this.radius * 0.8);
-                    let startY = this.y + Math.sin(angle) * (this.radius * 0.8);
-                    let endX = this.x + Math.cos(angle) * (this.radius * 1.4);
-                    let endY = this.y + Math.sin(angle) * (this.radius * 1.4);
-                    
-                    targetCtx.beginPath();
-                    targetCtx.moveTo(startX, startY);
-                    targetCtx.lineTo(endX, endY);
-                    targetCtx.stroke();
-                }
-                targetCtx.restore();
-            }
+        // --- ATOM TUNGGAL (Gaya Pixel Scene Presisi) ---
+        let c = COL[this.atomData[0].symbol] || this.color || "#41a6f6";
+        
+        // Lingkaran luar hitam (outline 1px)
+        ctx.fillStyle = "#0d0f1c";
+        for (let dy = -9; dy <= 9; dy++) {
+            const hw = Math.round(Math.sqrt(81 - dy * dy));
+            ctx.fillRect(drawX - hw, drawY + dy, hw * 2 + 1, 1);
         }
+        // Badan atom
+        ctx.fillStyle = c;
+        for (let dy = -8; dy <= 8; dy++) {
+            const hw = Math.round(Math.sqrt(64 - dy * dy));
+            ctx.fillRect(drawX - hw, drawY + dy, hw * 2 + 1, 1);
+        }
+        // Kilau piksel putih
+        R(drawX - 5, drawY - 5, 2, 2, "rgba(255,255,255,.8)");
+        R(drawX - 4, drawY - 6, 2, 1, "rgba(255,255,255,.8)");
 
-        let drawnWithSprite = false;
-        if (this.atomData.length === 1 && window.AtomSpriteSystem && window.AtomSpriteSystem.enabled) {
-            drawnWithSprite = window.AtomSpriteSystem.drawAtom(targetCtx, this.atomData[0].symbol, this.x, this.y, this.radius, this.id);
+        // Simbol atom dengan auto-kontras teks
+        ctx.font = FONT;
+        ctx.textBaseline = "middle";
+        ctx.textAlign = "center";
+        
+        let isBright = false;
+        if (c.startsWith('#') && c.length >= 7) {
+            let rVal = parseInt(c.slice(1, 3), 16) || 0;
+            let gVal = parseInt(c.slice(3, 5), 16) || 0;
+            let bVal = parseInt(c.slice(5, 7), 16) || 0;
+            isBright = (rVal * 0.3 + gVal * 0.59 + bVal * 0.11) > 150;
         }
-
-        if (!drawnWithSprite) {
-            disc(this.x, this.y, this.radius + 1, "#0d0f1c");
-            disc(this.x, this.y, this.radius, this.color || "#41a6f6");
-            ctx.fillStyle = "#ffffffcc";
-            ctx.fillRect(Math.round(this.x - 2), Math.round(this.y - 2), 2, 2);
-        }
-
-        if (this.moleculeName || !drawnWithSprite) {
-            ctx.fillStyle = '#ffffff';
-            ctx.font = "8px 'Press Start 2P'";
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            
-            let displayLabel = this.moleculeName ? this.moleculeName.split(' ')[0] : this.label;
-            if (displayLabel.length > 4) displayLabel = displayLabel.substring(0, 4);
-            ctx.fillText(displayLabel, Math.round(this.x), Math.round(this.y + 1));
-        }
+        ctx.fillStyle = isBright ? "#1a2138" : "#fff";
+        let sym = this.atomData[0].symbol;
+        ctx.fillText(sym.slice(0, 2), drawX, drawY + 1);
     }
 }
 
@@ -1206,47 +1239,23 @@ function animate(now = performance.now()) {
 
         ctx.clearRect(0, 0, W, H);
 
-        // 1. Gambar latar kotak-kotak piksel 4x4
-        for (let y = 0; y < H; y += 4) {
-            for (let x = 0; x < W; x += 4) {
-                R(x, y, 4, 4, ((x + y) / 4) % 2 ? "#232850" : "#1d2142");
-            }
+        // 1. Gambar latar ubin dinding, meja, dan papan neon (pixel-scene.js)
+        if (bg) {
+            ctx.drawImage(bg, 0, 0);
         }
 
-        // 2. Meja Laboratorium
-        R(0, 92, W, 16, "#333c57");
-        for (let x = 0; x < W; x += 16) R(x + ((92 / 16 | 0) % 2 ? 8 : 0), 96, 1, 12, "#1a1c2c");
-        R(0, 92, W, 2, "#0d0f1c");
-
-        // 3. Warna Cairan Berdasarkan pH
-        const lc = PHC[Math.max(0, Math.min(14, Math.round(currentPH)))];
-
-        // 4. Bayangan Belakang Gelas Kimia
-        R(54, 30, 76, 62, "#2b3560");
-
-        // 5. Cairan Berlapis Flat & Gelombang Permukaan Bergerak per Langkah (Stepped Wave)
-        const waveTop = 48 + ((tick >> 2) % 2);
-        R(57, waveTop, 70, 89 - waveTop, lc);
-        R(57, waveTop, 70, 2, "#f4f4f4aa"); // Sorotan permukaan cairan
-
-        // 6. Gelembung saat Mendidih / Suhu Tinggi
-        if (Math.random() < Math.max(0, currentTemp - 60) / 1500 + 0.02) {
-            bubbles.push({ x: 60 + Math.random() * 64, y: 86, v: 1 + Math.random() * 2 });
+        // 2. Tint warna dinding mengikuti pH (hanya jika menjauhi netral)
+        const dev = Math.abs(currentPH - 7);
+        if (dev > 0.5 && L.cy) {
+            ctx.globalAlpha = Math.min(0.3, dev * 0.05);
+            R(0, 0, W, L.cy, PHC[Math.max(0, Math.min(14, Math.round(currentPH)))]);
+            ctx.globalAlpha = 1;
         }
-        bubbles = bubbles.filter(b => (b.y -= b.v) > waveTop);
-        bubbles.forEach(b => R(b.x, b.y, 2, 2, "#f4f4f4"));
 
-        // 7. Garis Tepi Kaca Gelas Kimia (Crisp Beaker Rim)
-        R(54, 26, 3, 66, "#94b0c2"); // Dinding kiri
-        R(127, 26, 3, 66, "#94b0c2"); // Dinding kanan
-        R(54, 89, 76, 3, "#94b0c2"); // Dasar gelas
-        R(50, 24, 8, 3, "#f4f4f4"); // Corong kiri
-        R(126, 24, 8, 3, "#f4f4f4"); // Corong kanan
+        // 3. Partikel Atom & Molekul
+        particles.slice().sort((p, q) => p.y - q.y).forEach(p => p.draw());
 
-        // 8. Partikel Atom & Molekul
-        particles.forEach(p => p.draw());
-
-        // 9. Kilatan Reaksi (Reaction Flash)
+        // 4. Kilatan Reaksi (Reaction Flash)
         const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         flashes.forEach(f => {
             f.update();
@@ -1254,18 +1263,19 @@ function animate(now = performance.now()) {
         });
         flashes = flashes.filter(f => f.life > 0);
 
-        // 10. Efek Asap / Gelembung
+        // 5. Efek Asap / Partikel Reaksi
         visualEffects.forEach(v => {
             v.update();
             v.draw();
         });
         visualEffects = visualEffects.filter(v => v.life > 0);
 
-        // 11. Efek Termal Ekstrim
-        if (currentTemp > 80) {
+        // 6. Efek Termal Ekstrim
+        if (currentTemp > 80 && particles.length > 0) {
             let intensity = Math.min((currentTemp - 80) / 200, 1.0);
-            if (Math.random() < 0.2 * intensity) {
-                visualEffects.push(new VisualEffect(57 + Math.random() * 70, 86, 'smoke'));
+            if (Math.random() < 0.15 * intensity) {
+                const p = particles[Math.floor(Math.random() * particles.length)];
+                visualEffects.push(new VisualEffect(p.x, p.y, 'smoke'));
             }
         }
 

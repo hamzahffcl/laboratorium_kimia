@@ -284,21 +284,27 @@ button, input {
 /* App Container Layout */
 .app {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 390px);
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 400px);
   gap: 12px;
   padding: 12px;
   min-height: 100vh;
-  max-width: 1800px;
+  height: 100vh;
+  max-width: 1920px;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .stage-wrap {
   position: relative;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
   margin: var(--u);
   background: var(--ink);
+  height: calc(100% - 2 * var(--u));
+  min-height: 480px;
+  box-sizing: border-box;
 }
 
 .hud {
@@ -330,15 +336,27 @@ button, input {
 .side {
   padding: 16px;
   align-self: start;
-  overflow: hidden;
+  max-height: calc(100vh - 24px - 2 * var(--u));
+  overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  box-sizing: border-box;
 }
 
 @media (max-width: 860px) {
   .app {
+    height: auto;
     grid-template-columns: 1fr;
+  }
+  .stage-wrap {
+    height: 65vh;
+    min-height: 380px;
+  }
+  .side {
+    max-height: none;
+    overflow-y: visible;
   }
 }
 
