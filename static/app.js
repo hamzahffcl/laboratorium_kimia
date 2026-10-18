@@ -867,7 +867,7 @@ class Particle {
 
         // Simbol atom dengan auto-kontras teks — lebih besar dan jelas
         let sym = this.atomData[0].symbol;
-        // Gunakan font lebih besar untuk atom tunggal agar tulisan jelas terbaca
+        // Font lebih besar untuk atom tunggal agar mudah terbaca
         const atomFontSize = sym.length === 1 ? "9px" : "7px";
         ctx.font = `${atomFontSize} 'Press Start 2P', monospace`;
         ctx.textBaseline = "middle";
@@ -880,9 +880,11 @@ class Particle {
             let bVal = parseInt(c.slice(5, 7), 16) || 0;
             isBright = (rVal * 0.3 + gVal * 0.59 + bVal * 0.11) > 150;
         }
-        // Outline hitam tipis agar teks terbaca di semua latar
-        ctx.fillStyle = "#0d0f1c";
-        ctx.fillText(sym.slice(0, 2), drawX + 1, drawY + 2);
+        // Outline via strokeText (tidak menambah karakter palsu)
+        ctx.strokeStyle = isBright ? "#1a2138" : "#0d0f1c";
+        ctx.lineWidth = 2;
+        ctx.lineJoin = 'round';
+        ctx.strokeText(sym.slice(0, 2), drawX, drawY + 1);
         ctx.fillStyle = isBright ? "#1a2138" : "#fff";
         ctx.fillText(sym.slice(0, 2), drawX, drawY + 1);
     }
