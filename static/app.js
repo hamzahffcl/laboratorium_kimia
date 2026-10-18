@@ -24,23 +24,23 @@ function disc(cx, cy, r, c) {
     }
 }
 
-// Batas pergerakan atom di dinding ubin (tidak masuk ke area meja)
+// Batas pergerakan atom bebas di seluruh 1 canvas penuh
 function bounds() {
     return {
-        x0: 12,
-        x1: Math.max(24, W - 12),
-        y0: L.sign ? 66 : 16,
-        y1: (L.cy ? L.cy - 12 : Math.round(H * 0.74) - 12)
+        x0: 8,
+        x1: Math.max(24, W - 8),
+        y0: 8,
+        y1: Math.max(24, H - 8)
     };
 }
 
-// Generator background ubin dinding + meja + papan neon persis dari pixel-scene.js
+// Generator background ubin dinding + meja dari pixel_ui_preview.html
 function buildBg(mk) {
     if (W <= 0 || H <= 0) return;
     bg = mk(W, H);
     const b = bg.getContext("2d");
     const r = (x, y, w, h, c) => { b.fillStyle = c; b.fillRect(x, y, w, h); };
-    const { cx, cy, sign } = L;
+    const { cx, cy } = L;
     const ts = 24;
     
     r(0, 0, W, H, "#1a2138");
@@ -65,22 +65,53 @@ function buildBg(mk) {
     const y2 = cy + Math.round((H - cy) * 0.5);
     r(0, y2, W, H - y2, "#3a3e4d");
     r(0, y2, W, 1, "#2b2e3a");
-    if (sign) {
-        const sw = 128, sh = 36, sx = cx - sw / 2, sy = 12;
-        // Frame luar biru gelap
-        r(sx - 3, sy - 3, sw + 6, sh + 6, "#2a3f8f");
-        // Border putih
-        r(sx - 1, sy - 1, sw + 2, sh + 2, "#dfe7ff");
-        // Dalam gelap
-        r(sx + 1, sy + 1, sw - 2, sh - 2, "#141a33");
-        b.font = FONT;
-        b.textAlign = "center";
-        b.textBaseline = "middle";
-        // Teks "LAB KIMIA" satu baris di tengah
-        b.fillStyle = "#f4f4f4";
-        b.fillText("LAB", cx, sy + 12);
-        b.fillStyle = "#ffcd75";
-        b.fillText("KIMIA", cx, sy + 26);
+}
+
+let flick = 0, fi = 0;
+function drawSign(g, R) {
+    const s = L.sign;
+    if (!s) return;
+    const { sx, sy, sw, sh, fs } = s;
+    const t = "LAB KIMIA";
+    R(sx - 3, sy - 3, sw + 6, sh + 6, "#2a3f8f");
+    R(sx - 1, sy - 1, sw + 2, sh + 2, "#dfe7ff");
+    R(sx + 1, sy + 1, sw - 2, sh - 2, "#141a33");
+    const on = i => (i + (tick >> 1)) % 3 === 0;
+    let i = 0;
+    for (let x = sx - 3; x <= sx + sw + 1; x += 6, i++) {
+        R(x, sy - 3, 2, 2, on(i) ? "#ffcd75" : "#5a74c8");
+        R(x, sy + sh + 1, 2, 2, on(i + 1) ? "#ffcd75" : "#5a74c8");
+    }
+    for (let y = sy + 3; y <= sy + sh - 3; y += 6, i++) {
+        R(sx - 3, y, 2, 2, on(i) ? "#ffcd75" : "#5a74c8");
+        R(sx + sw + 1, y, 2, 2, on(i + 2) ? "#ffcd75" : "#5a74c8");
+    }
+    if (flick > 0) {
+        flick--;
+    } else if (Math.random() < 0.025) {
+        flick = 2 + (Math.random() * 2 | 0);
+        fi = [0, 1, 2, 4, 5, 6, 7, 8][Math.random() * 8 | 0];
+    }
+    g.font = fs + "px 'Press Start 2P', monospace";
+    g.textAlign = "left";
+    g.textBaseline = "middle";
+    const x0 = sx + (sw - t.length * fs) / 2;
+    const cy0 = sy + sh / 2 + 1;
+    const amp = fs > 8 ? 2 : 1;
+    [...t].forEach((ch, k) => {
+        if (ch === " ") return;
+        const x = Math.round(x0 + k * fs);
+        const y = Math.round(cy0 + Math.sin(tick * 0.35 + k * 0.9) * amp);
+        const dim = flick > 0 && k === fi;
+        if (!dim) {
+            g.fillStyle = "#2a3f8f";
+            [[-1, 0], [1, 0], [0, -1], [0, 1]].forEach(([dx, dy]) => g.fillText(ch, x + dx, y + dy));
+        }
+        g.fillStyle = dim ? "#4a557f" : (k < 3 ? "#f4f4f4" : "#ffcd75");
+        g.fillText(ch, x, y);
+    });
+    if (Math.random() < 0.35) {
+        R(sx + 2 + Math.random() * (sw - 6), sy + 2 + Math.random() * (sh - 6), 1, 1, "#ffffff");
     }
 }
 
@@ -102,7 +133,13 @@ function fitCanvas() {
     
     ctx.imageSmoothingEnabled = false;
     
-    L = { cx: W >> 1, cy: Math.round(H * 0.74), sign: H >= 130 && W >= 150 };
+    L = { cx: W >> 1, cy: Math.round(H * 0.74), sign: null };
+    if (H >= 130 && W >= 150) {
+        const fs = W >= 200 ? 16 : 8;
+        const sw = 9 * fs + 24;
+        const sh = fs + 26;
+        L.sign = { fs, sw, sh, sx: Math.round((W - sw) / 2), sy: 14 };
+    }
     
     const b = bounds();
     if (particles && particles.length > 0) {
@@ -386,9 +423,10 @@ async function initDB() {
             });
         };
         updateAtomDatalist();
-        if (window.AtomSpriteSystem && window.AtomSpriteSystem.preload) {
-            window.AtomSpriteSystem.preload();
-        }
+        // Sprite gambar di folder static/atoms dinonaktifkan sesuai permintaan pengguna
+        // if (window.AtomSpriteSystem && window.AtomSpriteSystem.preload) {
+        //     window.AtomSpriteSystem.preload();
+        // }
 
     } catch (e) {
         console.error("Gagal memuat data", e);
@@ -528,7 +566,7 @@ class ReactionFlash {
 
 // --- ATOM SPRITE ANIMATION SYSTEM (PIXEL ART) ---
 window.AtomSpriteSystem = {
-    enabled: true,
+    enabled: false, // Dinonaktifkan: tidak memakai gambar di folder static/atoms (pakai fallback procedural pixel art)
     fps: 14, // Kecepatan animasi pantulan pixel art
     sprites: {},
     mapping: {"H": "001_H.png", "He": "002_He.png", "Li": "003_Li.png", "Be": "004_Be.png", "B": "005_B.png", "C": "006_C.png", "N": "007_N.png", "O": "008_O.png", "F": "009_F.png", "Ne": "010_Ne.png", "Na": "011_Na.png", "Mg": "012_Mg.png", "Al": "013_Al.png", "Si": "014_Si.png", "P": "015_P.png", "S": "016_S.png", "Cl": "017_Cl.png", "Ar": "018_Ar.png", "K": "019_K.png", "Ca": "020_Ca.png", "Sc": "021_Sc.png", "Ti": "022_Ti.png", "V": "023_V.png", "Cr": "024_Cr.png", "Mn": "025_Mn.png", "Fe": "026_Fe.png", "Co": "027_Co.png", "Ni": "028_Ni.png", "Cu": "029_Cu.png", "Zn": "030_Zn.png", "Ga": "031_Ga.png", "Ge": "032_Ge.png", "As": "033_As.png", "Se": "034_Se.png", "Br": "035_Br.png", "Kr": "036_Kr.png", "Rb": "037_Rb.png", "Sr": "038_Sr.png", "Y": "039_Y.png", "Zr": "040_Zr.png", "Nb": "041_Nb.png", "Mo": "042_Mo.png", "Tc": "043_Tc.png", "Ru": "044_Ru.png", "Rh": "045_Rh.png", "Pd": "046_Pd.png", "Ag": "047_Ag.png", "Cd": "048_Cd.png", "In": "049_In.png", "Sn": "050_Sn.png", "Sb": "051_Sb.png", "Te": "052_Te.png", "I": "053_I.png", "Xe": "054_Xe.png", "Cs": "055_Cs.png", "Ba": "056_Ba.png", "La": "057_La.png", "Ce": "058_Ce.png", "Pr": "059_Pr.png", "Nd": "060_Nd.png", "Pm": "061_Pm.png", "Sm": "062_Sm.png", "Eu": "063_Eu.png", "Gd": "064_Gd.png", "Tb": "065_Tb.png", "Dy": "066_Dy.png", "Ho": "067_Ho.png", "Er": "068_Er.png", "Tm": "069_Tm.png", "Yb": "070_Yb.png", "Lu": "071_Lu.png", "Hf": "072_Hf.png", "Ta": "073_Ta.png", "W": "074_W.png", "Re": "075_Re.png", "Os": "076_Os.png", "Ir": "077_Ir.png", "Pt": "078_Pt.png", "Au": "079_Au.png", "Hg": "080_Hg.png", "Tl": "081_Tl.png", "Pb": "082_Pb.png", "Bi": "083_Bi.png", "Po": "084_Po.png", "At": "085_At.png", "Rn": "086_Rn.png", "Fr": "087_Fr.png", "Ra": "088_Ra.png", "Ac": "089_Ac.png", "Th": "090_Th.png", "Pa": "091_Pa.png", "U": "092_U.png", "Np": "093_Np.png", "Pu": "094_Pu.png", "Am": "095_Am.png", "Cm": "096_Cm.png", "Bk": "097_Bk.png", "Cf": "098_Cf.png", "Es": "099_Es.png", "Fm": "100_Fm.png", "Md": "101_Md.png", "No": "102_No.png", "Lr": "103_Lr.png", "Rf": "104_Rf.png", "Db": "105_Db.png", "Sg": "106_Sg.png", "Bh": "107_Bh.png", "Hs": "108_Hs.png", "Mt": "109_Mt.png", "Ds": "110_Ds.png", "Rg": "111_Rg.png", "Cn": "112_Cn.png", "Nh": "113_Nh.png", "Fl": "114_Fl.png", "Mc": "115_Mc.png", "Lv": "116_Lv.png", "Ts": "117_Ts.png", "Og": "118_Og.png"},
@@ -708,15 +746,20 @@ class Particle {
         this.x += this.dx * sp;
         this.y += this.dy * sp;
         
-        // Jaga kecepatan tetap terkontrol dan nyaman
+        // Jaga kecepatan tetap halus, stabil, dan konsisten (smooth)
         let curV = Math.hypot(this.dx, this.dy);
-        if (curV > 2.5) {
-            this.dx = (this.dx / curV) * 2.5;
-            this.dy = (this.dy / curV) * 2.5;
-        } else if (curV < 0.25) {
-            let ang = Math.random() * 6.28;
-            this.dx = Math.cos(ang) * 0.6;
-            this.dy = Math.sin(ang) * 0.6;
+        if (curV > 2.2) {
+            this.dx = (this.dx / curV) * 2.2;
+            this.dy = (this.dy / curV) * 2.2;
+        } else if (curV < 0.35) {
+            if (curV > 0.01) {
+                this.dx = (this.dx / curV) * 0.35;
+                this.dy = (this.dy / curV) * 0.35;
+            } else {
+                let ang = Math.random() * 6.28;
+                this.dx = Math.cos(ang) * 0.35;
+                this.dy = Math.sin(ang) * 0.35;
+            }
         }
         
         if (isNaN(this.dx) || !isFinite(this.dx)) this.dx = 0.5;
@@ -1074,19 +1117,19 @@ function resolveCollisions() {
                         let dist = Math.hypot(distX, distY);
                         let minDist = p1.radius + p2.radius;
                         
-                        // --- GAYA TARIK KIMIA (CHEMICAL ATTRACTION) ---
+                        // --- GAYA TARIK KIMIA (CHEMICAL ATTRACTION) - HALUS / SMOOTH ACCELERATION ---
                         const ATTRACTION_RANGE = 12;
                         if (dist >= minDist && dist < minDist + ATTRACTION_RANGE) {
                             if (areParticlesRelated(p1, p2)) {
                                 let pullFactor = (1 - (dist - minDist) / ATTRACTION_RANGE);
-                                let pullSpeed = 0.2 * pullFactor; 
+                                let pullAcc = 0.04 * pullFactor; 
                                 let nx = dist > 0 ? (distX / dist) : 1;
                                 let ny = dist > 0 ? (distY / dist) : 0;
                                 
-                                p1.x -= nx * pullSpeed;
-                                p1.y -= ny * pullSpeed;
-                                p2.x += nx * pullSpeed;
-                                p2.y += ny * pullSpeed;
+                                p1.dx -= nx * pullAcc;
+                                p1.dy -= ny * pullAcc;
+                                p2.dx += nx * pullAcc;
+                                p2.dy += ny * pullAcc;
                             }
                         }
                         
@@ -1143,14 +1186,15 @@ function resolveCollisions() {
                                 continue;
                             }
                             
-                            // Physics Elastic Bounce
+                            // Physics Elastic Bounce (Halus & Terkendali)
                             let nx = dist === 0 ? 1 : distX / dist;
                             let ny = dist === 0 ? 0 : distY / dist;
                             let overlap = minDist - dist;
-                            p1.x += nx * overlap / 2;
-                            p1.y += ny * overlap / 2;
-                            p2.x -= nx * overlap / 2;
-                            p2.y -= ny * overlap / 2;
+                            let sep = Math.min(overlap * 0.5, 2.0);
+                            p1.x += nx * sep;
+                            p1.y += ny * sep;
+                            p2.x -= nx * sep;
+                            p2.y -= ny * sep;
                             
                             let rvx = p1.dx - p2.dx;
                             let rvy = p1.dy - p2.dy;
@@ -1263,23 +1307,31 @@ function updatePhysicsStep() {
 function animate(now = performance.now()) {
     try {
         tick++;
-        let dt = Math.min(0.1, (now - lastFrameTimestamp) / 1000.0);
+        let dt = Math.min(0.05, (now - lastFrameTimestamp) / 1000.0);
         lastFrameTimestamp = now;
         physicsAccumulator += dt;
         
-        while (physicsAccumulator >= FIXED_STEP) {
+        let steps = 0;
+        while (physicsAccumulator >= FIXED_STEP && steps < 4) {
             updatePhysicsStep();
             physicsAccumulator -= FIXED_STEP;
+            steps++;
+        }
+        if (physicsAccumulator >= FIXED_STEP) {
+            physicsAccumulator = 0;
         }
 
         ctx.clearRect(0, 0, W, H);
 
-        // 1. Gambar latar ubin dinding, meja, dan papan neon (pixel-scene.js)
+        // 1. Gambar latar ubin dinding & meja (pixel_ui_preview.html)
         if (bg) {
             ctx.drawImage(bg, 0, 0);
         }
 
-        // 2. Tint warna dinding mengikuti pH (hanya jika menjauhi netral)
+        // 2. Papan neon interaktif beranimasi (marquee + wave)
+        drawSign(ctx, R);
+
+        // 3. Tint warna dinding mengikuti pH (hanya jika menjauhi netral)
         const dev = Math.abs(currentPH - 7);
         if (dev > 0.5 && L.cy) {
             ctx.globalAlpha = Math.min(0.3, dev * 0.05);
@@ -1287,10 +1339,10 @@ function animate(now = performance.now()) {
             ctx.globalAlpha = 1;
         }
 
-        // 3. Partikel Atom & Molekul
+        // 4. Partikel Atom & Molekul bebas melayang di seluruh kanvas
         particles.slice().sort((p, q) => p.y - q.y).forEach(p => p.draw());
 
-        // 4. Kilatan Reaksi (Reaction Flash)
+        // 5. Kilatan Reaksi (Reaction Flash)
         const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         flashes.forEach(f => {
             f.update();
@@ -1298,12 +1350,15 @@ function animate(now = performance.now()) {
         });
         flashes = flashes.filter(f => f.life > 0);
 
-        // 5. Efek Asap / Partikel Reaksi
+        // 6. Efek Asap / Partikel Reaksi
         visualEffects.forEach(v => {
             v.update();
             v.draw();
         });
         visualEffects = visualEffects.filter(v => v.life > 0);
+        if (visualEffects.length > 150) {
+            visualEffects = visualEffects.slice(-100);
+        }
 
         // 6. Efek Termal Ekstrim — asap pixel + tint merah tipis di dinding
         if (currentTemp > 80 && particles.length > 0) {
