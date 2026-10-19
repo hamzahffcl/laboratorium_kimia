@@ -16,3 +16,7 @@ temp_data.json
 test_old.json
 static/data.json
 *.backup
+
+# Old/backup atom sprite folders (kept locally only)
+static/atoms_old_160/
+static/atoms_backup*/

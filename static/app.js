@@ -301,6 +301,14 @@ class VisualEffect {
             this.color = Math.random() > 0.5 ? '#a7f070' : '#38b764';
             this.wobblePhase = Math.random() * Math.PI * 2;
             this.size = Math.random() > 0.6 ? 3 : 2;
+        } else if (type === 'frost_flower') {
+            // Bunga es kecil (delicate pixel ice flower / crystal flake)
+            this.vx = (Math.random() - 0.5) * 0.35;
+            this.vy = 0.18 + Math.random() * 0.22; // Melayang turun perlahan seperti salju / kristal es
+            this.wobblePhase = Math.random() * Math.PI * 2;
+            this.color = Math.random() > 0.4 ? '#73eff7' : '#ffffff';
+            this.size = Math.random() > 0.5 ? 5 : 3;
+            this.sparkle = Math.random() * Math.PI * 2;
         } else {
             // bubble biasa
             this.vx = 0;
@@ -323,6 +331,12 @@ class VisualEffect {
                 this.x += Math.sin(this.wobblePhase) * 0.5;
                 this.y += this.vy;
                 this.life -= 0.022;
+            } else if (this.type === 'frost_flower') {
+                this.wobblePhase += 0.08;
+                this.sparkle += 0.18;
+                this.x += Math.sin(this.wobblePhase) * 0.35 + this.vx;
+                this.y += this.vy;
+                this.life -= 0.008; // Melayang anggun cukup lama
             } else {
                 this.wobblePhase += 0.4;
                 this.x += Math.sin(this.wobblePhase) * 0.8;
@@ -345,6 +359,52 @@ class VisualEffect {
             ctx.globalAlpha = Math.min(0.5, this.life * 0.5);
             ctx.fillStyle = this.color;
             ctx.fillRect(Math.round(this.x), Math.round(this.y), this.size, this.size);
+        } else if (this.type === 'frost_flower') {
+            // Render bunga es kecil pixel art kristal
+            let alpha = Math.min(0.85, this.life * 1.5);
+            let sparkleAlpha = alpha * (0.7 + Math.sin(this.sparkle) * 0.3);
+            ctx.globalAlpha = Math.max(0.1, Math.min(1.0, sparkleAlpha));
+            
+            let px = Math.round(this.x);
+            let py = Math.round(this.y);
+
+            if (this.size >= 5) {
+                // Bunga es 5x5 piksel bentuk bintang kristal:
+                //       #
+                //     # # #
+                //   # # # # #
+                //     # # #
+                //       #
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(px, py, 1, 1);
+                
+                ctx.fillStyle = this.color;
+                ctx.fillRect(px - 1, py, 1, 1);
+                ctx.fillRect(px + 1, py, 1, 1);
+                ctx.fillRect(px, py - 1, 1, 1);
+                ctx.fillRect(px, py + 1, 1, 1);
+                
+                ctx.fillStyle = '#dfe7ff';
+                ctx.fillRect(px - 2, py, 1, 1);
+                ctx.fillRect(px + 2, py, 1, 1);
+                ctx.fillRect(px, py - 2, 1, 1);
+                ctx.fillRect(px, py + 2, 1, 1);
+                
+                ctx.fillStyle = 'rgba(115, 239, 247, 0.5)';
+                ctx.fillRect(px - 1, py - 1, 1, 1);
+                ctx.fillRect(px + 1, py - 1, 1, 1);
+                ctx.fillRect(px - 1, py + 1, 1, 1);
+                ctx.fillRect(px + 1, py + 1, 1, 1);
+            } else {
+                // Bunga es kecil 3x3 piksel:
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(px, py, 1, 1);
+                ctx.fillStyle = this.color;
+                ctx.fillRect(px - 1, py, 1, 1);
+                ctx.fillRect(px + 1, py, 1, 1);
+                ctx.fillRect(px, py - 1, 1, 1);
+                ctx.fillRect(px, py + 1, 1, 1);
+            }
         } else {
             ctx.globalAlpha = Math.min(0.8, this.life);
             ctx.fillStyle = this.color;
@@ -563,12 +623,20 @@ class ReactionFlash {
     }
 }
 
-// --- ATOM SPRITE ANIMATION SYSTEM (PIXEL ART) ---
+// --- ATOM SPRITE ANIMATION SYSTEM (PIXEL ART NATIVE) ---
 window.AtomSpriteSystem = {
-    enabled: true, // Diaktifkan: menggunakan sprite animasi dari folder static/atoms
-    fps: 14, // Kecepatan animasi pantulan pixel art
+    enabled: true, // Diaktifkan: menggunakan sprite animasi baru 15–30px dari folder static/atoms
+    fps: 14, // Kecepatan animasi 14 FPS dengan squash & sweeping shine
     sprites: {},
     mapping: {"H": "001_H.png", "He": "002_He.png", "Li": "003_Li.png", "Be": "004_Be.png", "B": "005_B.png", "C": "006_C.png", "N": "007_N.png", "O": "008_O.png", "F": "009_F.png", "Ne": "010_Ne.png", "Na": "011_Na.png", "Mg": "012_Mg.png", "Al": "013_Al.png", "Si": "014_Si.png", "P": "015_P.png", "S": "016_S.png", "Cl": "017_Cl.png", "Ar": "018_Ar.png", "K": "019_K.png", "Ca": "020_Ca.png", "Sc": "021_Sc.png", "Ti": "022_Ti.png", "V": "023_V.png", "Cr": "024_Cr.png", "Mn": "025_Mn.png", "Fe": "026_Fe.png", "Co": "027_Co.png", "Ni": "028_Ni.png", "Cu": "029_Cu.png", "Zn": "030_Zn.png", "Ga": "031_Ga.png", "Ge": "032_Ge.png", "As": "033_As.png", "Se": "034_Se.png", "Br": "035_Br.png", "Kr": "036_Kr.png", "Rb": "037_Rb.png", "Sr": "038_Sr.png", "Y": "039_Y.png", "Zr": "040_Zr.png", "Nb": "041_Nb.png", "Mo": "042_Mo.png", "Tc": "043_Tc.png", "Ru": "044_Ru.png", "Rh": "045_Rh.png", "Pd": "046_Pd.png", "Ag": "047_Ag.png", "Cd": "048_Cd.png", "In": "049_In.png", "Sn": "050_Sn.png", "Sb": "051_Sb.png", "Te": "052_Te.png", "I": "053_I.png", "Xe": "054_Xe.png", "Cs": "055_Cs.png", "Ba": "056_Ba.png", "La": "057_La.png", "Ce": "058_Ce.png", "Pr": "059_Pr.png", "Nd": "060_Nd.png", "Pm": "061_Pm.png", "Sm": "062_Sm.png", "Eu": "063_Eu.png", "Gd": "064_Gd.png", "Tb": "065_Tb.png", "Dy": "066_Dy.png", "Ho": "067_Ho.png", "Er": "068_Er.png", "Tm": "069_Tm.png", "Yb": "070_Yb.png", "Lu": "071_Lu.png", "Hf": "072_Hf.png", "Ta": "073_Ta.png", "W": "074_W.png", "Re": "075_Re.png", "Os": "076_Os.png", "Ir": "077_Ir.png", "Pt": "078_Pt.png", "Au": "079_Au.png", "Hg": "080_Hg.png", "Tl": "081_Tl.png", "Pb": "082_Pb.png", "Bi": "083_Bi.png", "Po": "084_Po.png", "At": "085_At.png", "Rn": "086_Rn.png", "Fr": "087_Fr.png", "Ra": "088_Ra.png", "Ac": "089_Ac.png", "Th": "090_Th.png", "Pa": "091_Pa.png", "U": "092_U.png", "Np": "093_Np.png", "Pu": "094_Pu.png", "Am": "095_Am.png", "Cm": "096_Cm.png", "Bk": "097_Bk.png", "Cf": "098_Cf.png", "Es": "099_Es.png", "Fm": "100_Fm.png", "Md": "101_Md.png", "No": "102_No.png", "Lr": "103_Lr.png", "Rf": "104_Rf.png", "Db": "105_Db.png", "Sg": "106_Sg.png", "Bh": "107_Bh.png", "Hs": "108_Hs.png", "Mt": "109_Mt.png", "Ds": "110_Ds.png", "Rg": "111_Rg.png", "Cn": "112_Cn.png", "Nh": "113_Nh.png", "Fl": "114_Fl.png", "Mc": "115_Mc.png", "Lv": "116_Lv.png", "Ts": "117_Ts.png", "Og": "118_Og.png"},
+    getSize(symbol) {
+        let file = this.mapping[symbol];
+        let z = file ? parseInt(file.slice(0, 3), 10) : 6;
+        let d = z <= 10 ? 15 : z <= 30 ? 20 : z <= 50 ? 25 : z <= 80 ? 28 : 30;
+        let fw = d + 2;
+        let fh = fw;
+        return { z, diameter: d, radius: d / 2, fw, fh };
+    },
     getSprite(symbol) {
         if (!this.mapping[symbol]) return null;
         if (!this.sprites[symbol]) {
@@ -593,26 +661,22 @@ window.AtomSpriteSystem = {
         if (!img) return false;
         try {
             const totalFrames = 16;
-            const frameW = 160;
-            const ballH = 142; // Pangkas baris bawah (y >= 143) untuk menghilangkan bayangan lantai (preferensi data main)
+            const size = this.getSize(symbol);
+            const fw = size.fw;
+            const fh = size.fh;
             
             // Variasi fase agar tidak memantul kaku serempak
             const time = Date.now() / 1000;
             const offset = ((particleId || 0) * 0.38);
             const frameIndex = Math.floor((time + offset) * this.fps) % totalFrames;
             
-            // Hitung ukuran rendering proporsional terhadap radius
-            const drawW = (radius * 2) * (160 / 88);
-            const drawH = drawW * (ballH / 160);
-            const drawX = x - drawW * 0.5;
-            const drawY = y - drawH * 0.52; // Pusat bola pas di tengah tanpa bayangan bawah
-            
             targetCtx.save();
             targetCtx.imageSmoothingEnabled = false; // Efek tajam pixel art
+            // Gambar 1:1 tepat tanpa sampling nearest-neighbor (resolusi asli per piksel):
             targetCtx.drawImage(
                 img,
-                frameIndex * frameW, 0, frameW, ballH,
-                drawX, drawY, drawW, drawH
+                frameIndex * fw, 0, fw, fh,
+                Math.round(x - fw / 2), Math.round(y - fh / 2), fw, fh
             );
             targetCtx.restore();
             return true;
@@ -621,6 +685,92 @@ window.AtomSpriteSystem = {
         }
     }
 };
+
+// Fungsi pembantu tata letak dan radius molekul gabungan
+function getMoleculeLayout(atomData, cleanMolFormula) {
+    if (!atomData || atomData.length <= 1) return null;
+    
+    const getSubRadius = (sym, mass, zNum) => {
+        let z = zNum || (window.AtomSpriteSystem ? window.AtomSpriteSystem.getSize(sym).z : 6);
+        let d = z <= 10 ? 15 : z <= 30 ? 20 : z <= 50 ? 25 : z <= 80 ? 28 : 30;
+        return d / 2;
+    };
+
+    let sortedAtoms = [...atomData].sort((a, b) => getValence(b.symbol) - getValence(a.symbol));
+    let centerAtom = sortedAtoms[0];
+    let branches = sortedAtoms.slice(1);
+    let centerR = getSubRadius(centerAtom.symbol, centerAtom.mass, centerAtom.atomic_number);
+
+    let atomPositions = [];
+    let bonds = [];
+
+    if (branches.length === 1) {
+        let branchAtom = branches[0];
+        let branchR = getSubRadius(branchAtom.symbol, branchAtom.mass, branchAtom.atomic_number);
+        let dist = centerR + branchR + 4;
+        let halfDist = dist / 2;
+        
+        atomPositions.push({ atom: centerAtom, x: -halfDist, y: 0, r: centerR });
+        atomPositions.push({ atom: branchAtom, x: halfDist, y: 0, r: branchR });
+        bonds.push([0, 1]);
+    } else {
+        let angles = [];
+        if (branches.length === 2) {
+            if (cleanMolFormula === 'CO2') {
+                angles = [-Math.PI / 2, Math.PI / 2];
+            } else {
+                let halfAngle = (104.5 * Math.PI) / 360;
+                angles = [Math.PI / 2 - halfAngle, Math.PI / 2 + halfAngle];
+            }
+        } else if (branches.length === 3) {
+            angles = [-Math.PI / 2, -Math.PI / 2 + (Math.PI * 2 / 3), -Math.PI / 2 + (Math.PI * 4 / 3)];
+        } else if (branches.length === 4) {
+            angles = [-Math.PI * 0.25, Math.PI * 0.25, Math.PI * 0.75, -Math.PI * 0.75];
+        } else {
+            let step = (Math.PI * 2) / branches.length;
+            for (let i = 0; i < branches.length; i++) angles.push(i * step);
+        }
+
+        let minCircumference = branches.length * 20;
+        let neededDist = minCircumference / (2 * Math.PI);
+
+        let rawPositions = [{ atom: centerAtom, x: 0, y: 0, r: centerR }];
+
+        for (let i = 0; i < branches.length; i++) {
+            let bAtom = branches[i];
+            let bR = getSubRadius(bAtom.symbol, bAtom.mass, bAtom.atomic_number);
+            let bondDist = Math.max(centerR + bR + 4, neededDist);
+            let ang = angles[i];
+            let bx = Math.cos(ang) * bondDist;
+            let by = Math.sin(ang) * bondDist;
+            rawPositions.push({ atom: bAtom, x: bx, y: by, r: bR });
+            bonds.push([0, i + 1]);
+        }
+
+        let sumX = rawPositions.reduce((s, p) => s + p.x, 0);
+        let sumY = rawPositions.reduce((s, p) => s + p.y, 0);
+        let avgX = sumX / rawPositions.length;
+        let avgY = sumY / rawPositions.length;
+
+        atomPositions = rawPositions.map(p => ({
+            ...p,
+            x: p.x - avgX,
+            y: p.y - avgY
+        }));
+    }
+
+    let maxExtent = 12;
+    atomPositions.forEach(p => {
+        let ext = Math.hypot(p.x, p.y) + p.r;
+        if (ext > maxExtent) maxExtent = ext;
+    });
+
+    return {
+        atomPositions,
+        bonds,
+        boundingRadius: Math.ceil(maxExtent) + 2
+    };
+}
 
 class Particle {
     constructor(atomSymbols, x, y, moleculeName = null) {
@@ -642,27 +792,15 @@ class Particle {
         this.mass = this.atomData.reduce((sum, a) => sum + (a.mass || 12), 0);
         if (!this.mass || isNaN(this.mass) || this.mass <= 0) this.mass = 12;
         
-        // Hitung radius partikel berdasarkan kelompok Ar / Mr (Skala presisi yang telah disepakati)
-        let m = this.mass;
-        if (moleculeName && this.atomData.length > 1) {
-            // Molekul menggunakan massa total (Mr) dengan sedikit penyesuaian
-            if (m <= 10) this.radius = 16;
-            else if (m <= 30) this.radius = 22;
-            else if (m <= 50) this.radius = 26;
-            else if (m <= 80) this.radius = 29;
-            else this.radius = 32;
+        // Hitung radius partikel berdasarkan kelompok Ar / Mr (Skala diameter native 15–30 px)
+        let z = (this.atomData[0] && this.atomData[0].atomic_number) ? this.atomData[0].atomic_number : 6;
+        let d = z <= 10 ? 15 : z <= 30 ? 20 : z <= 50 ? 25 : z <= 80 ? 28 : 30;
+        
+        if (this.atomData.length > 1) {
+            let layout = getMoleculeLayout(this.atomData, (moleculeName || this.label).split(' ')[0]);
+            this.radius = layout ? layout.boundingRadius : 16;
         } else {
-            // Skala Ar atom tunggal sesuai kesepakatan spesifikasi:
-            // Ar 1 - 10  : 15 px
-            // Ar 11 - 30 : 20 px
-            // Ar 31 - 50 : 25 px
-            // Ar 51 - 80 : 28 px
-            // Ar > 80    : 30 px
-            if (m <= 10) this.radius = 15;
-            else if (m <= 30) this.radius = 20;
-            else if (m <= 50) this.radius = 25;
-            else if (m <= 80) this.radius = 28;
-            else this.radius = 30;
+            this.radius = d / 2;
         }
         
         // Spawn bebas di area kanvas penuh dengan margin radius
@@ -757,32 +895,71 @@ class Particle {
             this.state = "PADAT";
         }
         
-        // Suhu: mengatur kecepatan gerak atom (kecepatan ∝ √T)
+        // Jika partikel sedang di-drag kursor pengguna, jangan jalankan fisika gravitasi internal
+        if (typeof draggedParticle !== 'undefined' && draggedParticle === this) {
+            return;
+        }
+
+        // Suhu: mengatur kecepatan gerak kinetik atom (kecepatan ∝ √T)
         // Di 25 °C gerak normal (sp = 1.0), makin panas makin cepat, mendekati nol mutlak hampir diam
-        const sp = Math.max(0.15, Math.min(3.0, Math.sqrt(Math.max(currentTemp + 273.15, 1) / 298.15)));
+        const sp = Math.max(0.12, Math.min(3.0, Math.sqrt(Math.max(currentTemp + 273.15, 1) / 298.15)));
         
-        this.ph += 0.05 * sp;
-        this.x += this.dx * sp;
-        this.y += this.dy * sp;
-        
-        // Jaga kecepatan tetap halus, stabil, dan konsisten (smooth)
-        let curV = Math.hypot(this.dx, this.dy);
-        if (curV > 2.2) {
-            this.dx = (this.dx / curV) * 2.2;
-            this.dy = (this.dy / curV) * 2.2;
-        } else if (curV < 0.35) {
-            if (curV > 0.01) {
-                this.dx = (this.dx / curV) * 0.35;
-                this.dy = (this.dy / curV) * 0.35;
-            } else {
-                let ang = Math.random() * 6.28;
-                this.dx = Math.cos(ang) * 0.35;
-                this.dy = Math.sin(ang) * 0.35;
+        if (this.state === "GAS") {
+            // GAS: Melayang bebas ke segala arah, restitusi elastis (0.85), microgravity
+            this.restitution = 0.85;
+            this.ph += 0.05 * sp;
+            this.x += this.dx * sp;
+            this.y += this.dy * sp;
+
+            // Agitasi termal gas acak
+            this.dx += (Math.random() - 0.5) * 0.08 * sp;
+            this.dy += (Math.random() - 0.5) * 0.08 * sp;
+
+            // Jaga kecepatan gas tetap stabil dan halus
+            let curV = Math.hypot(this.dx, this.dy);
+            if (curV > 2.2) {
+                this.dx = (this.dx / curV) * 2.2;
+                this.dy = (this.dy / curV) * 2.2;
+            } else if (curV < 0.35) {
+                if (curV > 0.01) {
+                    this.dx = (this.dx / curV) * 0.35;
+                    this.dy = (this.dy / curV) * 0.35;
+                } else {
+                    let ang = Math.random() * 6.28;
+                    this.dx = Math.cos(ang) * 0.35;
+                    this.dy = Math.sin(ang) * 0.35;
+                }
             }
+        } else if (this.state === "CAIR") {
+            // CAIRAN: Gravitasi cairan menarik ke bawah (meja), mengalir dengan viskositas
+            this.restitution = 0.30;
+            this.dy += 0.20; // Gravitasi cairan
+            this.dx *= 0.97; // Gesekan viskositas cairan
+            this.dy *= 0.98;
+
+            // Gerak Brown cairan sesuai suhu
+            let jitter = Math.max(0, (currentTemp + 273.15) * 0.00012);
+            this.dx += (Math.random() - 0.5) * jitter;
+
+            this.x += this.dx * sp;
+            this.y += this.dy;
+        } else {
+            // PADAT: Gravitasi padatan menarik ke bawah (jatuh dan mengendap di meja lab)
+            this.restitution = 0.18;
+            this.dy += 0.30; // Gravitasi padatan
+            this.dx *= 0.88; // Gesekan permukaan padat
+            this.dy *= 0.92;
+
+            // Getaran kisi kristal padat (makin dingin makin diam)
+            let vib = Math.max(0.005, (currentTemp + 273.15) * 0.00006);
+            this.dx += (Math.random() - 0.5) * vib;
+
+            this.x += this.dx * sp;
+            this.y += this.dy;
         }
         
-        if (isNaN(this.dx) || !isFinite(this.dx)) this.dx = 0.5;
-        if (isNaN(this.dy) || !isFinite(this.dy)) this.dy = 0.5;
+        if (isNaN(this.dx) || !isFinite(this.dx)) this.dx = 0;
+        if (isNaN(this.dy) || !isFinite(this.dy)) this.dy = 0;
 
         // Pantulan di batas ruangan (dinding kiri/kanan, papan neon atas, lis meja bawah)
         const b = bounds();
@@ -798,7 +975,17 @@ class Particle {
             this.dy = Math.abs(this.dy) * this.restitution;
         } else if (this.y + this.radius > b.y1) {
             this.y = b.y1 - this.radius;
-            this.dy = -Math.abs(this.dy) * this.restitution;
+            if (this.state === "PADAT") {
+                this.dy = -Math.abs(this.dy) * this.restitution;
+                if (Math.abs(this.dy) < 0.25) this.dy = 0; // Mengendap stabil di atas meja
+                this.dx *= 0.82;
+            } else if (this.state === "CAIR") {
+                this.dy = -Math.abs(this.dy) * this.restitution;
+                if (Math.abs(this.dy) < 0.18) this.dy = 0;
+                this.dx *= 0.94;
+            } else {
+                this.dy = -Math.abs(this.dy) * this.restitution;
+            }
         }
     }
 
@@ -818,103 +1005,74 @@ class Particle {
 
         let cleanMolFormula = this.moleculeName ? this.moleculeName.split(' ')[0].trim() : this.atomData.map(a => a.symbol).join('');
 
-        // Bayangan tipis di bawah atom / molekul proporsional radius
-        R(drawX - this.radius, drawY + this.radius + 2, this.radius * 2, 2, "rgba(0,0,0,.28)");
-
         if (this.atomData.length > 1) {
             try {
-                let sortedAtoms = [...this.atomData].sort((a, b) => getValence(b.symbol) - getValence(a.symbol));
-                let centerAtom = sortedAtoms[0];
-                let branches = sortedAtoms.slice(1);
+                let layout = getMoleculeLayout(this.atomData, cleanMolFormula);
+                if (layout) {
+                    this.radius = layout.boundingRadius;
 
-                const getSubRadius = (sym, mass) => {
-                    let m = mass || 1;
-                    if (m <= 10) return 9;
-                    if (m <= 30) return 12;
-                    return 15;
-                };
+                    // Bayangan tipis di bawah molekul proporsional radius
+                    R(drawX - this.radius, drawY + this.radius + 2, this.radius * 2, 2, "rgba(0,0,0,.28)");
 
-                let centerR = getSubRadius(centerAtom.symbol, centerAtom.mass);
+                    // Ayunan mengapung lembut (gentle sway ±6°), tanpa memutar sprite piksel
+                    let sway = Math.sin((Date.now() * 0.001) + (this.id * 1.5)) * 0.1;
+                    let cosR = Math.cos(sway);
+                    let sinR = Math.sin(sway);
 
-                let angles = [];
-                if (branches.length === 1) {
-                    angles = [0];
-                } else if (branches.length === 2) {
-                    if (cleanMolFormula === 'CO2') {
-                        angles = [0, Math.PI];
-                    } else {
-                        let halfAngle = (104.5 * Math.PI) / 360;
-                        angles = [-halfAngle, halfAngle];
-                    }
-                } else if (branches.length === 3) {
-                    angles = [-Math.PI * 0.45, Math.PI * 0.45, Math.PI];
-                } else if (branches.length === 4) {
-                    angles = [-Math.PI * 0.35, Math.PI * 0.35, Math.PI * 0.75, -Math.PI * 0.75];
-                } else {
-                    let step = (Math.PI * 2) / branches.length;
-                    for (let i = 0; i < branches.length; i++) angles.push(i * step);
+                    let renderedCoords = layout.atomPositions.map(p => {
+                        let rx = p.x * cosR - p.y * sinR;
+                        let ry = p.x * sinR + p.y * cosR;
+                        return {
+                            ...p,
+                            drawX: Math.round(drawX + rx),
+                            drawY: Math.round(drawY + ry)
+                        };
+                    });
+
+                    // 1. Gambar garis ikatan (Bond Sticks)
+                    targetCtx.save();
+                    targetCtx.strokeStyle = 'rgba(255, 255, 255, 0.75)';
+                    targetCtx.lineWidth = 2;
+                    targetCtx.lineCap = 'round';
+                    layout.bonds.forEach(([idxA, idxB]) => {
+                        let pA = renderedCoords[idxA];
+                        let pB = renderedCoords[idxB];
+                        targetCtx.beginPath();
+                        targetCtx.moveTo(pA.drawX, pA.drawY);
+                        targetCtx.lineTo(pB.drawX, pB.drawY);
+                        targetCtx.stroke();
+                    });
+                    targetCtx.restore();
+
+                    // 2. Gambar atom-atom penyusun UPRIGHT (TEGAK 1:1 tanpa rotate canvas)
+                    renderedCoords.forEach((p, idx) => {
+                        let drawn = false;
+                        if (window.AtomSpriteSystem && window.AtomSpriteSystem.enabled) {
+                            drawn = window.AtomSpriteSystem.drawAtom(
+                                targetCtx,
+                                p.atom.symbol,
+                                p.drawX,
+                                p.drawY,
+                                p.r,
+                                this.id + idx * 7
+                            );
+                        }
+                        if (!drawn) {
+                            let cColor = COL[p.atom.symbol] || p.atom.color || '#3b82f6';
+                            disc(p.drawX, p.drawY, p.r + 1, "#0d0f1c");
+                            disc(p.drawX, p.drawY, p.r, cColor);
+                        }
+                    });
+
+                    // 3. Formula Label di atas molekul (bersih dan tidak menutupi atom)
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = FONT;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(cleanMolFormula, drawX, Math.round(drawY - this.radius - 5));
+
+                    return;
                 }
-
-                targetCtx.save();
-                targetCtx.translate(drawX, drawY);
-                targetCtx.rotate((Date.now() * 0.0004) + (this.id * 1.2));
-
-                targetCtx.strokeStyle = 'rgba(255, 255, 255, 0.75)';
-                targetCtx.lineWidth = 2;
-                targetCtx.lineCap = 'round';
-
-                let branchPositions = [];
-                let bondDist = centerR + 10;
-
-                for (let i = 0; i < branches.length; i++) {
-                    let bAtom = branches[i];
-                    let branchR = getSubRadius(bAtom.symbol, bAtom.mass);
-                    let ang = angles[i] !== undefined ? angles[i] : (i * (Math.PI * 2 / branches.length));
-                    let bx = Math.cos(ang) * bondDist;
-                    let by = Math.sin(ang) * bondDist;
-                    branchPositions.push({ bAtom, bx, by, branchR });
-
-                    targetCtx.beginPath();
-                    targetCtx.moveTo(0, 0);
-                    targetCtx.lineTo(bx, by);
-                    targetCtx.stroke();
-                }
-
-                // Gambar atom pusat (Sprite atau Fallback Disc)
-                let drawnCenter = false;
-                if (window.AtomSpriteSystem && window.AtomSpriteSystem.enabled) {
-                    drawnCenter = window.AtomSpriteSystem.drawAtom(targetCtx, centerAtom.symbol, 0, 0, centerR, this.id);
-                }
-                if (!drawnCenter) {
-                    let cColor = COL[centerAtom.symbol] || centerAtom.color || '#3b82f6';
-                    disc(0, 0, centerR + 1, "#0d0f1c");
-                    disc(0, 0, centerR, cColor);
-                }
-
-                // Gambar atom cabang (Sprite atau Fallback Disc)
-                for (let i = 0; i < branchPositions.length; i++) {
-                    let bp = branchPositions[i];
-                    let drawnBranch = false;
-                    if (window.AtomSpriteSystem && window.AtomSpriteSystem.enabled) {
-                        drawnBranch = window.AtomSpriteSystem.drawAtom(targetCtx, bp.bAtom.symbol, bp.bx, bp.by, bp.branchR, this.id + i + 1);
-                    }
-                    if (!drawnBranch) {
-                        let bColor = COL[bp.bAtom.symbol] || bp.bAtom.color || '#94a3b8';
-                        disc(bp.bx, bp.by, bp.branchR + 1, "#0d0f1c");
-                        disc(bp.bx, bp.by, bp.branchR, bColor);
-                    }
-                }
-
-                targetCtx.restore();
-
-                // Formula Label (Press Start 2P)
-                ctx.fillStyle = '#ffffff';
-                ctx.font = FONT;
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(cleanMolFormula, drawX, Math.round(drawY - this.radius - 6));
-
-                return;
             } catch (err) {
                 console.warn("Fallback rendering molekul:", err);
             }
@@ -966,6 +1124,20 @@ class Particle {
             ctx.strokeText(sym.slice(0, 2), drawX, drawY + 1);
             ctx.fillStyle = isBright ? "#1a2138" : "#fff";
             ctx.fillText(sym.slice(0, 2), drawX, drawY + 1);
+        }
+
+        // Efek kristal bunga es kecil pada atom/molekul yang membeku (PADAT) saat suhu dingin (< 0 °C)
+        if (currentTemp < 0 && this.state === "PADAT") {
+            let frostTwinkle = Math.sin((Date.now() * 0.005) + (this.id * 2.3));
+            if (frostTwinkle > -0.2) {
+                let fx = drawX + Math.round(this.radius * 0.45);
+                let fy = drawY - Math.round(this.radius * 0.45);
+                R(fx, fy, 2, 2, "#ffffff");
+                R(fx - 1, fy, 1, 1, "#73eff7");
+                R(fx + 2, fy, 1, 1, "#73eff7");
+                R(fx, fy - 1, 1, 1, "#73eff7");
+                R(fx, fy + 2, 1, 1, "#73eff7");
+            }
         }
     }
 }
@@ -1397,7 +1569,7 @@ function animate(now = performance.now()) {
             visualEffects = visualEffects.slice(-100);
         }
 
-        // 6. Efek Termal Ekstrim — asap pixel + tint merah tipis di dinding
+        // 6. Efek Termal Ekstrim — Panas (asap pixel + tint merah) vs Dingin (bunga es + kristal + tint es)
         if (currentTemp > 80 && particles.length > 0) {
             let intensity = Math.min((currentTemp - 80) / 200, 1.0);
             // Spawn asap lebih sering seiring suhu naik
@@ -1416,6 +1588,32 @@ function animate(now = performance.now()) {
             if (L.cy) {
                 ctx.globalAlpha = Math.min(0.22, intensity * 0.22);
                 ctx.fillStyle = "#b13e53"; // merah retro
+                ctx.fillRect(0, 0, W, L.cy);
+                ctx.globalAlpha = 1;
+            }
+        } else if (currentTemp < 0) {
+            // EFEK SUHU DINGIN — Bunga es kecil melayang + kristal es + tint es retro
+            let coldIntensity = Math.min(1.0, Math.abs(currentTemp) / 100);
+            let frostRate = 0.12 + coldIntensity * 0.35;
+            if (Math.random() < frostRate) {
+                let fx, fy;
+                // 50% spawn di dekat partikel padat/beku, 50% mengapung di kanvas
+                const solidParticles = particles.filter(p => p.state === "PADAT");
+                if (solidParticles.length > 0 && Math.random() < 0.6) {
+                    const p = solidParticles[Math.floor(Math.random() * solidParticles.length)];
+                    fx = p.x + (Math.random() - 0.5) * (p.radius * 2);
+                    fy = p.y + (Math.random() - 0.5) * (p.radius * 2);
+                } else {
+                    fx = Math.random() * W;
+                    fy = Math.random() * (H * 0.75);
+                }
+                visualEffects.push(new VisualEffect(fx, fy, 'frost_flower'));
+            }
+
+            // Tint biru es sejuk retro di area dinding
+            if (L.cy) {
+                ctx.globalAlpha = Math.min(0.20, coldIntensity * 0.20);
+                ctx.fillStyle = "#73eff7"; // cyan es
                 ctx.fillRect(0, 0, W, L.cy);
                 ctx.globalAlpha = 1;
             }
